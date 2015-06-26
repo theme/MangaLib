@@ -5,9 +5,9 @@
 #include <QMainWindow>
 #include <QFileSystemModel>
 #include <QItemSelectionModel>
-#include <QtSql>
 #include <QFileDialog>
 #include <QMessageBox>
+#include "db/dbsm.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,13 +23,15 @@ public:
 signals:
     void sigCurrentAbsPath(QString abspath);
     void sigStatusMsg(QString, int t = 0);
+    void sigOpenDBFile(QString fpath);
 public slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
 private slots:
-    QSqlError initDB();
-private:private:
+    void open();
+    void onDBError(QString what, QString why);
+private:
     //Menu
     void createActions();
     void createMenus();
@@ -44,8 +46,8 @@ private:private:
     QFileSystemModel *files_model_;
     QString current_abs_path_;
 
-    //DB
-    QFile dbfn_;
+    // DB satate machine
+    DBSM *dbsm_;
 };
 
 #endif // MAINWINDOW_H
