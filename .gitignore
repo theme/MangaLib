@@ -1,0 +1,4 @@
+*.pro.user
+*.png
+*.ico
+**/node_modules/
