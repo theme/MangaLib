@@ -11,9 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // ui: menu
     createActions();
     createMenus();
 
+    // ui: explorer
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     files_model_->setRootPath(current_abs_path_);
@@ -38,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
-    // DBSM
+    // Database State Machine
     connect(this, SIGNAL(sigOpenDBFile(QString)),
             dbsm_, SLOT(openDBFile(QString)));
     connect(dbsm_, SIGNAL(sigStatusMsg(QString, int)),
@@ -76,22 +78,22 @@ void MainWindow::onDBError(QString what, QString why)
     QMessageBox::critical(this, what, why);
 }
 
-void MainWindow::open()
+void MainWindow::openDBFile()
 {
-    QString selfilter = tr("DB Files (*.db)");
+    QString selfilter = tr("DB Files (*.db)");  // selection filter
     QString fn = QFileDialog::getSaveFileName(
                             this,
                             tr("Choose DB file"), current_abs_path_, tr("DB Files (*.db)"),
                             &selfilter, QFileDialog::DontConfirmOverwrite);
-    emit sigOpenDBFile(fn);
+    emit sigOpenDBFile(fn); // handle by DBSM
 }
 
 void MainWindow::createActions()
 {
-    openAct = new QAction(tr("&Open"), this);
+    openAct = new QAction(tr("&Open DB File"), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open a DB file"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+    connect(openAct, SIGNAL(triggered()), this, SLOT(openDBFile()));
 
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
@@ -101,7 +103,6 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openAct);
     fileMenu->addSeparator();

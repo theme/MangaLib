@@ -30,7 +30,7 @@ private slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
-    void open();
+    void openDBFile();
     void onDBError(QString what, QString why);
 private:
     //Menu
