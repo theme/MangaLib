@@ -45,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
             dbsm_, SLOT(openDBFile(QString)));
     connect(dbsm_, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
+
+    // ui: Library ( DB ) View
+    connect(dbsm_, SIGNAL(sigOnline()), this, SLOT(enableLibView()));
+    connect(dbsm_, SIGNAL(sigOffline()), this, SLOT(disableLibView()));
 }
 
 MainWindow::~MainWindow()
@@ -76,6 +80,16 @@ void MainWindow::onUIPathEdited()
 void MainWindow::onDBError(QString what, QString why)
 {
     QMessageBox::critical(this, what, why);
+}
+
+void MainWindow::enableLibView()
+{
+    ui->tablesTabWidget->setEnabled(true);
+}
+
+void MainWindow::disableLibView()
+{
+    ui->tablesTabWidget->setDisabled(true);
 }
 
 void MainWindow::openDBFile()

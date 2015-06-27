@@ -83,6 +83,7 @@ QSqlError DBSM::initDB()
        && tables.contains("authors", Qt::CaseInsensitive)
        && tables.contains("files", Qt::CaseInsensitive))
     {
+        emit sigInitOK();
         emit sigStatusMsg("(db online) " + dbf_->fileName());
        return QSqlError();  // NO ERROR
     }

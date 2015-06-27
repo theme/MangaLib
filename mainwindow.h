@@ -32,6 +32,9 @@ private slots:
     void onUIPathEdited();
     void openDBFile();
     void onDBError(QString what, QString why);
+    void enableLibView();
+    void disableLibView();
+
 private:
     //Menu
     void createActions();
