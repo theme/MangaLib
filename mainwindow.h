@@ -20,15 +20,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 signals:
     void sigCurrentAbsPath(QString abspath);
     void sigStatusMsg(QString, int t = 0);
     void sigOpenDBFile(QString fpath);
-public slots:
+
+private slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
-private slots:
     void open();
     void onDBError(QString what, QString why);
 private:
