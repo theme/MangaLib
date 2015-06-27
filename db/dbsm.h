@@ -25,6 +25,8 @@ signals:
     void sigGotDBFile(QString fn);
     void sigError(QString what, QString why);
     void sigInitOK();
+    void sigOnline();
+    void sigOffline();
 
 public slots:
     QSqlError initDB();

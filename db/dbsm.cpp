@@ -18,6 +18,9 @@ DBSM::DBSM(QObject *parent) :
 
     s_offline_got_file_->addTransition(this, SIGNAL(sigInitOK()), s_online_);
 
+    // output status signal
+    connect(s_online_, SIGNAL(entered()), this, SIGNAL(sigOnline()));
+    connect(s_offline_, SIGNAL(entered()), this, SIGNAL(sigOffline()));
 
     // assemble SM
     this->addState(s_offline_);
