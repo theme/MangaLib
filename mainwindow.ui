@@ -19,23 +19,8 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <property name="spacing">
-     <number>0</number>
-    </property>
     <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="topTabWidget">
       <property name="currentIndex">
        <number>1</number>
       </property>
@@ -74,13 +59,47 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="dbTab">
+      <widget class="QWidget" name="libTab">
        <attribute name="title">
         <string>Library</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QTableView" name="tableView"/>
+         <widget class="QTabWidget" name="tablesTabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_books">
+           <attribute name="title">
+            <string>Books</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QTableView" name="dbBooksView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_authors">
+           <attribute name="title">
+            <string>Authors</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="0">
+             <widget class="QTableView" name="dbAuthorsView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_files">
+           <attribute name="title">
+            <string>Files</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <widget class="QTableView" name="dbFilesView"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
