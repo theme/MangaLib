@@ -7,6 +7,7 @@
 #include <QItemSelectionModel>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSqlTableModel>
 #include "db/dbsm.h"
 
 namespace Ui {
@@ -36,14 +37,14 @@ private slots:
     void disableLibView();
 
 private:
-    //Menu
+    // ui::Menu
     void createActions();
     void createMenus();
     QMenu *fileMenu;
     QAction *openAct;
     QAction *quitAct;
 
-    //Explorer
+    // ui::Explorer
     Ui::MainWindow *ui;
     QFileSystemModel *dir_model_;
     QItemSelectionModel *dir_selection_model_;
@@ -52,6 +53,11 @@ private:
 
     // DB satate machine
     DBSM *dbsm_;
+
+    // ui::Library ( DB )
+    QSqlTableModel *db_books_model_;
+    QSqlTableModel *db_authors_model_;
+    QSqlTableModel *db_files_model_;
 };
 
 #endif // MAINWINDOW_H

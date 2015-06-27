@@ -3,7 +3,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    db_books_model_(0),db_authors_model_(0),db_files_model_(0)
 {
     ui->setupUi(this);
 
@@ -85,6 +86,28 @@ void MainWindow::onDBError(QString what, QString why)
 void MainWindow::enableLibView()
 {
     ui->tablesTabWidget->setEnabled(true);
+
+    if (db_books_model_ != 0){
+        delete db_authors_model_;
+    }
+    if (db_authors_model_ != 0){
+        delete db_authors_model_;
+    }
+    if (db_files_model_ != 0){
+        delete db_files_model_;
+    }
+    db_books_model_ = new QSqlTableModel(parent(), dbsm_->getDB());
+    db_authors_model_ = new QSqlTableModel(parent(), dbsm_->getDB());
+    db_files_model_ = new QSqlTableModel(parent(), dbsm_->getDB());
+    db_books_model_->setTable("books");
+    db_books_model_->setEditStrategy(QSqlTableModel::OnRowChange);
+    db_books_model_->select();
+    db_authors_model_->setTable("authors");
+    db_files_model_->setTable("files");
+    ui->dbBooksView->setModel(db_books_model_);
+    ui->dbAuthorsView->setModel(db_authors_model_);
+    ui->dbFilesView->setModel(db_files_model_);
+    qDebug() << "show tables";
 }
 
 void MainWindow::disableLibView()

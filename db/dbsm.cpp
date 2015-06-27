@@ -31,6 +31,11 @@ DBSM::DBSM(QObject *parent) :
     this->start();
 }
 
+QSqlDatabase &DBSM::getDB()
+{
+    return db_;
+}
+
 void DBSM::openDBFile(QString fpath)
 {
     dbf_->setFileName(fpath);

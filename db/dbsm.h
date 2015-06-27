@@ -19,6 +19,7 @@ class DBSM : public QStateMachine
     Q_OBJECT
 public:
     explicit DBSM(QObject *parent = 0);
+    QSqlDatabase& getDB();
 
 signals:
     void sigStatusMsg(QString, int t = 0);
