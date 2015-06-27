@@ -36,7 +36,7 @@ private:
     QState*   s_offline_got_file_;
     QState* s_online_;
 
-    QFile dbf_;		// db file
+    QFile *dbf_;	// db file
     QSqlDatabase db_;
 };
 

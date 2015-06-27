@@ -1,7 +1,8 @@
 #include "dbsm.h"
 
 DBSM::DBSM(QObject *parent) :
-    QStateMachine(parent)
+    QStateMachine(parent),
+    dbf_(new QFile(parent))
 {
     // new states
     s_offline_ = new QState();
@@ -29,21 +30,21 @@ DBSM::DBSM(QObject *parent) :
 
 void DBSM::openDBFile(QString fpath)
 {
-    dbf_.setFileName(fpath);
+    dbf_->setFileName(fpath);
 
-    if (!dbf_.open(QIODevice::ReadWrite)){
-        dbf_.close();
-        emit sigStatusMsg(tr("Can not read write DB file") + dbf_.fileName());
+    if (!dbf_->open(QIODevice::ReadWrite)){
+        dbf_->close();
+        emit sigStatusMsg(tr("Can not read write DB file") + dbf_->fileName());
     } else {
-        dbf_.close();
-        emit sigStatusMsg(tr("opened DB file") + dbf_.fileName());
-        emit sigGotDBFile(dbf_.fileName());
+        dbf_->close();
+        emit sigStatusMsg(tr("opened DB file") + dbf_->fileName());
+        emit sigGotDBFile(dbf_->fileName());
     }
 }
 
 QSqlError DBSM::initDB()
 {
-    emit sigStatusMsg(tr("(init DB) ") + dbf_.fileName());
+    emit sigStatusMsg(tr("(init DB) ") + dbf_->fileName());
 
     // open DB
     if (!QSqlDatabase::drivers().contains("QSQLITE")) {
@@ -54,14 +55,14 @@ QSqlError DBSM::initDB()
     }
 
     db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(dbf_.fileName());
+    db_.setDatabaseName(dbf_->fileName());
 
     if (!db_.open()){
         emit sigError("db open failed", "Unknown why");
        return db_.lastError();
     }
 
-    emit sigStatusMsg(tr("(open DB) ") + dbf_.fileName());
+    emit sigStatusMsg(tr("(open DB) ") + dbf_->fileName());
     // ensure we have needed table
     /*
      * files: record files
@@ -79,7 +80,7 @@ QSqlError DBSM::initDB()
        && tables.contains("authors", Qt::CaseInsensitive)
        && tables.contains("files", Qt::CaseInsensitive))
     {
-        emit sigStatusMsg("(db online) " + dbf_.fileName());
+        emit sigStatusMsg("(db online) " + dbf_->fileName());
        return QSqlError();  // NO ERROR
     }
 
