@@ -3,11 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    dir_model_(new QFileSystemModel(parent)),
-    files_model_(new QFileSystemModel(parent)),
-    current_abs_path_(QDir::currentPath()),
-    dbsm_(new DBSM(parent))
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -16,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     // ui: explorer
+    current_abs_path_ = QDir::currentPath();
+    dir_model_ = new QFileSystemModel(parent);
+    files_model_ = new QFileSystemModel(parent);
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     files_model_->setRootPath(current_abs_path_);
@@ -41,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->statusBar, SLOT(showMessage(QString,int)));
 
     // Database State Machine
+    dbsm_ = new DBSM(parent);
     connect(this, SIGNAL(sigOpenDBFile(QString)),
             dbsm_, SLOT(openDBFile(QString)));
     connect(dbsm_, SIGNAL(sigStatusMsg(QString, int)),
