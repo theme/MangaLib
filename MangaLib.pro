@@ -21,8 +21,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RC_ICONS = MangaLib.ico
-
 RESOURCES += \
     icon.qrc
 

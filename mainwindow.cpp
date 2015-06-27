@@ -107,7 +107,6 @@ void MainWindow::enableLibView()
     ui->dbBooksView->setModel(db_books_model_);
     ui->dbAuthorsView->setModel(db_authors_model_);
     ui->dbFilesView->setModel(db_files_model_);
-    qDebug() << "show tables";
 }
 
 void MainWindow::disableLibView()
