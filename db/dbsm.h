@@ -23,15 +23,15 @@ public:
 
 signals:
     void sigStatusMsg(QString, int t = 0);
-    void sigGotDBFile(QString fn);
     void sigError(QString what, QString why);
-    void sigInitOK();
+    void sigDBopened();
+    void sigDBclosed();
     void sigOnline();
     void sigOffline();
 
 public slots:
-    QSqlError initDB();
-    void openDBFile(QString fpath);
+    QSqlError openDB(QString fname);
+    void closeDB();
 
 private:
     QState* s_offline_;
@@ -39,7 +39,6 @@ private:
     QState*   s_offline_got_file_;
     QState* s_online_;
 
-    QFile *dbf_;	// db file
     QSqlDatabase db_;
 };
 

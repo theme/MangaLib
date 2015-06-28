@@ -1,22 +1,15 @@
 #include "dbsm.h"
 
 DBSM::DBSM(QObject *parent) :
-    QStateMachine(parent),
-    dbf_(new QFile(parent))
+    QStateMachine(parent)
 {
     // new states
     s_offline_ = new QState();
-    s_offline_no_file_ = new QState(s_offline_);
-    s_offline_got_file_ = new QState(s_offline_);
     s_online_ = new QState();
 
     // set transition on states
-    s_offline_no_file_->addTransition(this, SIGNAL(sigGotDBFile(QString)),
-                                      s_offline_got_file_);
-
-    connect( s_offline_got_file_, SIGNAL(entered()), this, SLOT(initDB()));
-
-    s_offline_got_file_->addTransition(this, SIGNAL(sigInitOK()), s_online_);
+    s_offline_->addTransition(this, SIGNAL(sigDBopened()), s_online_);
+    s_online_->addTransition(this, SIGNAL(sigDBclosed()), s_offline_);
 
     // output status signal
     connect(s_online_, SIGNAL(entered()), this, SIGNAL(sigOnline()));
@@ -24,7 +17,6 @@ DBSM::DBSM(QObject *parent) :
 
     // assemble SM
     this->addState(s_offline_);
-    s_offline_->setInitialState(s_offline_no_file_);
     this->addState(s_online_);
     this->setInitialState(s_offline_);
 
@@ -36,23 +28,9 @@ QSqlDatabase &DBSM::getDB()
     return db_;
 }
 
-void DBSM::openDBFile(QString fpath)
+QSqlError DBSM::openDB(QString fname)
 {
-    dbf_->setFileName(fpath);
-
-    if (!dbf_->open(QIODevice::ReadWrite)){
-        dbf_->close();
-        emit sigStatusMsg(tr("Can not read write DB file") + dbf_->fileName());
-    } else {
-        dbf_->close();
-        emit sigStatusMsg(tr("opened DB file") + dbf_->fileName());
-        emit sigGotDBFile(dbf_->fileName());
-    }
-}
-
-QSqlError DBSM::initDB()
-{
-    emit sigStatusMsg(tr("(init DB) ") + dbf_->fileName());
+    emit sigStatusMsg(tr("(init DB...) ") + fname);
 
     // open DB
     if (!QSqlDatabase::drivers().contains("QSQLITE")) {
@@ -63,14 +41,15 @@ QSqlError DBSM::initDB()
     }
 
     db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(dbf_->fileName());
+    db_.setDatabaseName(fname);
 
+    this->closeDB();    // close first
     if (!db_.open()){
         emit sigError("db open failed", "Unknown why");
        return db_.lastError();
     }
 
-    emit sigStatusMsg(tr("(open DB) ") + dbf_->fileName());
+    emit sigStatusMsg(tr("(open DB) ") + fname);
     // ensure we have needed table
     /*
      * files: record files
@@ -88,8 +67,8 @@ QSqlError DBSM::initDB()
        && tables.contains("authors", Qt::CaseInsensitive)
        && tables.contains("files", Qt::CaseInsensitive))
     {
-        emit sigInitOK();
-        emit sigStatusMsg("(db online) " + dbf_->fileName());
+        emit sigDBopened();
+        emit sigStatusMsg("(db online) " + fname);
        return QSqlError();  // NO ERROR
     }
 
@@ -128,6 +107,14 @@ QSqlError DBSM::initDB()
     }
 
     emit sigStatusMsg("init DB ok.");
-    emit sigInitOK();
+    emit sigDBopened();
     return QSqlError();
+}
+
+void DBSM::closeDB()
+{
+    if (db_.isOpen()){
+        db_.close();
+    }
+    emit sigDBclosed();
 }

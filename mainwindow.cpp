@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Database State Machine
     dbsm_ = new DBSM(parent);
     connect(this, SIGNAL(sigOpenDBFile(QString)),
-            dbsm_, SLOT(openDBFile(QString)));
+            dbsm_, SLOT(openDB(QString)));
     connect(dbsm_, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
