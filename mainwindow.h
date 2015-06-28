@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QMainWindow>
+#include <QShortcut>
 #include <QFileSystemModel>
 #include <QItemSelectionModel>
 #include <QFileDialog>
@@ -68,6 +69,7 @@ private:
     QItemSelectionModel *dir_selection_model_;
     QFileSystemModel *files_model_;
     QString current_abs_path_;
+    QShortcut *sc_editpath_;
 
     // DB
     QSqlDatabase db_;

@@ -18,7 +18,7 @@
     <normaloff>:/icons/icon.svg</normaloff>:/icons/icon.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -31,41 +31,41 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0">
      <widget class="QTabWidget" name="topTabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="expTab">
        <attribute name="title">
         <string>&amp;Explorer</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
         <item row="0" column="0">
-         <widget class="QLineEdit" name="pathEdit"/>
-        </item>
-        <item row="1" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5">
-          <property name="spacing">
-           <number>6</number>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QTreeView" name="dirView"/>
+           <widget class="QLineEdit" name="pathEdit"/>
           </item>
           <item>
-           <widget class="QListView" name="filesView"/>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5">
+            <item>
+             <widget class="QTreeView" name="dirView"/>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QListView" name="filesView"/>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string>GroupBox</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -189,7 +189,7 @@
      <x>0</x>
      <y>0</y>
      <width>659</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

@@ -12,9 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     // ui: explorer
+    sc_editpath_ = new QShortcut(QKeySequence(tr("Ctrl+L", "Edit path")),
+                             this);
+    connect(sc_editpath_, SIGNAL(activated()), ui->pathEdit, SLOT(setFocus()));
     current_abs_path_ = QDir::currentPath();
-    dir_model_ = new QFileSystemModel(parent);
-    files_model_ = new QFileSystemModel(parent);
+    dir_model_ = new QFileSystemModel(this);
+    files_model_ = new QFileSystemModel(this);
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     files_model_->setRootPath(current_abs_path_);
@@ -40,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->statusBar, SLOT(showMessage(QString,int)));
 
     // DB state machine
-    dbsm_ = new QStateMachine(parent);
+    dbsm_ = new QStateMachine(this);
     state_opened_ = new QState(dbsm_);
     state_closed_ = new QState(dbsm_);
     dbsm_->setInitialState(state_closed_);
