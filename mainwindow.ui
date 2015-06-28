@@ -54,14 +54,7 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
-               <widget class="QListView" name="filesView"/>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox">
-                <property name="title">
-                 <string>GroupBox</string>
-                </property>
-               </widget>
+               <widget class="QTableView" name="filesView"/>
               </item>
              </layout>
             </item>
