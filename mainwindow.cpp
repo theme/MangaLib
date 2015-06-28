@@ -50,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // ui: Library ( DB ) View
     connect(dbsm_, SIGNAL(sigOnline()), this, SLOT(enableLibView()));
     connect(dbsm_, SIGNAL(sigOffline()), this, SLOT(disableLibView()));
+    connect(ui->insertButton, SIGNAL(clicked()), this, SLOT(libInsertRecord()));
+    connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(libDeleteRecord()));
+    connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(libSaveTable()));
 }
 
 MainWindow::~MainWindow()
@@ -112,6 +115,32 @@ void MainWindow::enableLibView()
 void MainWindow::disableLibView()
 {
     ui->tablesTabWidget->setDisabled(true);
+}
+
+void MainWindow::libInsertRecord()
+{
+    qDebug() << ui->tablesTabWidget->currentIndex();
+    switch (ui->tablesTabWidget->currentIndex()){
+    case 0:
+        db_books_model_->insertRows(ui->dbBooksView->currentIndex().row(),1);
+        break;
+    case 1:
+        db_authors_model_->insertRows(ui->dbAuthorsView->currentIndex().row(),1);
+        break;
+    case 2:
+        db_files_model_->insertRows(ui->dbFilesView->currentIndex().row(),1);
+        break;
+    }
+}
+
+void MainWindow::libDeleteRecord()
+{
+
+}
+
+void MainWindow::libSaveTable()
+{
+
 }
 
 void MainWindow::openDBFile()

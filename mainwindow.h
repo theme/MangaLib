@@ -35,6 +35,10 @@ private slots:
     void onDBError(QString what, QString why);
     void enableLibView();
     void disableLibView();
+    // ui:lib control
+    void libInsertRecord();
+    void libDeleteRecord();
+    void libSaveTable();
 
 private:
     // ui::Menu
