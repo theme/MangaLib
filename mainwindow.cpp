@@ -133,7 +133,7 @@ QSqlError MainWindow::openDBFile()
     db_ = QSqlDatabase::addDatabase("QSQLITE");
     db_.setDatabaseName(fname);
 
-    this->closeDB();    // close first
+    this->closeDBfile();    // close first
     if (!db_.open()){
         emit sigDBError("db open failed", "Unknown why");
        return db_.lastError();
@@ -201,7 +201,7 @@ QSqlError MainWindow::openDBFile()
     return QSqlError();
 }
 
-void MainWindow::closeDB()
+void MainWindow::closeDBfile()
 {
     if (db_.isOpen()){
         db_.close();
@@ -219,7 +219,7 @@ void MainWindow::createActions()
     closeAct = new QAction(tr("&Close DB file"), this);
     closeAct->setShortcut(QKeySequence::Close);
     closeAct->setStatusTip(tr("Close current DB file"));
-    connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDB()));
+    connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDBfile()));
 
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);

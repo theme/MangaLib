@@ -40,7 +40,7 @@ private slots:
     void onUIPathEdited();
     // DB
     QSqlError openDBFile();
-    void closeDB();
+    void closeDBfile();
     void onDBError(QString what, QString why);
     void displayDB();   // load db tables to view
     // DB view
