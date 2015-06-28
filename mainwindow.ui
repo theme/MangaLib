@@ -38,7 +38,7 @@
       </property>
       <widget class="QWidget" name="expTab">
        <attribute name="title">
-        <string>Explorer</string>
+        <string>&amp;Explorer</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
@@ -73,7 +73,7 @@
       </widget>
       <widget class="QWidget" name="libTab">
        <attribute name="title">
-        <string>Library</string>
+        <string>&amp;Library</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <property name="leftMargin">
@@ -129,7 +129,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="libControlGroup">
           <property name="title">
            <string/>
           </property>
@@ -143,14 +143,14 @@
            <item>
             <widget class="QPushButton" name="insertButton">
              <property name="text">
-              <string>insert</string>
+              <string>&amp;insert</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="deleteButton">
+            <widget class="QPushButton" name="removeButton">
              <property name="text">
-              <string>Delete</string>
+              <string>&amp;Remove</string>
              </property>
             </widget>
            </item>
@@ -168,9 +168,9 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="saveButton">
+            <widget class="QPushButton" name="submitButton">
              <property name="text">
-              <string>Save</string>
+              <string>&amp;Submit</string>
              </property>
             </widget>
            </item>

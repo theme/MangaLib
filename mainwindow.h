@@ -8,7 +8,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlTableModel>
+#include <QTableView>
 #include "db/dbsm.h"
+#include "sqltablewidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +35,15 @@ private slots:
     void onUIPathEdited();
     void openDBFile();
     void onDBError(QString what, QString why);
+    void displayDB();   // load db tables to view
     void enableLibView();
     void disableLibView();
-    // ui:lib control
-    void libInsertRecord();
-    void libDeleteRecord();
-    void libSaveTable();
+
+    void on_insertButton_clicked();
+
+    void on_submitButton_clicked();
+
+    void on_removeButton_clicked();
 
 private:
     // ui::Menu
@@ -57,11 +62,6 @@ private:
 
     // DB satate machine
     DBSM *dbsm_;
-
-    // ui::Library ( DB )
-    QSqlTableModel *db_books_model_;
-    QSqlTableModel *db_authors_model_;
-    QSqlTableModel *db_files_model_;
 };
 
 #endif // MAINWINDOW_H

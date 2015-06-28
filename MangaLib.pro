@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    db/dbsm.cpp
+    db/dbsm.cpp \
+    sqltablewidget.cpp
 
 HEADERS  += mainwindow.h \
-    db/dbsm.h
+    db/dbsm.h \
+    sqltablewidget.h
 
 FORMS    += mainwindow.ui
 
