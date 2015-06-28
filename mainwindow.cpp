@@ -44,8 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     state_opened_ = new QState(dbsm_);
     state_closed_ = new QState(dbsm_);
     dbsm_->setInitialState(state_closed_);
-    state_opened_->addTransition(this, SIGNAL(sigDBopened()), state_opened_);
-    state_closed_->addTransition(this, SIGNAL(sigDBclosed()), state_closed_);
+    state_closed_->addTransition(this, SIGNAL(sigDBopened()), state_opened_);
+    state_opened_->addTransition(this, SIGNAL(sigDBclosed()), state_closed_);
     dbsm_->start();
 
     // ui: Library ( DB ) View
