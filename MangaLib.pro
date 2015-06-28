@@ -27,4 +27,4 @@ RESOURCES += \
     icon.qrc
 
 OTHER_FILES += \
-    icon.svg
+    icons/icon.svg
