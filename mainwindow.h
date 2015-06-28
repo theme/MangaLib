@@ -9,7 +9,9 @@
 #include <QMessageBox>
 #include <QSqlTableModel>
 #include <QTableView>
-#include "db/dbsm.h"
+#include <QStateMachine>
+#include <QState>
+#include <QtSql>
 #include "sqltablewidget.h"
 
 namespace Ui {
@@ -27,15 +29,21 @@ public:
 signals:
     void sigCurrentAbsPath(QString abspath);
     void sigStatusMsg(QString, int t = 0);
-    void sigOpenDBFile(QString fpath);
+    // DB
+    void sigDBError(QString what, QString why);
+    void sigDBopened();
+    void sigDBclosed();
 
 private slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
-    void openDBFile();
+    // DB
+    QSqlError openDBFile();
+    void closeDB();
     void onDBError(QString what, QString why);
     void displayDB();   // load db tables to view
+    // DB view
     void enableLibView();
     void disableLibView();
 
@@ -51,6 +59,7 @@ private:
     void createMenus();
     QMenu *fileMenu;
     QAction *openAct;
+    QAction *closeAct;  // close DB
     QAction *quitAct;
 
     // ui::Explorer
@@ -60,8 +69,11 @@ private:
     QFileSystemModel *files_model_;
     QString current_abs_path_;
 
-    // DB satate machine
-    DBSM *dbsm_;
+    // DB
+    QSqlDatabase db_;
+    QStateMachine* dbsm_;
+    QState *state_opened_;
+    QState *state_closed_;
 };
 
 #endif // MAINWINDOW_H
