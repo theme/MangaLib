@@ -35,8 +35,6 @@ public slots:
 
 private:
     QState* s_offline_;
-    QState*   s_offline_no_file_;
-    QState*   s_offline_got_file_;
     QState* s_online_;
 
     QSqlDatabase db_;
