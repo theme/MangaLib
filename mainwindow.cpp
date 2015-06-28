@@ -257,12 +257,10 @@ void MainWindow::on_submitButton_clicked()
 {
     SQLTableWidget* w = static_cast<SQLTableWidget*>(ui->tablesTabWidget->currentWidget());
     QSqlTableModel* m = w->model();
-    if( m->isDirty() ){
-        if (!m->submitAll()){
-            emit sigStatusMsg(m->lastError().text());
-        } else {
-            emit sigStatusMsg("submit success.");
-        }
+    if (!m->submitAll()){
+        emit sigStatusMsg(m->lastError().text());
+    } else {
+        emit sigStatusMsg("submit success.");
     }
 }
 
