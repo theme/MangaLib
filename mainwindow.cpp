@@ -141,13 +141,25 @@ void MainWindow::onDBError(QString what, QString why)
 
 void MainWindow::displayDB()
 {
-    qDebug() << ui->topTabWidget->count();
+    // remove old
+    QHash<SQLTableWidget*,int>::iterator iter;
+    for (iter = db_table_widgets_hash_.begin(); iter != db_table_widgets_hash_.end(); ++iter){
+        ui->topTabWidget->removeTab(iter.value());
+        iter.key()->deleteLater();
+    }
+    db_table_widgets_hash_.clear();
 
-//    QStringList tables = db_.tables();
-//        SQLTableWidget* w = new SQLTableWidget(tables.at(i),
-//                                                    db_,
-//                                                    ui->tablesTabWidget);
-//        ui->topTabWidget->addTab(w,tables.at(i));
+    // add new
+
+    QStringList tables = db_.tables();
+    for( int i = 0; i < tables.size(); ++i){
+        SQLTableWidget* w = new SQLTableWidget(tables.at(i),
+                                                    db_,
+                                                    ui->topTabWidget);
+
+        int tabIndex = ui->topTabWidget->addTab(w,tables.at(i));
+        db_table_widgets_hash_.insert(w,tabIndex);
+    }
 }
 
 QSqlError MainWindow::openDBFile()
