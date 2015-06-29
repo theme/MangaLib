@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->fileInfoWidget->hide();
 
     // ui: menu
     createActions();
@@ -35,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(dir_selection_model_, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onDirSelectChanged(QModelIndex,QModelIndex)));
+    connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onFileSelectChanged(QModelIndex,QModelIndex)));
     connect(ui->pathEdit, SIGNAL(editingFinished()),
             this, SLOT(onUIPathEdited()));
     connect(this, SIGNAL(sigCurrentAbsPath(QString)),
@@ -66,6 +69,29 @@ void MainWindow::onDirSelectChanged(QModelIndex current, QModelIndex previous)
 {
     setCurrentAbsPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
     ui->dirView->resizeColumnToContents(current.column());
+}
+
+void MainWindow::onFileSelectChanged(QModelIndex current, QModelIndex previous)
+{
+    if (!current.isValid()){
+        ui->fileInfoWidget->hide();
+    }
+
+    QFileInfo fi =  files_model_->fileInfo(current);
+
+    if (fi.exists() && fi.isFile()){
+        ui->fileInfoWidget->show();
+        // calculate hash
+        QFile f(fi.filePath());
+        if (f.open(QFile::ReadOnly)){
+            QCryptographicHash hash(QCryptographicHash::Md5);
+            hash.addData(f.readAll());
+            ui->fhash->setText("md5: " + QString(hash.result().toHex()).toUpper());
+        } else {
+            ui->fhash->setText(f.errorString());
+        }
+        f.close();
+    }
 }
 
 void MainWindow::setCurrentAbsPath(QString absPath)
