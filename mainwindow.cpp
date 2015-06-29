@@ -150,7 +150,9 @@ void MainWindow::loadDBTabs()
                                                     db_,
                                                     ui->topTabWidget);
 
-        int tabIndex = ui->topTabWidget->addTab(w,tables.at(i));
+        QString tname = QString("( &") + QString::number(i+1) + " ) "
+                + tables.at(i);
+        int tabIndex = ui->topTabWidget->addTab(w,tname);
         db_table_widgets_hash_.insert(w,tabIndex);
     }
 }
