@@ -30,7 +30,7 @@ public:
 
 signals:
     void sigCurrentAbsPath(QString abspath);
-    void sigStatusMsg(QString, int t = 0);
+    void sigStatusMsg(QString, int t = 2000);
     // DB
     void sigDBError(QString what, QString why);
     void sigDBopened();
@@ -51,7 +51,8 @@ private slots:
     QSqlError openDBFile();
     void closeDBfile();
     void onDBError(QString what, QString why);
-    void displayDB();   // load db tables to view
+    void loadDBTabs();   // load db tables to view
+    void removeDBTabs();
 
 private:
     // ui::Menu
@@ -76,6 +77,7 @@ private:
     QHash<QString, QString> hash_cache_; // <fpath, hash>
 
     // DB
+    QString dbfn_;
     QSqlDatabase db_;
     QStateMachine* dbsm_;
     QState *state_opened_;

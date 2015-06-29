@@ -57,7 +57,10 @@ MainWindow::MainWindow(QWidget *parent) :
     dbsm_->start();
 
     // ui: Library ( DB ) View
-    connect(state_opened_, SIGNAL(entered()), this, SLOT(displayDB()));
+    connect(state_opened_, SIGNAL(entered()), this, SLOT(loadDBTabs()));
+    state_opened_->assignProperty(closeAct, "enabled", true);
+    connect(state_closed_, SIGNAL(entered()), this, SLOT(removeDBTabs()));
+    state_closed_->assignProperty(closeAct, "enabled", false);
 }
 
 MainWindow::~MainWindow()
@@ -139,18 +142,8 @@ void MainWindow::onDBError(QString what, QString why)
     QMessageBox::critical(this, what, why);
 }
 
-void MainWindow::displayDB()
+void MainWindow::loadDBTabs()
 {
-    // remove old
-    QHash<SQLTableWidget*,int>::iterator iter;
-    for (iter = db_table_widgets_hash_.begin(); iter != db_table_widgets_hash_.end(); ++iter){
-        ui->topTabWidget->removeTab(iter.value());
-        iter.key()->deleteLater();
-    }
-    db_table_widgets_hash_.clear();
-
-    // add new
-
     QStringList tables = db_.tables();
     for( int i = 0; i < tables.size(); ++i){
         SQLTableWidget* w = new SQLTableWidget(tables.at(i),
@@ -162,17 +155,37 @@ void MainWindow::displayDB()
     }
 }
 
+void MainWindow::removeDBTabs()
+{
+    QHash<SQLTableWidget*,int>::iterator iter;
+    for (iter = db_table_widgets_hash_.begin(); iter != db_table_widgets_hash_.end(); ++iter){
+        ui->topTabWidget->removeTab(iter.value());
+        iter.key()->deleteLater();
+    }
+    db_table_widgets_hash_.clear();
+}
+
 QSqlError MainWindow::openDBFile()
 {
+    // dialog
     QString selfilter = tr("DB Files (*.db)");  // selection filter
-    QString fname = QFileDialog::getSaveFileName( this,
+    QString fn = QFileDialog::getSaveFileName( this,
                                                tr("Choose DB file"),
                                                current_abs_path_,
                                                tr("DB Files (*.db)"),
                                                &selfilter,
                                                QFileDialog::DontConfirmOverwrite);
 
-    emit sigStatusMsg(tr("(init DB...) ") + fname);
+    if ( fn == dbfn_ ){
+        emit sigStatusMsg(tr("same DB file, do nothing."));
+        return QSqlError();
+    }
+
+    // close current
+    this->closeDBfile();
+
+    dbfn_ = fn;
+    emit sigStatusMsg(tr("(open DB file ...) ") + dbfn_);
 
     // open DB
     if (!QSqlDatabase::drivers().contains("QSQLITE")) {
@@ -183,15 +196,14 @@ QSqlError MainWindow::openDBFile()
     }
 
     db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(fname);
+    db_.setDatabaseName(dbfn_);
 
-    this->closeDBfile();    // close first
     if (!db_.open()){
-        emit sigDBError("db open failed", "Unknown why");
+        emit sigDBError(tr("db open failed"), "Unknown why");
        return db_.lastError();
     }
 
-    emit sigStatusMsg(tr("(open DB) ") + fname);
+    emit sigStatusMsg(tr("(open DB) ") + dbfn_);
     // ensure we have needed table
     /*
      * files: record files
@@ -209,7 +221,7 @@ QSqlError MainWindow::openDBFile()
        && tables.contains("authors", Qt::CaseInsensitive)
        && tables.contains("files", Qt::CaseInsensitive))
     {
-        emit sigStatusMsg("DB opened, tables exist.");
+        emit sigStatusMsg("DB opened: " + dbfn_);
         emit sigDBopened();
         return QSqlError();  // NO ERROR
     }
@@ -248,16 +260,20 @@ QSqlError MainWindow::openDBFile()
        return q.lastError();
     }
 
-    emit sigStatusMsg("init DB, tables created.");
+    emit sigStatusMsg("(DB opened) " + dbfn_);
     emit sigDBopened();
     return QSqlError();
 }
 
 void MainWindow::closeDBfile()
 {
+    if ( dbfn_ == "")
+        return;
     if (db_.isOpen()){
         db_.close();
     }
+    QSqlDatabase::removeDatabase(dbfn_);
+    dbfn_ = "";
     emit sigDBclosed();
 }
 
