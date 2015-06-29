@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(onDirSelectChanged(QModelIndex,QModelIndex)));
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onFileSelectChanged(QModelIndex,QModelIndex)));
+    connect(ui->filesView, SIGNAL(sigFocusOut()),this, SLOT(onFileFocusOut()));
     connect(ui->pathEdit, SIGNAL(editingFinished()),
             this, SLOT(onUIPathEdited()));
     connect(this, SIGNAL(sigCurrentAbsPath(QString)),
@@ -92,6 +93,11 @@ void MainWindow::onFileSelectChanged(QModelIndex current, QModelIndex previous)
         }
         f.close();
     }
+}
+
+void MainWindow::onFileFocusOut()
+{
+    ui->fileInfoWidget->hide();
 }
 
 void MainWindow::setCurrentAbsPath(QString absPath)

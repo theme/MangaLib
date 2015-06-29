@@ -38,6 +38,7 @@ signals:
 private slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void onFileSelectChanged(QModelIndex current, QModelIndex previous);
+    void onFileFocusOut();
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
     // DB
