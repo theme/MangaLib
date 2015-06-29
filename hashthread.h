@@ -13,6 +13,7 @@ public:
     HashThread(QString fpath,
                enum QCryptographicHash::Algorithm algo,
                QObject *parent = 0);
+    QString fpath();
 signals:
     void sigHash(QString hashString, QString fpath);
     void sigHashError(QString errorString, QString fpath);

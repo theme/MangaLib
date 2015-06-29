@@ -38,12 +38,14 @@ signals:
 
 private slots:
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
-    void onFileSelectChanged(QModelIndex current, QModelIndex previous);
+    void showFileInfo(QModelIndex index);
     void onFileFocusOut();
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
     // File
-    void calculateHash(QString fpath);
+    QString getHash(QString fpath);
+    void updateFileHash(QString hash, QString fpath);
+    void clearCache();
 
     // DB
     QSqlError openDBFile();
@@ -67,6 +69,7 @@ private:
     QMenu *fileMenu;
     QAction *openAct;
     QAction *closeAct;  // close DB
+    QAction *clearCacheAct; // clear hash cache
     QAction *quitAct;
 
     // ui::Explorer
@@ -76,6 +79,10 @@ private:
     QFileSystemModel *files_model_;
     QString current_abs_path_;
     QShortcut *sc_editpath_;
+
+    // File info
+    HashThread *hash_thread_;
+    QHash<QString, QString> hash_cache_; // <fpath, hash>
 
     // DB
     QSqlDatabase db_;

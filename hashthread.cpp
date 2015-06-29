@@ -5,14 +5,21 @@ HashThread::HashThread(QString fpath, enum QCryptographicHash::Algorithm algo, Q
 {
 }
 
+QString HashThread::fpath()
+{
+    return fpath_;
+}
+
 void HashThread::run()
 {
     QFile f(fpath_);
     if (f.open(QFile::ReadOnly)){
+        emit sigHashError(tr("Hashing..."), fpath_);
         QCryptographicHash hash(algo_);
         while(!f.atEnd()){
             hash.addData(f.read(102400));   //100K
             if(this->isInterruptionRequested()){
+                emit sigHashError("interrupted", fpath_);
                 goto end;
             }
         }

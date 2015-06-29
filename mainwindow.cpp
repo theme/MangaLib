@@ -3,7 +3,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    hash_thread_(0)
 {
     ui->setupUi(this);
     ui->fileInfoWidget->hide();
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(dir_selection_model_, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onDirSelectChanged(QModelIndex,QModelIndex)));
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onFileSelectChanged(QModelIndex,QModelIndex)));
+            this, SLOT(showFileInfo(QModelIndex)));
     connect(ui->filesView, SIGNAL(sigFocusOut()),this, SLOT(onFileFocusOut()));
     connect(ui->pathEdit, SIGNAL(editingFinished()),
             this, SLOT(onUIPathEdited()));
@@ -72,13 +73,18 @@ void MainWindow::onDirSelectChanged(QModelIndex current, QModelIndex previous)
     ui->dirView->resizeColumnToContents(current.column());
 }
 
-void MainWindow::onFileSelectChanged(QModelIndex current, QModelIndex previous)
+void MainWindow::showFileInfo(QModelIndex index)
 {
-    if (!current.isValid()){
+    if (!index.isValid()){
         ui->fileInfoWidget->hide();
     }
     else {
-        this->calculateHash(files_model_->fileInfo(current).filePath());
+        QString fpath = files_model_->fileInfo(index).filePath();
+        QFileInfo fi(fpath);
+        if (fi.isFile()){
+            ui->fileInfoWidget->show();
+            ui->fhash->setText(getHash(fpath));
+        }
     }
 }
 
@@ -102,23 +108,32 @@ void MainWindow::onUIPathEdited()
     }
 }
 
-void MainWindow::calculateHash(QString fpath)
+QString MainWindow::getHash(QString fpath)
 {
-    QFileInfo fi(fpath);
+    if (!hash_cache_.contains(fpath)) {
+        hash_thread_ = new HashThread(fpath,QCryptographicHash::Md5,this);
 
-    if (fi.exists() && fi.isFile()){
-        ui->fileInfoWidget->show();
+        connect(hash_thread_, SIGNAL(finished()),
+                hash_thread_, SLOT(deleteLater()));
+        connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
+                this, SLOT(updateFileHash(QString,QString)));
+        connect(hash_thread_, SIGNAL(sigHashError(QString,QString)),
+                this, SIGNAL(sigStatusMsg(QString)));
 
-        HashThread *t = new HashThread(fi.filePath(),QCryptographicHash::Md5,this);
-        connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
-        connect(t, SIGNAL(sigHash(QString,QString)),
-                ui->fhash, SLOT(setText(QString)));
-        connect(t, SIGNAL(sigHashError(QString,QString)),
-                ui->fhash, SLOT(setText(QString)));
-
-        t->start();
-        ui->fhash->setText(tr("Hashing..."));
+        hash_cache_.insert(fpath, "Hashing...");// Necessary ( guard too many threads )
+        hash_thread_->start();
     }
+    return hash_cache_.value(fpath);
+}
+
+void MainWindow::updateFileHash(QString hash, QString fpath)
+{
+    hash_cache_.insert(fpath, hash);
+}
+
+void MainWindow::clearCache()
+{
+    hash_cache_.clear();
 }
 
 void MainWindow::onDBError(QString what, QString why)
@@ -262,6 +277,11 @@ void MainWindow::createActions()
     closeAct->setStatusTip(tr("Close current DB file"));
     connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDBfile()));
 
+    clearCacheAct = new QAction(tr("Clea&r cache"), this);
+    clearCacheAct->setShortcut(QKeySequence::Close);
+    clearCacheAct->setStatusTip(tr("clear all caches"));
+    connect(clearCacheAct, SIGNAL(triggered()), this, SLOT(clearCache()));
+
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
@@ -273,6 +293,8 @@ void MainWindow::createMenus()
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openAct);
     fileMenu->addAction(closeAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(clearCacheAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
 }
