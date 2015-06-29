@@ -52,21 +52,12 @@ private slots:
     void closeDBfile();
     void onDBError(QString what, QString why);
     void displayDB();   // load db tables to view
-    // DB view
-    void enableLibView();
-    void disableLibView();
-
-    void on_insertButton_clicked();
-
-    void on_submitButton_clicked();
-
-    void on_removeButton_clicked();
 
 private:
     // ui::Menu
     void createActions();
     void createMenus();
-    QMenu *fileMenu;
+    QMenu *DBMenu;
     QAction *openAct;
     QAction *closeAct;  // close DB
     QAction *clearCacheAct; // clear hash cache

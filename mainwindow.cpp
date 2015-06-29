@@ -58,8 +58,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: Library ( DB ) View
     connect(state_opened_, SIGNAL(entered()), this, SLOT(displayDB()));
-    connect(state_opened_, SIGNAL(entered()), this, SLOT(enableLibView()));
-    connect(state_closed_, SIGNAL(entered()), this, SLOT(disableLibView()));
 }
 
 MainWindow::~MainWindow()
@@ -143,27 +141,13 @@ void MainWindow::onDBError(QString what, QString why)
 
 void MainWindow::displayDB()
 {
-    ui->tablesTabWidget->clear();
+    qDebug() << ui->topTabWidget->count();
 
-    QStringList tables = db_.tables();
-    for (int i = 0; i < tables.size(); ++i){
-        SQLTableWidget* w = new SQLTableWidget(tables.at(i),
-                                                    db_,
-                                                    ui->tablesTabWidget);
-        ui->tablesTabWidget->addTab(w,tables.at(i));
-    }
-}
-
-void MainWindow::enableLibView()
-{
-    ui->tablesTabWidget->setEnabled(true);
-    ui->libControlGroup->setEnabled(true);
-}
-
-void MainWindow::disableLibView()
-{
-    ui->tablesTabWidget->setDisabled(true);
-    ui->libControlGroup->setDisabled(true);
+//    QStringList tables = db_.tables();
+//        SQLTableWidget* w = new SQLTableWidget(tables.at(i),
+//                                                    db_,
+//                                                    ui->tablesTabWidget);
+//        ui->topTabWidget->addTab(w,tables.at(i));
 }
 
 QSqlError MainWindow::openDBFile()
@@ -290,56 +274,11 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(closeAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(clearCacheAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(quitAct);
-}
-
-void MainWindow::on_insertButton_clicked()
-{
-    SQLTableWidget* w = static_cast<SQLTableWidget*>(ui->tablesTabWidget->currentWidget());
-    QSqlTableModel* m = static_cast<QSqlTableModel*>(w->model());
-    QModelIndex in = w->currentIndex();
-    int r = 0;
-    if (in.isValid()){ // append
-        r = in.row();
-    }
-
-    if (!m->insertRows(r,1)){
-        emit sigStatusMsg(m->lastError().text());
-    } else {
-        emit sigStatusMsg("row inserted.");
-    }
-}
-
-void MainWindow::on_submitButton_clicked()
-{
-    SQLTableWidget* w = static_cast<SQLTableWidget*>(ui->tablesTabWidget->currentWidget());
-    QSqlTableModel* m = w->model();
-    if (!m->submitAll()){
-        emit sigStatusMsg(m->lastError().text());
-    } else {
-        emit sigStatusMsg("submit success.");
-    }
-}
-
-void MainWindow::on_removeButton_clicked()
-{
-    SQLTableWidget* w = static_cast<SQLTableWidget*>(ui->tablesTabWidget->currentWidget());
-    QSqlTableModel* m = w->model();
-    QModelIndexList rows = w->selectionModel()->selectedRows();
-    if ( rows.size() == 0){
-        emit sigStatusMsg("Nothing to remove : no row selected.");
-    }
-    for (int i = 0; i < rows.size(); ++i){
-        if(!m->removeRow(rows.at(i).row())){
-            emit sigStatusMsg(m->lastError().text());
-        } else {
-            emit sigStatusMsg( QString::number(i+1) + " row(s) removed.");
-        }
-    }
+    DBMenu = menuBar()->addMenu(tr("&Database"));
+    DBMenu->addAction(openAct);
+    DBMenu->addAction(closeAct);
+    DBMenu->addSeparator();
+    DBMenu->addAction(clearCacheAct);
+    DBMenu->addSeparator();
+    DBMenu->addAction(quitAct);
 }
