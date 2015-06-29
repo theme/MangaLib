@@ -77,21 +77,8 @@ void MainWindow::onFileSelectChanged(QModelIndex current, QModelIndex previous)
     if (!current.isValid()){
         ui->fileInfoWidget->hide();
     }
-
-    QFileInfo fi =  files_model_->fileInfo(current);
-
-    if (fi.exists() && fi.isFile()){
-        ui->fileInfoWidget->show();
-        // calculate hash
-        QFile f(fi.filePath());
-        if (f.open(QFile::ReadOnly)){
-            QCryptographicHash hash(QCryptographicHash::Md5);
-            hash.addData(f.readAll());
-            ui->fhash->setText("md5: " + QString(hash.result().toHex()).toUpper());
-        } else {
-            ui->fhash->setText(f.errorString());
-        }
-        f.close();
+    else {
+        this->calculateHash(files_model_->fileInfo(current).filePath());
     }
 }
 
@@ -112,6 +99,25 @@ void MainWindow::onUIPathEdited()
 {
     if(dir_model_->index(ui->pathEdit->text()).isValid()){
         emit sigCurrentAbsPath(ui->pathEdit->text());
+    }
+}
+
+void MainWindow::calculateHash(QString fpath)
+{
+    QFileInfo fi(fpath);
+
+    if (fi.exists() && fi.isFile()){
+        ui->fileInfoWidget->show();
+
+        HashThread *t = new HashThread(fi.filePath(),QCryptographicHash::Md5,this);
+        connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+        connect(t, SIGNAL(sigHash(QString,QString)),
+                ui->fhash, SLOT(setText(QString)));
+        connect(t, SIGNAL(sigHashError(QString,QString)),
+                ui->fhash, SLOT(setText(QString)));
+
+        t->start();
+        ui->fhash->setText(tr("Hashing..."));
     }
 }
 

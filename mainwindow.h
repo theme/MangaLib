@@ -14,6 +14,7 @@
 #include <QState>
 #include <QtSql>
 #include "sqltablewidget.h"
+#include "hashthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -41,6 +42,9 @@ private slots:
     void onFileFocusOut();
     void setCurrentAbsPath(QString absPath);
     void onUIPathEdited();
+    // File
+    void calculateHash(QString fpath);
+
     // DB
     QSqlError openDBFile();
     void closeDBfile();
