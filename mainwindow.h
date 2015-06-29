@@ -32,7 +32,6 @@ signals:
     void sigCurrentAbsPath(QString abspath);
     void sigStatusMsg(QString, int t = 2000);
     // DB
-    void sigDBError(QString what, QString why);
     void sigDBopened();
     void sigDBclosed();
 
@@ -48,8 +47,8 @@ private slots:
     void clearCache();
 
     // DB
-    QSqlError openDBFile();
-    void closeDBfile();
+    QSqlError openDB(QString fn = QString()); // open db: sqlite file
+    void closeDB();
     void onDBError(QString what, QString why);
     void loadDBTabs();   // load db tables to view
     void removeDBTabs();
@@ -77,7 +76,6 @@ private:
     QHash<QString, QString> hash_cache_; // <fpath, hash>
 
     // DB
-    QString dbfn_;
     QSqlDatabase db_;
     QStateMachine* dbsm_;
     QState *state_opened_;

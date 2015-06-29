@@ -1,5 +1,5 @@
 #include "sqltablewidget.h"
-
+#include <QDebug>
 SQLTableWidget::SQLTableWidget(QString name, QSqlDatabase &db, QWidget *parent) :
     QTableView(parent),name_(name)
 {
@@ -7,7 +7,7 @@ SQLTableWidget::SQLTableWidget(QString name, QSqlDatabase &db, QWidget *parent) 
     sql_table_model_->setTable(name);
     sql_table_model_->setEditStrategy(QSqlTableModel::OnManualSubmit);
     sql_table_model_->select();
-    sql_table_model_->sort(1, Qt::AscendingOrder);
+//    sql_table_model_->sort(1, Qt::AscendingOrder);
     this->setModel(sql_table_model_);
 }
 

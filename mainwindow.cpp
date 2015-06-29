@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    hash_thread_(0)
+        QMainWindow(parent),
+        ui(new Ui::MainWindow),
+        hash_thread_(0)
 {
     ui->setupUi(this);
     ui->fileInfoWidget->hide();
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: explorer
     sc_editpath_ = new QShortcut(QKeySequence(tr("Ctrl+L", "Edit path")),
-                             this);
+                                 this);
     connect(sc_editpath_, SIGNAL(activated()), ui->pathEdit, SLOT(setFocus()));
     current_abs_path_ = QDir::currentPath();
     dir_model_ = new QFileSystemModel(this);
@@ -147,11 +147,11 @@ void MainWindow::loadDBTabs()
     QStringList tables = db_.tables();
     for( int i = 0; i < tables.size(); ++i){
         SQLTableWidget* w = new SQLTableWidget(tables.at(i),
-                                                    db_,
-                                                    ui->topTabWidget);
+                                               db_,
+                                               ui->topTabWidget);
 
         QString tname = QString("( &") + QString::number(i+1) + " ) "
-                + tables.at(i);
+                        + tables.at(i);
         int tabIndex = ui->topTabWidget->addTab(w,tname);
         db_table_widgets_hash_.insert(w,tabIndex);
     }
@@ -167,116 +167,110 @@ void MainWindow::removeDBTabs()
     db_table_widgets_hash_.clear();
 }
 
-QSqlError MainWindow::openDBFile()
+QSqlError MainWindow::openDB(QString fn)
 {
-    // dialog
-    QString selfilter = tr("DB Files (*.db)");  // selection filter
-    QString fn = QFileDialog::getSaveFileName( this,
-                                               tr("Choose DB file"),
-                                               current_abs_path_,
-                                               tr("DB Files (*.db)"),
-                                               &selfilter,
-                                               QFileDialog::DontConfirmOverwrite);
+    if( fn.isEmpty() ){
+        QString selfilter = tr("DB Files (*.db)");
+        fn = QFileDialog::getSaveFileName( this,
+                                           tr("Choose DB file"),
+                                           current_abs_path_,
+                                           tr("DB Files (*.db)"),
+                                           &selfilter,
+                                           QFileDialog::DontConfirmOverwrite );
+    }
 
-    if ( fn == dbfn_ ){
-        emit sigStatusMsg(tr("same DB file, do nothing."));
+    if (fn.isEmpty()){
+        emit sigStatusMsg(tr("no file selected."));
         return QSqlError();
     }
 
-    // close current
-    this->closeDBfile();
+    qDebug() << "openDB() fn: " << fn;
 
-    dbfn_ = fn;
-    emit sigStatusMsg(tr("(open DB file ...) ") + dbfn_);
+    if (db_.isValid()){
+        qDebug() << "openDB() when db_.isValid () : db_.connectionName()" << db_.connectionName();
+        if (fn == db_.connectionName()){ // same db
+            emit sigStatusMsg(tr("same DB file, do nothing."));
+            return QSqlError();
+        }
+        else {
+            this->closeDB();
+        }
+    }
+
+    emit sigStatusMsg(tr("(open DB file ...) ") + fn);
 
     // open DB
     if (!QSqlDatabase::drivers().contains("QSQLITE")) {
-        emit sigDBError("Unable to load database", "no SQLITE driver");
-        return QSqlError("no SQLite driver",
-                         "unable to load database",
+        return QSqlError("no SQLite driver", "unable to load database",
                          QSqlError::UnknownError);
     }
 
-    db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(dbfn_);
+    db_ = QSqlDatabase::addDatabase("QSQLITE", fn);
+    db_.setDatabaseName(fn);
+
 
     if (!db_.open()){
-        emit sigDBError(tr("db open failed"), "Unknown why");
-       return db_.lastError();
+        return db_.lastError();
     }
 
-    emit sigStatusMsg(tr("(open DB) ") + dbfn_);
+    emit sigStatusMsg(tr("(DB file opened) fn: ") + fn);
+
     // ensure we have needed table
-    /*
-     * files: record files
-     * books: record books
-     *
-     * 	ISSN: identifies periodical publications such as magazines.
-     *        different ISSN is assigned to each media type.
-     *        e.g. print ISSN (p-ISSN) and electronic ISSN (e-ISSN or eISSN).
-     *  ISMN: identifies musical scores.
-     *
-     *
-     */
     QStringList tables = db_.tables();
     if (tables.contains("books", Qt::CaseInsensitive)
-       && tables.contains("authors", Qt::CaseInsensitive)
-       && tables.contains("files", Qt::CaseInsensitive))
+                    && tables.contains("authors", Qt::CaseInsensitive)
+                    && tables.contains("files", Qt::CaseInsensitive))
     {
-        emit sigStatusMsg("DB opened: " + dbfn_);
+        emit sigStatusMsg("(DB tables all right) fn: " + fn);
         emit sigDBopened();
         return QSqlError();  // NO ERROR
     }
 
-    emit sigStatusMsg("creating tables in DB...");
+    emit sigStatusMsg("(creating tables in DB...) fn: " + fn);
     QSqlQuery q(db_);
     if (!q.exec(QLatin1String("create table books("      // books
-                             "id integer primary key, "
-                             "isbn integer,"
-                             "title varchar, "
-                             "author integer, "
-                             "year integer, "
-                             "rank integer)")))
+                              "id integer primary key, "
+                              "isbn integer,"
+                              "title varchar, "
+                              "author integer, "
+                              "year integer, "
+                              "rank integer)")))
     {
         emit sigStatusMsg("create table books error. | "+ q.lastError().text());
-       return q.lastError();
+        return q.lastError();
     }
     if (!q.exec(QLatin1String("create table authors("    // authors
-                             "id integer primary key, "
-                             "realname varchar,"
-                             "penname varchar,"
-                             "circle varchar,"
-                             "country varchar,"
-                             "location varchar)")))
+                              "id integer primary key, "
+                              "realname varchar,"
+                              "penname varchar,"
+                              "circle varchar,"
+                              "country varchar,"
+                              "location varchar)")))
     {
         emit sigStatusMsg("create table authors error. | "+ q.lastError().text());
-       return q.lastError();
+        return q.lastError();
     }
     if (!q.exec(QLatin1String("create table files("  // files
-                             "id integer primary key,"
-                             "fn varchar,"
-                             "sha1 varchar,"
-                             "md5 varchar)")))
+                              "id integer primary key,"
+                              "fn varchar,"
+                              "sha1 varchar,"
+                              "md5 varchar)")))
     {
         emit sigStatusMsg("create table files error. | "+ q.lastError().text());
-       return q.lastError();
+        return q.lastError();
     }
-
-    emit sigStatusMsg("(DB opened) " + dbfn_);
+    emit sigStatusMsg("(DB ready.) fn: " + fn);
     emit sigDBopened();
     return QSqlError();
 }
 
-void MainWindow::closeDBfile()
+void MainWindow::closeDB()
 {
-    if ( dbfn_ == "")
-        return;
-    if (db_.isOpen()){
+    if (db_.isValid()){
         db_.close();
+        db_.removeDatabase(db_.connectionName());
+        emit sigDBclosed();
     }
-    QSqlDatabase::removeDatabase(dbfn_);
-    dbfn_ = "";
-    emit sigDBclosed();
 }
 
 void MainWindow::createActions()
@@ -284,12 +278,12 @@ void MainWindow::createActions()
     openAct = new QAction(tr("&Open DB file"), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open a DB file"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(openDBFile()));
+    connect(openAct, SIGNAL(triggered()), this, SLOT(openDB()));
 
     closeAct = new QAction(tr("&Close DB file"), this);
     closeAct->setShortcut(QKeySequence::Close);
     closeAct->setStatusTip(tr("Close current DB file"));
-    connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDBfile()));
+    connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDB()));
 
     clearCacheAct = new QAction(tr("Clea&r cache"), this);
     clearCacheAct->setShortcut(QKeySequence::Close);
