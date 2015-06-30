@@ -146,7 +146,7 @@ void MainWindow::loadDBTabs()
 {
     QStringList tables = db_.tables();
     for( int i = 0; i < tables.size(); ++i){
-        SQLTableWidget* w = new SQLTableWidget(tables.at(i),
+        DBTableWidget* w = new DBTableWidget(tables.at(i),
                                                db_,
                                                ui->topTabWidget);
 
@@ -159,7 +159,7 @@ void MainWindow::loadDBTabs()
 
 void MainWindow::removeDBTabs()
 {
-    QHash<SQLTableWidget*,int>::iterator iter;
+    QHash<DBTableWidget*,int>::iterator iter;
     for (iter = db_table_widgets_hash_.begin(); iter != db_table_widgets_hash_.end(); ++iter){
         ui->topTabWidget->removeTab(iter.value());
         iter.key()->deleteLater();

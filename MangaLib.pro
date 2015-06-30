@@ -14,16 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    sqltablewidget.cpp \
     filestableview.cpp \
-    hashthread.cpp
+    hashthread.cpp \
+    dbtablewidget.cpp
 
 HEADERS  += mainwindow.h \
-    sqltablewidget.h \
     filestableview.h \
-    hashthread.h
+    hashthread.h \
+    dbtablewidget.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dbtablewidget.ui
 
 RESOURCES += \
     icon.qrc

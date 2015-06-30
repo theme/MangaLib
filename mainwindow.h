@@ -13,7 +13,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QtSql>
-#include "sqltablewidget.h"
+#include "dbtablewidget.h"
 #include "hashthread.h"
 
 namespace Ui {
@@ -80,7 +80,7 @@ private:
     QStateMachine* dbsm_;
     QState *state_opened_;
     QState *state_closed_;
-    QHash<SQLTableWidget*, int> db_table_widgets_hash_;
+    QHash<DBTableWidget*, int> db_table_widgets_hash_;
 };
 
 #endif // MAINWINDOW_H
