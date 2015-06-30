@@ -13,10 +13,18 @@ QString HashThread::fpath()
 void HashThread::run()
 {
     QFile f(fpath_);
+    qint64 size = f.size();
+    char buf[BUFSIZE];
+    qint64 rc = 0; // read count
+    int len;
+
     if (f.open(QFile::ReadOnly)){
         QCryptographicHash hash(algo_);
         while(!f.atEnd()){
-            hash.addData(f.read(102400));   //100K
+            len = f.read(buf, BUFSIZE);
+            hash.addData(buf, len);   //100K
+            rc += len;
+            emit sigHashingPercent(rc*100/size,fpath_);
         }
         hash_ = hash.result().toHex().toUpper();
         emit sigHash(hash_, fpath_);

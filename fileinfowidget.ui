@@ -50,6 +50,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QProgressBar" name="lhashProgress">
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="lsize">
         <property name="text">
          <string>size</string>

@@ -21,6 +21,7 @@ public slots:
     void setFile(QString f);
     void cacheFileHash(QString hash, QString fpath);
     void updateUiFileHash(QString hash, QString fpath);
+    void updateUiFileHashingPercent(int percent, QString fpath);
 
 private:
     QString getHash(QString fpath);

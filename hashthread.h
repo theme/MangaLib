@@ -2,9 +2,9 @@
 #define HASHTHREAD_H
 
 #include <QObject>
-#include <QCryptographicHash>
-#include <QFileInfo>
 #include <QThread>
+#include <QCryptographicHash>
+#include <QFile>
 
 class HashThread : public QThread
 {
@@ -17,12 +17,14 @@ public:
 signals:
     void sigHash(QString hashString, QString fpath);
     void sigHashingError(QString errorString, QString fpath);
+    void sigHashingPercent(int percent, QString fpath);
 
 private:
     void run();
     QString fpath_;
     enum QCryptographicHash::Algorithm algo_;
     QString hash_;
+    static const uint BUFSIZE = 40960; // 40k
 };
 
 #endif // HASHTHREAD_H

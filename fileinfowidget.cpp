@@ -6,6 +6,7 @@ FileInfoWidget::FileInfoWidget(QWidget *parent) :
     ui(new Ui::FileInfoWidget)
 {
     ui->setupUi(this);
+    ui->lhashProgress->hide();
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -22,6 +23,9 @@ void FileInfoWidget::setFile(QString f)
     ui->lname->setText(finfo.fileName());
 
     ui->lhash->setText(this->getHash(finfo.filePath()));
+    ui->lhashProgress->setMinimum(0);
+    ui->lhashProgress->setMaximum(100);
+
     ui->lsize->setText(QString::number(finfo.size()));
 }
 
@@ -34,6 +38,15 @@ void FileInfoWidget::updateUiFileHash(QString hash, QString fpath)
 {
     if (finfo.filePath() == fpath){
         ui->lhash->setText(this->getHash(fpath));
+        ui->lhashProgress->hide();
+    }
+}
+
+void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
+{
+    if( fpath == finfo.filePath()){
+        ui->lhashProgress->setValue(percent);
+        ui->lhashProgress->show();
     }
 }
 
@@ -48,6 +61,8 @@ QString FileInfoWidget::getHash(QString fpath)
                 this, SLOT(cacheFileHash(QString,QString)));
         connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
                 this, SLOT(updateUiFileHash(QString,QString)));
+        connect(hash_thread_, SIGNAL(sigHashingPercent(int,QString)),
+                this, SLOT(updateUiFileHashingPercent(int,QString)));
 
         hash_cache_.insert(fpath, "Hashing...");// Necessary ( guard too many threads )
         hash_thread_->start();
