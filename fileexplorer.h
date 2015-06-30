@@ -5,6 +5,8 @@
 #include <QFileSystemModel>
 #include <QItemSelectionModel>
 #include <QShortcut>
+#include <QCompleter>
+#include <QDirModel>
 #include "filestableview.h"
 
 namespace Ui {
@@ -24,9 +26,9 @@ signals:
     void sigPath(QString path);
 
 private slots:
+    void onPathEdited();
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setPath(QString path);
-    void onPathEdited();
 
 private:
     Ui::FileExplorer *ui;
