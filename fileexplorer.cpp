@@ -16,17 +16,15 @@ FileExplorer::FileExplorer(QWidget *parent) :
 
     // short cut
     sc_editpath_ = new QShortcut(QKeySequence(tr("Ctrl+L", "Edit path")),this);
-    connect(sc_editpath_, SIGNAL(activated()),
-            ui->pathEdit, SLOT(setFocus()));
+    connect(sc_editpath_, SIGNAL(activated()), ui->pathEdit, SLOT(setFocus()));
 
     // dir View
     dir_model_ = new QFileSystemModel(this);
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     ui->dirView->setModel(dir_model_);
-    dir_selection_model_ = ui->dirView->selectionModel();
-    connect(dir_selection_model_, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onDirSelectChanged(QModelIndex,QModelIndex)));
+    connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
 
     // files View
     files_model_ = new QFileSystemModel(this);
@@ -38,6 +36,8 @@ FileExplorer::FileExplorer(QWidget *parent) :
                                  << "*.rar");
     files_model_->setNameFilterDisables(false);
     ui->filesView->setModel(files_model_);
+    connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onCurrentFileChanged(QModelIndex,QModelIndex)));
 
     // handle path change
     connect(this, SIGNAL(sigPath(QString)), this, SLOT(setPath(QString)));
@@ -48,9 +48,16 @@ FileExplorer::~FileExplorer()
     delete ui;
 }
 
-void FileExplorer::onDirSelectChanged(QModelIndex current, QModelIndex previous)
+void FileExplorer::onCurrentDirChanged(QModelIndex current, QModelIndex previous)
 {
-    emit sigPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
+    qDebug() << dir_model_->filePath(current);
+    emit sigPath( dir_model_->filePath(current) );
+}
+
+void FileExplorer::onCurrentFileChanged(QModelIndex current, QModelIndex previous)
+{
+    qDebug() << files_model_->filePath(current);
+    emit sigFilePath( files_model_->filePath(current));
 }
 
 void FileExplorer::setPath(QString path)

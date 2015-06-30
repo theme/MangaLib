@@ -1,9 +1,10 @@
 #ifndef FILEEXPLORER_H
 #define FILEEXPLORER_H
 
+#include <QtDebug>
+
 #include <QWidget>
 #include <QFileSystemModel>
-#include <QItemSelectionModel>
 #include <QShortcut>
 #include <QCompleter>
 #include <QDirModel>
@@ -27,7 +28,8 @@ signals:
     void sigFilePath(QString fpath);
 
 private slots:
-    void onDirSelectChanged(QModelIndex current, QModelIndex previous);
+    void onCurrentDirChanged(QModelIndex current, QModelIndex previous);
+    void onCurrentFileChanged(QModelIndex current, QModelIndex previous);
     void setPath(QString path);
 
     void on_pathEdit_editingFinished();
@@ -36,7 +38,6 @@ private:
     Ui::FileExplorer *ui;
     QFileInfo finfo_;
     QFileSystemModel *dir_model_;
-    QItemSelectionModel *dir_selection_model_;
     QFileSystemModel *files_model_;
     QShortcut *sc_editpath_;
 };
