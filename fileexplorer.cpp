@@ -8,12 +8,11 @@ FileExplorer::FileExplorer(QWidget *parent) :
     ui->setupUi(this);
 
     // path Edit
-    ui->pathEdit->setText( QDir::currentPath() );
+    ui->pathEdit->setText( QDir::homePath() );
     QCompleter *completer = new QCompleter(this);
     completer->setModel(new QDirModel(completer));
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
     ui->pathEdit->setCompleter(completer);
-    connect(ui->pathEdit, SIGNAL(editingFinished()),
-            this, SLOT(onPathEdited()));
 
     // short cut
     sc_editpath_ = new QShortcut(QKeySequence(tr("Ctrl+L", "Edit path")),this);
@@ -49,13 +48,6 @@ FileExplorer::~FileExplorer()
     delete ui;
 }
 
-void FileExplorer::onPathEdited()
-{
-    if(dir_model_->index(ui->pathEdit->text()).isValid()){
-        emit sigPath(ui->pathEdit->text());
-    }
-}
-
 void FileExplorer::onDirSelectChanged(QModelIndex current, QModelIndex previous)
 {
     setPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
@@ -66,4 +58,15 @@ void FileExplorer::setPath(QString path)
 {
     ui->dirView->setCurrentIndex(dir_model_->index(path));
     ui->filesView->setRootIndex(files_model_->setRootPath(path));
+}
+
+void FileExplorer::on_pathEdit_editingFinished()
+{
+    finfo_.setFile(ui->pathEdit->text());
+    if(dir_model_->index(finfo_.path()).isValid()){
+        emit sigPath(finfo_.path());
+    }
+    if(files_model_->index(finfo_.filePath()).isValid()){
+        emit sigFilePath(finfo_.filePath());
+    }
 }

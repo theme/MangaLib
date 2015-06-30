@@ -24,14 +24,17 @@ public:
 
 signals:
     void sigPath(QString path);
+    void sigFilePath(QString fpath);
 
 private slots:
-    void onPathEdited();
     void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void setPath(QString path);
 
+    void on_pathEdit_editingFinished();
+
 private:
     Ui::FileExplorer *ui;
+    QFileInfo finfo_;
     QFileSystemModel *dir_model_;
     QItemSelectionModel *dir_selection_model_;
     QFileSystemModel *files_model_;
