@@ -15,8 +15,8 @@ DBTableWidget::DBTableWidget(QString name,
     sql_table_model_->setTable(name);
     sql_table_model_->setEditStrategy(QSqlTableModel::OnManualSubmit);
     sql_table_model_->select();
+    ui->tableView->setSortingEnabled(true);
     ui->tableView->setModel(sql_table_model_);
-
 }
 
 DBTableWidget::~DBTableWidget()
