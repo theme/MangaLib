@@ -1,21 +1,21 @@
 {
-    "books": {
-        "isbn": "integer",
-        "title": "varchar",
-        "author": "varchar",
-        "year": "integer",
-        "rank": "integer"
-    },
-    "authors": {
-        "realname": "varchar",
-        "name": "varchar",
-        "circle":  "varchar",
-        "location": "varchar"
-    },
-    "files": {
-        "filename": "varcahr",
-        "md5": "varcahr",
-        "sha1": "varchar",
-        "sha256": "varchar"
-    }
+    "books": [
+        {"isbn": "integer"},
+        {"title": "varchar"},
+        {"author": "varchar"},
+        {"year": "integer"},
+        {"rank": "integer"}
+    ],
+    "authors": [
+        {"realname": "varchar"},
+        {"name": "varchar"},
+        {"circle":  "varchar"},
+        {"location": "varchar"}
+    ],
+    "files": [
+        {"filename": "varcahr"},
+        {"md5": "varcahr"},
+        {"sha1": "varchar"},
+        {"sha256": "varchar"}
+    ]
 }

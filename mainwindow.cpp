@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
+    // DB schema
+    dbschema_.parseJsonFile(":/dbschema.json");
+
     // DB state machine
     dbsm_ = new QStateMachine(this);
     state_opened_ = new QState(dbsm_);
@@ -217,44 +220,19 @@ QSqlError MainWindow::openDB(QString fn)
 
     // ensure we have needed table
     QStringList tables = db_.tables();
-    if (tables.contains("books", Qt::CaseInsensitive)
-                    && tables.contains("authors", Qt::CaseInsensitive)
-                    && tables.contains("files", Qt::CaseInsensitive))
-    {
-        emit sigStatusMsg("(DB tables all right) fn: " + fn);
-        emit sigDBopened();
-        return QSqlError();  // NO ERROR
-    }
-
-    emit sigStatusMsg("(creating tables in DB...) fn: " + fn);
-    QSqlQuery q(db_);
-    if (!q.exec(QLatin1String("create table books("      // books
-                              "isbn integer,"
-                              "title varchar, "
-                              "author varchar, "
-                              "year integer, "
-                              "rank integer)")))
-    {
-        emit sigStatusMsg("create table books error. | "+ q.lastError().text());
-        return q.lastError();
-    }
-    if (!q.exec(QLatin1String("create table authors("    // authors
-                              "realname varchar,"
-                              "penname varchar,"
-                              "circle varchar,"
-                              "country varchar,"
-                              "location varchar)")))
-    {
-        emit sigStatusMsg("create table authors error. | "+ q.lastError().text());
-        return q.lastError();
-    }
-    if (!q.exec(QLatin1String("create table files("  // files
-                              "fn varchar,"
-                              "md5 varchar,"
-                              "sha1 varchar)")))
-    {
-        emit sigStatusMsg("create table files error. | "+ q.lastError().text());
-        return q.lastError();
+    QStringList schema_tables = dbschema_.tables();
+    while (!schema_tables.isEmpty()){
+        QString stn = schema_tables.takeFirst();
+        if (!tables.contains(stn,Qt::CaseInsensitive)){ // need table
+            QSqlQuery q(db_);
+            if (!q.exec(dbschema_.createTableSql(stn))){
+                QString msg = "create table error. |"+stn +"|"+ q.lastError().text();
+                emit sigStatusMsg(msg);
+                qDebug()  << msg;
+                qDebug() << q.lastError();
+                return q.lastError();
+            }
+        }
     }
     emit sigStatusMsg("(DB ready.) fn: " + fn);
     emit sigDBopened();

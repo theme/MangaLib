@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QDebug>
+#include <QtDebug>
 #include <QMainWindow>
 #include <QShortcut>
 #include <QFileSystemModel>
@@ -13,6 +13,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QtSql>
+#include "dbschema.h"
 #include "dbtablewidget.h"
 #include "hashthread.h"
 
@@ -76,6 +77,7 @@ private:
     QHash<QString, QString> hash_cache_; // <fpath, hash>
 
     // DB
+    DBSchema dbschema_;
     QSqlDatabase db_;
     QStateMachine* dbsm_;
     QState *state_opened_;

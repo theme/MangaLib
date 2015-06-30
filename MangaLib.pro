@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     filestableview.cpp \
     hashthread.cpp \
-    dbtablewidget.cpp
+    dbtablewidget.cpp \
+    dbschema.cpp
 
 HEADERS  += mainwindow.h \
     filestableview.h \
     hashthread.h \
-    dbtablewidget.h
+    dbtablewidget.h \
+    dbschema.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui
