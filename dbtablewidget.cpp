@@ -1,6 +1,8 @@
 #include "dbtablewidget.h"
 #include "ui_dbtablewidget.h"
 
+#include <QDebug>
+
 DBTableWidget::DBTableWidget(QString name,
                              QSqlDatabase& db,
                              QWidget *parent) :
@@ -25,20 +27,26 @@ void DBTableWidget::on_insertButton_clicked()
 {
     QModelIndex in  = ui->tableView->currentIndex();
     if (!in.isValid()){
-        in = ui->tableView->rootIndex().child(0,0);
+        sql_table_model_->insertRow(0);
+    } else{
+        sql_table_model_->insertRow(in.row());
     }
-    sql_table_model_->insertRow(in.row(), in.parent());
 }
 
 void DBTableWidget::on_removeButton_clicked()
 {
-    QModelIndex in  = ui->tableView->currentIndex();
-    if (in.isValid()){
-        sql_table_model_->removeRow(in.row(),in.parent());
+    QModelIndexList li  = ui->tableView->selectionModel()->selectedIndexes();
+    while (!li.isEmpty()){
+        sql_table_model_->removeRow(li.takeFirst().row());
     }
 }
 
 void DBTableWidget::on_submitButton_clicked()
 {
     sql_table_model_->submitAll();
+}
+
+void DBTableWidget::on_cancelButton_clicked()
+{
+    sql_table_model_->revertAll();
 }
