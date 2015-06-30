@@ -3,21 +3,27 @@
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
-        ui(new Ui::MainWindow),
-        hash_thread_(0)
+        ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->fileInfoWidget->hide();
 
-    // ui: menu
+    // ui::menu
     createActions();
     createMenus();
 
-    file_exp_ = new FileExplorer(parent);
-    ui->topTabWidget->addTab(file_exp_, "&Explorer");
+    // ui: File explorer
+    file_exp_widget_ = new FileExplorer(parent);
+    ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
 
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
+
+    // ui: File info
+    file_info_widget_ = new FileInfoWidget(parent);
+    ui->topTabWidget->addTab(file_info_widget_, "&File info");
+    connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
+            file_info_widget_, SLOT(setFile(QString)));
+
 
     // DB schema
     dbschema_.parseJsonFile(":/dbschema.json");
@@ -41,49 +47,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::showFileInfo(QModelIndex index)
-{
-    if (!index.isValid()){
-        ui->fileInfoWidget->hide();
-    }
-    else {
-        QString fpath = files_model_->fileInfo(index).filePath();
-        QFileInfo fi(fpath);
-        if (fi.isFile()){
-            ui->fileInfoWidget->show();
-            ui->fhash->setText(getHash(fpath));
-        }
-    }
-}
-
-QString MainWindow::getHash(QString fpath)
-{
-    if (!hash_cache_.contains(fpath)) {
-        hash_thread_ = new HashThread(fpath,QCryptographicHash::Md5,this);
-
-        connect(hash_thread_, SIGNAL(finished()),
-                hash_thread_, SLOT(deleteLater()));
-        connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
-                this, SLOT(updateFileHash(QString,QString)));
-        connect(hash_thread_, SIGNAL(sigHashError(QString,QString)),
-                this, SIGNAL(sigStatusMsg(QString)));
-
-        hash_cache_.insert(fpath, "Hashing...");// Necessary ( guard too many threads )
-        hash_thread_->start();
-    }
-    return hash_cache_.value(fpath);
-}
-
-void MainWindow::updateFileHash(QString hash, QString fpath)
-{
-    hash_cache_.insert(fpath, hash);
-}
-
-void MainWindow::clearCache()
-{
-    hash_cache_.clear();
 }
 
 void MainWindow::onDBError(QString what, QString why)
@@ -122,7 +85,7 @@ QSqlError MainWindow::openDB(QString fn)
         QString selfilter = tr("DB Files (*.db)");
         fn = QFileDialog::getSaveFileName( this,
                                            tr("Choose DB file"),
-                                           current_abs_path_,
+                                           QDir::homePath(),
                                            tr("DB Files (*.db)"),
                                            &selfilter,
                                            QFileDialog::DontConfirmOverwrite );
@@ -206,11 +169,6 @@ void MainWindow::createActions()
     closeAct->setStatusTip(tr("Close current DB file"));
     connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDB()));
 
-    clearCacheAct = new QAction(tr("Clea&r cache"), this);
-    clearCacheAct->setShortcut(QKeySequence::Close);
-    clearCacheAct->setStatusTip(tr("clear all caches"));
-    connect(clearCacheAct, SIGNAL(triggered()), this, SLOT(clearCache()));
-
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
@@ -222,8 +180,6 @@ void MainWindow::createMenus()
     DBMenu = menuBar()->addMenu(tr("&Database"));
     DBMenu->addAction(openAct);
     DBMenu->addAction(closeAct);
-    DBMenu->addSeparator();
-    DBMenu->addAction(clearCacheAct);
     DBMenu->addSeparator();
     DBMenu->addAction(quitAct);
 }

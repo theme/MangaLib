@@ -15,8 +15,8 @@
 #include <QtSql>
 #include "dbschema.h"
 #include "fileexplorer.h"
+#include "fileinfowidget.h"
 #include "dbtablewidget.h"
-#include "hashthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,12 +37,6 @@ signals:
     void sigDBclosed();
 
 private slots:
-    void showFileInfo(QModelIndex index);
-    // File
-    QString getHash(QString fpath);
-    void updateFileHash(QString hash, QString fpath);
-    void clearCache();
-
     // DB
     QSqlError openDB(QString fn = QString()); // open db: sqlite file
     void closeDB();
@@ -51,29 +45,20 @@ private slots:
     void removeDBTabs();
 
 private:
+    Ui::MainWindow *ui;
     // ui::Menu
     void createActions();
     void createMenus();
     QMenu *DBMenu;
     QAction *openAct;
     QAction *closeAct;  // close DB
-    QAction *clearCacheAct; // clear hash cache
     QAction *quitAct;
 
-    // ui::Explorer
-    Ui::MainWindow *ui;
-    QFileSystemModel *dir_model_;
-    QItemSelectionModel *dir_selection_model_;
-    QFileSystemModel *files_model_;
-    QString current_abs_path_;
-    QShortcut *sc_editpath_;
+    // ui: File explorer
+    FileExplorer* file_exp_widget_;
 
-    // File explorer
-    FileExplorer* file_exp_;
-
-    // File info
-    HashThread *hash_thread_;
-    QHash<QString, QString> hash_cache_; // <fpath, hash>
+    // ui: File info
+    FileInfoWidget* file_info_widget_;
 
     // DB
     DBSchema dbschema_;

@@ -18,18 +18,21 @@ SOURCES += main.cpp\
     hashthread.cpp \
     dbtablewidget.cpp \
     dbschema.cpp \
-    fileexplorer.cpp
+    fileexplorer.cpp \
+    fileinfowidget.cpp
 
 HEADERS  += mainwindow.h \
     filestableview.h \
     hashthread.h \
     dbtablewidget.h \
     dbschema.h \
-    fileexplorer.h
+    fileexplorer.h \
+    fileinfowidget.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
-    fileexplorer.ui
+    fileexplorer.ui \
+    fileinfowidget.ui
 
 RESOURCES += \
     icon.qrc
