@@ -24,24 +24,11 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="localTab">
+      <widget class="QWidget" name="infoTab">
        <attribute name="title">
-        <string>&amp;Local</string>
+        <string>&amp;File info</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QLineEdit" name="pathEdit"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5">
-          <item>
-           <widget class="QTreeView" name="dirView"/>
-          </item>
-          <item>
-           <widget class="FilesTableView" name="filesView"/>
-          </item>
-         </layout>
-        </item>
         <item>
          <widget class="QWidget" name="fileInfoWidget" native="true">
           <layout class="QGridLayout" name="gridLayout">
@@ -124,13 +111,6 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>FilesTableView</class>
-   <extends>QTableView</extends>
-   <header>filestableview.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="icon.qrc"/>
  </resources>

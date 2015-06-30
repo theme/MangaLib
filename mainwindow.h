@@ -14,6 +14,7 @@
 #include <QState>
 #include <QtSql>
 #include "dbschema.h"
+#include "fileexplorer.h"
 #include "dbtablewidget.h"
 #include "hashthread.h"
 
@@ -30,18 +31,13 @@ public:
     ~MainWindow();
 
 signals:
-    void sigCurrentAbsPath(QString abspath);
     void sigStatusMsg(QString, int t = 2000);
     // DB
     void sigDBopened();
     void sigDBclosed();
 
 private slots:
-    void onDirSelectChanged(QModelIndex current, QModelIndex previous);
     void showFileInfo(QModelIndex index);
-    void onFileFocusOut();
-    void setCurrentAbsPath(QString absPath);
-    void onUIPathEdited();
     // File
     QString getHash(QString fpath);
     void updateFileHash(QString hash, QString fpath);
@@ -71,6 +67,9 @@ private:
     QFileSystemModel *files_model_;
     QString current_abs_path_;
     QShortcut *sc_editpath_;
+
+    // File explorer
+    FileExplorer* file_exp_;
 
     // File info
     HashThread *hash_thread_;

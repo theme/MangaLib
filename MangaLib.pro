@@ -17,16 +17,19 @@ SOURCES += main.cpp\
     filestableview.cpp \
     hashthread.cpp \
     dbtablewidget.cpp \
-    dbschema.cpp
+    dbschema.cpp \
+    fileexplorer.cpp
 
 HEADERS  += mainwindow.h \
     filestableview.h \
     hashthread.h \
     dbtablewidget.h \
-    dbschema.h
+    dbschema.h \
+    fileexplorer.h
 
 FORMS    += mainwindow.ui \
-    dbtablewidget.ui
+    dbtablewidget.ui \
+    fileexplorer.ui
 
 RESOURCES += \
     icon.qrc

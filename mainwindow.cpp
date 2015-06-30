@@ -13,37 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    // ui: explorer
-    sc_editpath_ = new QShortcut(QKeySequence(tr("Ctrl+L", "Edit path")),
-                                 this);
-    connect(sc_editpath_, SIGNAL(activated()), ui->pathEdit, SLOT(setFocus()));
-    current_abs_path_ = QDir::currentPath();
-    dir_model_ = new QFileSystemModel(this);
-    files_model_ = new QFileSystemModel(this);
-    dir_model_->setRootPath(QDir::rootPath());
-    dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-    files_model_->setRootPath(current_abs_path_);
-    files_model_->setFilter(QDir::Files);
-    files_model_->setNameFilters(QStringList()
-                                 << "*.zip"
-                                 << "*.cb?"
-                                 << "*.rar");
-    files_model_->setNameFilterDisables(false);
+    file_exp_ = new FileExplorer(parent);
+    ui->topTabWidget->addTab(file_exp_, "&Explorer");
 
-    ui->dirView->setModel(dir_model_);
-    ui->filesView->setModel(files_model_);
-
-    dir_selection_model_ = ui->dirView->selectionModel();
-
-    connect(dir_selection_model_, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onDirSelectChanged(QModelIndex,QModelIndex)));
-    connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(showFileInfo(QModelIndex)));
-    connect(ui->filesView, SIGNAL(sigFocusOut()),this, SLOT(onFileFocusOut()));
-    connect(ui->pathEdit, SIGNAL(editingFinished()),
-            this, SLOT(onUIPathEdited()));
-    connect(this, SIGNAL(sigCurrentAbsPath(QString)),
-            this, SLOT(setCurrentAbsPath(QString)));
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
@@ -71,12 +43,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onDirSelectChanged(QModelIndex current, QModelIndex previous)
-{
-    setCurrentAbsPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
-    ui->dirView->resizeColumnToContents(current.column());
-}
-
 void MainWindow::showFileInfo(QModelIndex index)
 {
     if (!index.isValid()){
@@ -89,26 +55,6 @@ void MainWindow::showFileInfo(QModelIndex index)
             ui->fileInfoWidget->show();
             ui->fhash->setText(getHash(fpath));
         }
-    }
-}
-
-void MainWindow::onFileFocusOut()
-{
-    ui->fileInfoWidget->hide();
-}
-
-void MainWindow::setCurrentAbsPath(QString absPath)
-{
-    current_abs_path_ = absPath;
-    ui->dirView->setCurrentIndex(dir_model_->index(current_abs_path_));
-    ui->filesView->setRootIndex(files_model_->setRootPath(current_abs_path_));
-    ui->pathEdit->setText(current_abs_path_);
-}
-
-void MainWindow::onUIPathEdited()
-{
-    if(dir_model_->index(ui->pathEdit->text()).isValid()){
-        emit sigCurrentAbsPath(ui->pathEdit->text());
     }
 }
 
