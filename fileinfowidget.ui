@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="DBFileInfoGroup">
      <property name="title">
@@ -23,7 +23,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="save2dbButton">
      <property name="text">
       <string>^ &amp;Save to DB ^</string>
      </property>
@@ -34,30 +34,51 @@
      <property name="title">
       <string>Local (file)</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="lname">
-        <property name="text">
-         <string>name</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lhash">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="2" column="0">
+       <widget class="QLabel" name="hashLabel">
         <property name="text">
          <string>hash</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QProgressBar" name="lhashProgress">
+      <item row="1" column="0">
+       <widget class="QLabel" name="nameLabel">
+        <property name="text">
+         <string>name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="nameEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="hashEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QProgressBar" name="hashProgress">
         <property name="value">
          <number>24</number>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="lsize">
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="sizeEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="sizeLabel">
         <property name="text">
          <string>size</string>
         </property>

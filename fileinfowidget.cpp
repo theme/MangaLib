@@ -6,7 +6,7 @@ FileInfoWidget::FileInfoWidget(QWidget *parent) :
     ui(new Ui::FileInfoWidget)
 {
     ui->setupUi(this);
-    ui->lhashProgress->hide();
+    ui->hashProgress->hide();
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -20,13 +20,13 @@ void FileInfoWidget::setFile(QString f)
     if (!finfo.isFile())
         return;
 
-    ui->lname->setText(finfo.fileName());
+    ui->nameEdit->setText(finfo.fileName());
 
-    ui->lhash->setText(this->getHash(finfo.filePath()));
-    ui->lhashProgress->setMinimum(0);
-    ui->lhashProgress->setMaximum(100);
+    ui->hashEdit->setText(this->getHash(finfo.filePath()));
+    ui->hashProgress->setMinimum(0);
+    ui->hashProgress->setMaximum(100);
 
-    ui->lsize->setText(QString::number(finfo.size()));
+    ui->sizeEdit->setText(QString::number(finfo.size()));
 }
 
 void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
@@ -37,16 +37,16 @@ void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
 void FileInfoWidget::updateUiFileHash(QString hash, QString fpath)
 {
     if (finfo.filePath() == fpath){
-        ui->lhash->setText(this->getHash(fpath));
-        ui->lhashProgress->hide();
+        ui->hashEdit->setText(this->getHash(fpath));
+        ui->hashProgress->hide();
     }
 }
 
 void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
-        ui->lhashProgress->setValue(percent);
-        ui->lhashProgress->show();
+        ui->hashProgress->setValue(percent);
+        ui->hashProgress->show();
     }
 }
 
