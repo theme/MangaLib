@@ -14,8 +14,17 @@
     ],
     "files": [
         {"filename": "varcahr"},
+        {"size": "integer"},
         {"md5": "varcahr"},
         {"sha1": "varchar"},
         {"sha256": "varchar"}
+    ],
+    "uploader": [
+        {"name": "varchar"},
+        {"location": "varchar"}
+    ],
+    "translators": [
+        {"name": "varchar"},
+        {"language": "varchar"}
     ]
 }
