@@ -36,7 +36,7 @@
      <item>
       <widget class="QPushButton" name="dupButton">
        <property name="text">
-        <string>&amp;Duplicate</string>
+        <string>D&amp;uplicate</string>
        </property>
       </widget>
      </item>

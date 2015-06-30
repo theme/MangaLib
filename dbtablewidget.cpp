@@ -16,6 +16,7 @@ DBTableWidget::DBTableWidget(QString name,
     sql_table_model_->setEditStrategy(QSqlTableModel::OnManualSubmit);
     sql_table_model_->select();
     ui->tableView->setModel(sql_table_model_);
+
 }
 
 DBTableWidget::~DBTableWidget()
@@ -43,10 +44,35 @@ void DBTableWidget::on_removeButton_clicked()
 
 void DBTableWidget::on_submitButton_clicked()
 {
-    sql_table_model_->submitAll();
+    if (!sql_table_model_->submitAll()){
+        qDebug() << sql_table_model_->lastError();
+    }
 }
 
 void DBTableWidget::on_cancelButton_clicked()
 {
     sql_table_model_->revertAll();
+}
+
+void DBTableWidget::on_dupButton_clicked()
+{
+    QModelIndexList li  = ui->tableView->selectionModel()->selectedIndexes();
+    // get sorted row numbers
+    QList<int> rows;
+    while (!li.isEmpty()){
+        QModelIndex in = li.takeFirst();
+        if (!rows.contains(in.row())){
+            rows.append(in.row());
+        }
+    }
+    qSort(rows.begin(),rows.end());
+
+    // do duplicate
+    int c = 0;  // only works when rows is sorted ascending.
+    while (!rows.isEmpty()){
+        int r = rows.takeFirst();
+        QSqlRecord rec = sql_table_model_->record(r + c);
+        sql_table_model_->insertRecord(r + c, rec);
+        ++c;
+    }
 }
