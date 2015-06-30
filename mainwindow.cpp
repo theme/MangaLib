@@ -229,10 +229,9 @@ QSqlError MainWindow::openDB(QString fn)
     emit sigStatusMsg("(creating tables in DB...) fn: " + fn);
     QSqlQuery q(db_);
     if (!q.exec(QLatin1String("create table books("      // books
-                              "id integer primary key, "
                               "isbn integer,"
                               "title varchar, "
-                              "author integer, "
+                              "author varchar, "
                               "year integer, "
                               "rank integer)")))
     {
@@ -240,7 +239,6 @@ QSqlError MainWindow::openDB(QString fn)
         return q.lastError();
     }
     if (!q.exec(QLatin1String("create table authors("    // authors
-                              "id integer primary key, "
                               "realname varchar,"
                               "penname varchar,"
                               "circle varchar,"
@@ -251,10 +249,9 @@ QSqlError MainWindow::openDB(QString fn)
         return q.lastError();
     }
     if (!q.exec(QLatin1String("create table files("  // files
-                              "id integer primary key,"
                               "fn varchar,"
-                              "sha1 varchar,"
-                              "md5 varchar)")))
+                              "md5 varchar,"
+                              "sha1 varchar)")))
     {
         emit sigStatusMsg("create table files error. | "+ q.lastError().text());
         return q.lastError();
