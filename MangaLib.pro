@@ -30,3 +30,5 @@ RESOURCES += \
 
 OTHER_FILES += \
     icons/icon.svg
+
+#CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
