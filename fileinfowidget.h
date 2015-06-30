@@ -19,10 +19,11 @@ public:
 
 public slots:
     void setFile(QString f);
+    void cacheFileHash(QString hash, QString fpath);
+    void updateUiFileHash(QString hash, QString fpath);
 
 private:
     QString getHash(QString fpath);
-    void updateFileHash(QString hash, QString fpath);
     void clearCache();
     Ui::FileInfoWidget *ui;
     QFileInfo finfo;   // local file info

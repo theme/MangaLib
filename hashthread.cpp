@@ -14,7 +14,6 @@ void HashThread::run()
 {
     QFile f(fpath_);
     if (f.open(QFile::ReadOnly)){
-        emit sigHashError(tr("Hashing..."), fpath_);
         QCryptographicHash hash(algo_);
         while(!f.atEnd()){
             hash.addData(f.read(102400));   //100K
@@ -22,7 +21,7 @@ void HashThread::run()
         hash_ = hash.result().toHex().toUpper();
         emit sigHash(hash_, fpath_);
     } else {
-        emit sigHashError(f.errorString(), fpath_);
+        emit sigHashingError(f.errorString(), fpath_);
     }
     f.close();
 }

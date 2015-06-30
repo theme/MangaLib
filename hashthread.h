@@ -16,7 +16,7 @@ public:
     QString fpath();
 signals:
     void sigHash(QString hashString, QString fpath);
-    void sigHashError(QString errorString, QString fpath);
+    void sigHashingError(QString errorString, QString fpath);
 
 private:
     void run();
