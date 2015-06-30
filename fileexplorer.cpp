@@ -30,7 +30,7 @@ FileExplorer::FileExplorer(QWidget *parent) :
 
     // files View
     files_model_ = new QFileSystemModel(this);
-    files_model_->setRootPath(ui->pathEdit->text());
+    files_model_->setRootPath(QDir::rootPath());
     files_model_->setFilter(QDir::Files);
     files_model_->setNameFilters(QStringList()
                                  << "*.zip"
@@ -63,10 +63,10 @@ void FileExplorer::setPath(QString path)
 void FileExplorer::on_pathEdit_editingFinished()
 {
     finfo_.setFile(ui->pathEdit->text());
-    if(dir_model_->index(finfo_.path()).isValid()){
+    if (finfo_.isDir()) {
+        emit sigPath(finfo_.filePath());
+    } else if ( finfo_.isFile()) {
         emit sigPath(finfo_.path());
-    }
-    if(files_model_->index(finfo_.filePath()).isValid()){
         emit sigFilePath(finfo_.filePath());
     }
 }
