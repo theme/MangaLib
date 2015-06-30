@@ -50,13 +50,17 @@ FileExplorer::~FileExplorer()
 
 void FileExplorer::onDirSelectChanged(QModelIndex current, QModelIndex previous)
 {
-    setPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
-    ui->dirView->resizeColumnToContents(current.column());
+    emit sigPath( dir_model_->filePath(dir_selection_model_->currentIndex()) );
 }
 
 void FileExplorer::setPath(QString path)
 {
-    ui->dirView->setCurrentIndex(dir_model_->index(path));
+    ui->pathEdit->setText(path);
+
+    QModelIndex din = dir_model_->index(path);
+    ui->dirView->setCurrentIndex(din);
+    ui->dirView->resizeColumnToContents(din.column());
+
     ui->filesView->setRootIndex(files_model_->setRootPath(path));
 }
 
