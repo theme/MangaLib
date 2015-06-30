@@ -33,7 +33,7 @@
          <widget class="QLineEdit" name="pathEdit"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5">
           <item>
            <widget class="QTreeView" name="dirView"/>
           </item>
@@ -81,7 +81,7 @@
      <x>0</x>
      <y>0</y>
      <width>659</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
