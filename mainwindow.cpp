@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                  << "*.zip"
                                  << "*.cb?"
                                  << "*.rar");
-    files_model_->setNameFilterDisables(true);
+    files_model_->setNameFilterDisables(false);
 
     ui->dirView->setModel(dir_model_);
     ui->filesView->setModel(files_model_);

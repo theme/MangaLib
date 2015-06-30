@@ -2,6 +2,7 @@
 #define FILESTABLEVIEW_H
 
 #include <QTableView>
+#include <QHeaderView>
 
 class FilesTableView : public QTableView
 {
