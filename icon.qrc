@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/icon.svg</file>
+        <file>dbschema.json</file>
     </qresource>
 </RCC>

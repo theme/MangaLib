@@ -30,6 +30,7 @@ RESOURCES += \
     icon.qrc
 
 OTHER_FILES += \
-    icons/icon.svg
+    icons/icon.svg \
+    dbschema.json
 
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
