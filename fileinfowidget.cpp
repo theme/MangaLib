@@ -1,12 +1,14 @@
 #include "fileinfowidget.h"
 #include "ui_fileinfowidget.h"
 
-FileInfoWidget::FileInfoWidget(QWidget *parent) :
+FileInfoWidget::FileInfoWidget(const DBSchema *schema,
+                               QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileInfoWidget)
+    ui(new Ui::FileInfoWidget),
+    schema_(schema)
 {
     ui->setupUi(this);
-    ui->hashProgress->hide();
+    this->populateUi();
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -20,13 +22,11 @@ void FileInfoWidget::setFile(QString f)
     if (!finfo.isFile())
         return;
 
-    ui->nameEdit->setText(finfo.fileName());
+    this->setValue("name", finfo.fileName());
 
-    ui->md5Edit->setText(this->getHash(finfo.filePath()));
-    ui->hashProgress->setMinimum(0);
-    ui->hashProgress->setMaximum(100);
+    this->setValue("md5", this->getHash(finfo.filePath()));
 
-    ui->sizeEdit->setText(QString::number(finfo.size()));
+    this->setValue("size", QString::number(finfo.size()));
 }
 
 void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
@@ -34,19 +34,30 @@ void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
     hash_cache_.insert(fpath, hash);
 }
 
-void FileInfoWidget::updateUiFileHash(QString hash, QString fpath)
+void FileInfoWidget::updateUiFileHash(QString fpath)
 {
-    if (finfo.filePath() == fpath){
-        ui->md5Edit->setText(this->getHash(fpath));
-        ui->hashProgress->hide();
-    }
+    this->setValue("md5", this->getHash(fpath));
 }
 
 void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
-        ui->hashProgress->setValue(percent);
-        ui->hashProgress->show();
+        hash_cache_.insert(fpath, "Hashing..." + QString::number(percent) + "%");
+        updateUiFileHash(fpath);
+    }
+}
+
+void FileInfoWidget::setValue(QString field, QString value, bool local )
+{
+    QStringList sf = schema_->fields("file");
+    if (!sf.contains(field))
+        return;
+
+    LRline* w = field_widgets_.value(field);
+    if ( local ){
+        w->setLocalValue(value);
+    } else {
+        w->setRemoveValue(value);
     }
 }
 
@@ -75,6 +86,14 @@ void FileInfoWidget::clearCache()
     hash_cache_.clear();
 }
 
-void FileInfoWidget::on_save2dbButton_clicked()
+void FileInfoWidget::populateUi()
 {
+    QStringList fields = schema_->fields("file");
+    LRline* line;
+    for (int i = 0; i < fields.size(); ++i){
+        line = new LRline(this);
+        line->setName(fields.at(i));
+        ui->layout->addWidget(line);
+        field_widgets_.insert(fields.at(i), line);
+    }
 }

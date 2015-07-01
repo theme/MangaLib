@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QFileInfo>
 #include "hashthread.h"
+#include "dbschema.h"
+#include "lrline.h"
 
 namespace Ui {
 class FileInfoWidget;
@@ -14,23 +16,28 @@ class FileInfoWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit FileInfoWidget(QWidget *parent = 0);
+    explicit FileInfoWidget(const DBSchema *schema,
+                            QWidget *parent = 0);
     ~FileInfoWidget();
 
 public slots:
     void setFile(QString f);
     void cacheFileHash(QString hash, QString fpath);
-    void updateUiFileHash(QString hash, QString fpath);
+    void updateUiFileHash(QString fpath);
     void updateUiFileHashingPercent(int percent, QString fpath);
 
-private slots:
-    void on_save2dbButton_clicked();
+    void setValue(QString field, QString value, bool local = true);
 
 private:
+    void populateUi();
     QString getHash(QString fpath);
     void clearCache();
     Ui::FileInfoWidget *ui;
     QFileInfo finfo;   // local file info
+
+    // db file schema
+    const DBSchema *schema_;
+    QHash< QString, LRline* > field_widgets_;
 
     // hash
     HashThread *hash_thread_;

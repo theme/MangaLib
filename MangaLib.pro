@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     dbschema.cpp \
     fileexplorer.cpp \
     fileinfowidget.cpp \
-    sqlitedb.cpp
+    sqlitedb.cpp \
+    lrline.cpp
 
 HEADERS  += mainwindow.h \
     filestableview.h \
@@ -29,12 +30,14 @@ HEADERS  += mainwindow.h \
     dbschema.h \
     fileexplorer.h \
     fileinfowidget.h \
-    sqlitedb.h
+    sqlitedb.h \
+    lrline.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
     fileexplorer.ui \
-    fileinfowidget.ui
+    fileinfowidget.ui \
+    lrline.ui
 
 RESOURCES += \
     icon.qrc

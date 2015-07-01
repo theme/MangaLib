@@ -18,16 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
-    // ui: File info
-    file_info_widget_ = new FileInfoWidget(this);
-    ui->topTabWidget->addTab(file_info_widget_, "&File info");
-    connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
-            file_info_widget_, SLOT(setFile(QString)));
-
     // DB
     dbschema_ = new DBSchema(this);
     dbschema_->parseJsonFile(":/dbschema.json");
     db_ = new SQLiteDB(dbschema_ ,this);
+
+    // ui: File info
+    file_info_widget_ = new FileInfoWidget(dbschema_, this);
+    ui->topTabWidget->addTab(file_info_widget_, "&File info");
+    connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
+            file_info_widget_, SLOT(setFile(QString)));
 
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));
