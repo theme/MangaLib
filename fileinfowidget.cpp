@@ -22,7 +22,7 @@ void FileInfoWidget::setFile(QString f)
 
     ui->nameEdit->setText(finfo.fileName());
 
-    ui->hashEdit->setText(this->getHash(finfo.filePath()));
+    ui->md5Edit->setText(this->getHash(finfo.filePath()));
     ui->hashProgress->setMinimum(0);
     ui->hashProgress->setMaximum(100);
 
@@ -37,7 +37,7 @@ void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
 void FileInfoWidget::updateUiFileHash(QString hash, QString fpath)
 {
     if (finfo.filePath() == fpath){
-        ui->hashEdit->setText(this->getHash(fpath));
+        ui->md5Edit->setText(this->getHash(fpath));
         ui->hashProgress->hide();
     }
 }

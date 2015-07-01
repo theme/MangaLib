@@ -9,7 +9,7 @@ class SQLiteDB : public QObject
 {
     Q_OBJECT
 public:
-    explicit SQLiteDB(DBSchema const *schema,
+    explicit SQLiteDB(const DBSchema *schema,
                       QObject *parent = 0);
     QStringList tables() const;
     QSqlDatabase &connection();
@@ -26,7 +26,7 @@ public slots:
 private slots:
 
 private:
-    DBSchema const *dbschema_;
+    const DBSchema *dbschema_;
     QSqlDatabase db_;
     QStateMachine* dbsm_;
     QState *state_opened_;

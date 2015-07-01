@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448"
-   height="1052.3622"
-   viewBox="0 0 744.09451 1052.3622"
+   width="745.09448"
+   height="448.57413"
+   viewBox="0 0 745.09451 448.57413"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
@@ -26,11 +26,11 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.360927"
-     inkscape:cx="365.9802"
-     inkscape:cy="844.04829"
+     inkscape:zoom="0.96232071"
+     inkscape:cx="403.14601"
+     inkscape:cy="172.66355"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -43,7 +43,12 @@
      inkscape:snap-bbox="true"
      inkscape:bbox-nodes="true"
      inkscape:snap-page="true"
-     inkscape:connector-spacing="5" />
+     inkscape:connector-spacing="5"
+     inkscape:snap-global="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -60,7 +65,15 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,3.5610728e-5)">
+     transform="translate(0.5,0.50003561)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3032"
+       width="744.09448"
+       height="447.57416"
+       x="0"
+       y="4.5474735e-13"
+       transform="translate(0,-4.6420996e-5)" />
     <text
        sodipodi:linespacing="125%"
        id="text3003"
@@ -74,7 +87,7 @@
          sodipodi:role="line">MainWindow( QWidget )</tspan></text>
     <g
        id="g4169"
-       transform="matrix(1.0790301,0,0,1.0566907,65.151944,-68.466405)">
+       transform="matrix(1.0790301,0,0,1.0566907,59.912909,-56.709712)">
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.93650329;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="rect3120"
@@ -95,16 +108,6 @@
            x="426.81284"
            y="432.02795">SQLite DB ( QObject )</tspan></text>
     </g>
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="m 511.85588,388.16619 -191.64734,1.27232"
-       id="path3989"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0"
-       inkscape:connection-end="#g4061"
-       inkscape:connection-end-point="d4"
-       inkscape:connection-start="#g4169"
-       inkscape:connection-start-point="d4" />
     <g
        id="g4061"
        transform="matrix(1.0790301,0,0,1.0566907,-25.907468,-51.287807)">
@@ -130,7 +133,7 @@
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 171.59707,84.795237 157.13864,205.03595"
+       d="M 172.26097,84.795237 161.7094,196.72272"
        id="path4186"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
@@ -164,7 +167,7 @@
     </g>
     <g
        id="g4179"
-       transform="translate(-16.103846,-40.650984)">
+       transform="translate(-10.908073,-48.964221)">
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="rect4071"
@@ -186,7 +189,7 @@
     </g>
     <g
        id="g4120"
-       transform="translate(132.21299,2.8251438)">
+       transform="translate(117.51712,2.0903505)">
       <rect
          transform="translate(0,-4.6420996e-5)"
          y="82.976845"
@@ -209,7 +212,7 @@
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 630.08915,121.70515 612.32719,361.34739"
+       d="m 616.02243,120.97036 -9.85127,252.13372"
        id="path4184"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
@@ -233,38 +236,82 @@
        xml:space="preserve"
        style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Serif;-inkscape-font-specification:Droid Serif"
        x="372.55801"
-       y="380.95398"
+       y="415.24609"
        id="text4192"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4194"
          x="372.55801"
-         y="380.95398">dbcon (&amp;)</tspan></text>
+         y="415.24609">dbcon (&amp;)</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 245.84934,205.03595 563.0801,121.70515"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
+       d="M 219.5304,244.84823 539.81046,373.10408"
        id="path4221"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
        inkscape:connection-start="#g4179"
        inkscape:connection-start-point="d4"
-       inkscape:connection-end="#g4120"
+       transform="translate(0,-4.6420996e-5)"
+       inkscape:connection-end="#g4169"
+       inkscape:connection-end-point="d4" />
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Serif;-inkscape-font-specification:Droid Serif"
+       x="457.57516"
+       y="198.54105"
+       id="text4223"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="457.57516"
+         y="198.54105"
+         id="tspan4246">QStringList tables()</tspan><tspan
+         sodipodi:role="line"
+         x="457.57516"
+         y="221.04105"
+         id="tspan4250">QStringList fields (tableName)</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 172.26097,84.795237 161.7094,196.72272"
+       id="path3015"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g4066"
+       inkscape:connection-start-point="d4"
+       inkscape:connection-end="#g4179"
+       inkscape:connection-end-point="d4"
+       transform="translate(0,-4.6420996e-5)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 506.61685,397.20665 320.20854,393.30538"
+       id="path3016"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#g4169"
+       inkscape:connection-start-point="d4"
+       inkscape:connection-end="#g4061"
        inkscape:connection-end-point="d4"
        transform="translate(0,-4.6420996e-5)" />
     <text
        xml:space="preserve"
        style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Serif;-inkscape-font-specification:Droid Serif"
-       x="337.03323"
-       y="193.34528"
-       id="text4223"
+       x="314.2326"
+       y="282.69226"
+       id="text3019"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="337.03323"
-         y="193.34528"
-         id="tspan4246">tables ( list &lt;string&gt; )</tspan><tspan
+         id="tspan3021"
+         x="314.2326"
+         y="282.69226">save request</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Serif;-inkscape-font-specification:Droid Serif"
+       x="259.56833"
+       y="312.66547"
+       id="text3023"
+       sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="337.03323"
-         y="215.84528"
-         id="tspan4250">fields ( list&lt;map&lt;string, string&gt;&gt; )</tspan></text>
+         id="tspan3025"
+         x="259.56833"
+         y="312.66547">finfo query</tspan></text>
   </g>
 </svg>

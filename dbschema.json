@@ -2,45 +2,45 @@
     "file": [
         {"name": "varcahr"},
         {"size": "integer"},
-        {"md5": "varcahr"},
-        {"sha1": "varchar"},
-        {"sha256": "varchar"},
-        {"timestamp": "varchar"}
+        {"md5": "varcahr(32)"},
+        {"sha1": "varchar(40)"},
+        {"sha256": "varchar(64)"},
+        {"timestamp": "varchar(30)"}
     ],
     "book": [
         {"name": "varchar"},
         {"isbn": "integer"},
         {"author": "varchar"},
-        {"time": "varchar"},
+        {"year": "varchar(4)"},
         {"rank": "integer"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ],
     "author": [
         {"name": "varchar"},
         {"country": "varchar"},
         {"site": "varchar"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ],
     "circle": [
         {"name": "varchar"},
         {"site": "varchar"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ],
     "uploader": [
         {"name": "varchar"},
         {"location": "varchar"},
         {"site": "varchar"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ],
     "translator": [
         {"name": "varchar"},
         {"language": "varchar"},
         {"site": "varchar"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ],
     "link": [
         {"name": "varchar"},
         {"URI": "varchar"},
-        {"timestamp": "varchar"}
+        {"timestamp": "varchar(30)"}
     ]
 }
