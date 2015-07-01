@@ -25,7 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
             file_info_widget_, SLOT(setFile(QString)));
 
     // DB
-    db_ = new SQLiteDB(parent);
+    dbschema_ = new DBSchema(this);
+    dbschema_->parseJsonFile(":/dbschema.json");
+    db_ = new SQLiteDB(dbschema_ ,this);
 
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));

@@ -1,11 +1,9 @@
 #include "sqlitedb.h"
 
-SQLiteDB::SQLiteDB(QObject *parent) :
-    QObject(parent)
+SQLiteDB::SQLiteDB(const DBSchema *schema,
+                   QObject *parent) :
+    QObject(parent), dbschema_(schema)
 {
-    // DB schema
-    dbschema_.parseJsonFile(":/dbschema.json");
-
     // DB state machine
     dbsm_ = new QStateMachine(this);
     state_opened_ = new QState(dbsm_);
@@ -61,12 +59,12 @@ QSqlError SQLiteDB::open(QString fn)
 
     // ensure we have needed table
     QStringList tables = db_.tables();
-    QStringList schema_tables = dbschema_.tables();
+    QStringList schema_tables = dbschema_->tables();
     while (!schema_tables.isEmpty()){
         QString stn = schema_tables.takeFirst();
         if (!tables.contains(stn,Qt::CaseInsensitive)){ // need table
             QSqlQuery q(db_);
-            if (!q.exec(dbschema_.createTableSql(stn))){
+            if (!q.exec(dbschema_->createTableSql(stn))){
                 QString msg = "create table error. |"+stn +"|"+ q.lastError().text();
                 emit sigStatusMsg(msg);
                 qDebug()  << msg;

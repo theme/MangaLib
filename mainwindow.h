@@ -11,6 +11,7 @@
 #include <QState>
 #include "fileexplorer.h"
 #include "fileinfowidget.h"
+#include "dbschema.h"
 #include "sqlitedb.h"
 #include "dbtablewidget.h"
 
@@ -52,6 +53,7 @@ private:
     FileInfoWidget *file_info_widget_;
 
     // DB
+    DBSchema *dbschema_;
     SQLiteDB *db_;
 
     // ui: DB tabs

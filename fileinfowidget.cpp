@@ -74,3 +74,7 @@ void FileInfoWidget::clearCache()
 {
     hash_cache_.clear();
 }
+
+void FileInfoWidget::on_save2dbButton_clicked()
+{
+}

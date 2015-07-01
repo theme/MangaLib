@@ -23,6 +23,9 @@ public slots:
     void updateUiFileHash(QString hash, QString fpath);
     void updateUiFileHashingPercent(int percent, QString fpath);
 
+private slots:
+    void on_save2dbButton_clicked();
+
 private:
     QString getHash(QString fpath);
     void clearCache();
