@@ -9,6 +9,8 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema,
 {
     ui->setupUi(this);
     this->populateUi();
+    connect(ui->save2dbButton, SIGNAL(clicked()),
+            this, SIGNAL(save2db()));
 }
 
 FileInfoWidget::~FileInfoWidget()

@@ -88,6 +88,12 @@ void MainWindow::removeDBTabs()
     db_table_widgets_hash_.clear();
 }
 
+void MainWindow::saveLocalFileInfo()
+{
+//    QSqlQuery q(db_);
+
+}
+
 void MainWindow::createActions()
 {
     openAct = new QAction(tr("&Open Sqlite DB file"), this);

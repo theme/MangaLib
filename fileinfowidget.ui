@@ -52,6 +52,13 @@
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QPushButton" name="save2dbButton">
+     <property name="text">
+      <string>&amp;Save to DB</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

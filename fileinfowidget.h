@@ -27,6 +27,9 @@ public slots:
 
     void setValue(QString field, QString value, bool local = true);
 
+signals:
+    void save2db();
+
 private:
     void populateUi();
     QString getHash(QString fpath);

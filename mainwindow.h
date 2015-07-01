@@ -7,12 +7,10 @@
 #include <QShortcut>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QStateMachine>
-#include <QState>
+
+#include "sqlitedb.h"
 #include "fileexplorer.h"
 #include "fileinfowidget.h"
-#include "dbschema.h"
-#include "sqlitedb.h"
 #include "dbtablewidget.h"
 
 namespace Ui {
@@ -35,6 +33,9 @@ private slots:
     void closeDBconnection();
     void loadDBTabs();   // load db tables to view
     void removeDBTabs();
+
+    // save file info
+    void saveLocalFileInfo();
 
 private:
     Ui::MainWindow *ui;
