@@ -20,6 +20,7 @@ public slots:
     void setName(QString s);
     void setLocalValue(QString s);
     void setRemoveValue(QString s);
+    void hintIfEqual();
 private:
     Ui::LocalAndDBinfoLine *ui;
 };

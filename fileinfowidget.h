@@ -23,7 +23,6 @@ public:
 public slots:
     void setFile(QString f);
     void cacheFileHash(QString hash, QString fpath);
-    void updateUiFileHash(QString fpath);
     void updateUiFileHashingPercent(int percent, QString fpath);
 
     void setValue(QString field, QString value, bool local = true);

@@ -16,11 +16,20 @@ LRline::~LRline()
 void LRline::setLocalValue(QString s)
 {
     ui->localValue->setText(s);
+    hintIfEqual();
 }
 
 void LRline::setRemoveValue(QString s)
 {
     ui->removeValue->setText(s);
+    hintIfEqual();
+}
+
+void LRline::hintIfEqual()
+{
+    if (isEqual()){
+        ui->fieldName->setStyleSheet("QLabel { background-color: green; color: yellow }");
+    }
 }
 
 bool LRline::isEqual() const

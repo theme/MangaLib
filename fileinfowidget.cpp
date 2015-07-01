@@ -32,18 +32,14 @@ void FileInfoWidget::setFile(QString f)
 void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
 {
     hash_cache_.insert(fpath, hash);
-}
-
-void FileInfoWidget::updateUiFileHash(QString fpath)
-{
-    this->setValue("md5", this->getHash(fpath));
+    this->setValue("md5", this->getHash(finfo.filePath()));
 }
 
 void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
         hash_cache_.insert(fpath, "Hashing..." + QString::number(percent) + "%");
-        updateUiFileHash(fpath);
+        this->setValue("md5", this->getHash(finfo.filePath()));
     }
 }
 
@@ -70,8 +66,6 @@ QString FileInfoWidget::getHash(QString fpath)
                 hash_thread_, SLOT(deleteLater()));
         connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
                 this, SLOT(cacheFileHash(QString,QString)));
-        connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
-                this, SLOT(updateUiFileHash(QString,QString)));
         connect(hash_thread_, SIGNAL(sigHashingPercent(int,QString)),
                 this, SLOT(updateUiFileHashingPercent(int,QString)));
 
