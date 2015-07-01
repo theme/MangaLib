@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     dbtablewidget.cpp \
     dbschema.cpp \
     fileexplorer.cpp \
-    fileinfowidget.cpp
+    fileinfowidget.cpp \
+    sqlitedb.cpp
 
 HEADERS  += mainwindow.h \
     filestableview.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     dbtablewidget.h \
     dbschema.h \
     fileexplorer.h \
-    fileinfowidget.h
+    fileinfowidget.h \
+    sqlitedb.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
