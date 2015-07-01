@@ -37,6 +37,15 @@ bool LRline::isEqual() const
     return ui->localValue->text() == ui->removeValue->text();
 }
 
+QString LRline::value(bool local)
+{
+    if (local){
+        return ui->localValue->text();
+    } else {
+        return ui->removeValue->text();
+    }
+}
+
 
 void LRline::setName(QString s)
 {

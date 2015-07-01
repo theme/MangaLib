@@ -1,21 +1,31 @@
 #include "fileinfowidget.h"
 #include "ui_fileinfowidget.h"
 
-FileInfoWidget::FileInfoWidget(const DBSchema *schema,
+FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
                                QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileInfoWidget),
-    schema_(schema)
+    dbschema_(schema),
+    db_(db)
 {
     ui->setupUi(this);
     this->populateUi();
     connect(ui->save2dbButton, SIGNAL(clicked()),
-            this, SIGNAL(save2db()));
+            this, SLOT(save2db()));
 }
 
 FileInfoWidget::~FileInfoWidget()
 {
     delete ui;
+}
+
+QString FileInfoWidget::getValue(QString field, bool local)
+{
+    if (! dbschema_->fields("file").contains(field) )
+        return QString();
+
+    LRline *line = field_widgets_.value(field);
+    return line->value(local);
 }
 
 void FileInfoWidget::setFile(QString f)
@@ -29,6 +39,8 @@ void FileInfoWidget::setFile(QString f)
     this->setValue("md5", this->getHash(finfo.filePath()));
 
     this->setValue("size", QString::number(finfo.size()));
+
+    this->setValue("timestamp", QDateTime::currentDateTime().toString(Qt::ISODate));
 }
 
 void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
@@ -47,7 +59,7 @@ void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
 
 void FileInfoWidget::setValue(QString field, QString value, bool local )
 {
-    QStringList sf = schema_->fields("file");
+    QStringList sf = dbschema_->fields("file");
     if (!sf.contains(field))
         return;
 
@@ -57,6 +69,37 @@ void FileInfoWidget::setValue(QString field, QString value, bool local )
     } else {
         w->setRemoveValue(value);
     }
+}
+
+QSqlError FileInfoWidget::save2db()
+{
+    // gen sql
+    QStringList fields = dbschema_->fields("file");
+    QString k,v;
+    QStringList keys, values;
+    for (int i = 0; i < fields.size(); ++i){
+        k = fields.at(i);
+        v = this->getValue(k);
+        if (!v.isEmpty()){
+            keys.append("'" + k + "'");
+            values.append("'" + v + "'");
+        }
+    }
+    QString sql = "INSERT INTO file (" + keys.join(",") + ") ";
+    sql += "VALUES (" + values.join(",") + ")";
+    QSqlQuery q(db_);
+
+    if (!q.exec(sql)){
+        QString msg = "insert to |file| error: "+ q.lastError().text();
+        qDebug()  << msg;
+        qDebug() << q.lastError();
+        qDebug() << q.lastQuery();
+        return q.lastError();
+    }
+
+    emit sigSaved();
+
+    return QSqlError();
 }
 
 QString FileInfoWidget::getHash(QString fpath)
@@ -84,7 +127,7 @@ void FileInfoWidget::clearCache()
 
 void FileInfoWidget::populateUi()
 {
-    QStringList fields = schema_->fields("file");
+    QStringList fields = dbschema_->fields("file");
     LRline* line;
     for (int i = 0; i < fields.size(); ++i){
         line = new LRline(this);

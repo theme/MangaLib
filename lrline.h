@@ -15,6 +15,7 @@ public:
     explicit LRline(QWidget *parent = 0);
     ~LRline();
     bool isEqual() const;
+    QString value( bool local = true);
 
 public slots:
     void setName(QString s);

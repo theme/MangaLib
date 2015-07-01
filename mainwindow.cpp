@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     db_ = new SQLiteDB(dbschema_ ,this);
 
     // ui: File info
-    file_info_widget_ = new FileInfoWidget(dbschema_, this);
+    file_info_widget_ = new FileInfoWidget(dbschema_, db_->connection(), this);
     ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
             file_info_widget_, SLOT(setFile(QString)));

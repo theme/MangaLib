@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QFileInfo>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDateTime>
 #include "hashthread.h"
 #include "dbschema.h"
 #include "lrline.h"
@@ -17,18 +20,23 @@ class FileInfoWidget : public QWidget
 
 public:
     explicit FileInfoWidget(const DBSchema *schema,
+                            QSqlDatabase &db,
                             QWidget *parent = 0);
     ~FileInfoWidget();
+    QString getValue(QString field, bool local = true);
 
 public slots:
     void setFile(QString f);
     void cacheFileHash(QString hash, QString fpath);
     void updateUiFileHashingPercent(int percent, QString fpath);
 
-    void setValue(QString field, QString value, bool local = true);
+    void setValue(QString field, QString getValue, bool local = true);
 
 signals:
-    void save2db();
+    void sigSaved();
+
+private slots:
+    QSqlError save2db();
 
 private:
     void populateUi();
@@ -38,8 +46,11 @@ private:
     QFileInfo finfo;   // local file info
 
     // db file schema
-    const DBSchema *schema_;
+    const DBSchema *dbschema_;
     QHash< QString, LRline* > field_widgets_;
+
+    // db ref
+    QSqlDatabase &db_;
 
     // hash
     HashThread *hash_thread_;
