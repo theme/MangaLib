@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: File info
     file_info_widget_ = new FileInfoWidget(dbschema_, db_->connection(), this);
-    ui->topTabWidget->addTab(file_info_widget_, "&File info");
+    file_exp_widget_->layout()->addWidget(file_info_widget_);
+//    ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
             file_info_widget_, SLOT(setFile(QString)));
 

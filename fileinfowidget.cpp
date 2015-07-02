@@ -9,6 +9,9 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
     db_(db)
 {
     ui->setupUi(this);
+    ui->layout->setContentsMargins(1,1,1,1);
+    ui->layout->setSpacing(1);
+    ui->layout->setMargin(1);
     this->populateUi();
     connect(ui->save2dbButton, SIGNAL(clicked()),
             this, SLOT(save2db()));
