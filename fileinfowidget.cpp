@@ -13,8 +13,18 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
     ui->layout->setSpacing(1);
     ui->layout->setMargin(1);
     this->populateUi();
+
+    // init cache
+    QStringList fields = dbschema_->fields("file");
+    for (int i=0; i<fields.size(); ++i){
+        caches_.insert(fields.at(i), QHash<QString, QString>());
+    }
+
+    //
     connect(ui->save2dbButton, SIGNAL(clicked()),
             this, SLOT(save2db()));
+    connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
+            this, SLOT(updateLocalValue(QString,QString,QString)));
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
             this, SLOT(queryDB(QString,QString)));
 }
@@ -41,25 +51,22 @@ void FileInfoWidget::setFile(QString f)
 
     // local
     this->setValue("name", finfo.fileName());
-
-    this->setValue("md5", this->getHash(finfo.filePath()));
-
+    this->setValue("md5", this->getHash("md5", finfo.filePath()));
     this->setValue("size", QString::number(finfo.size()));
-
     this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
 }
 
-void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
+void FileInfoWidget::cacheFileHash(QString algo, QString hash, QString fpath)
 {
-    hash_cache_.insert(fpath, hash);
-    this->setValue("md5", this->getHash(finfo.filePath()));
-    emit sigGotHash("md5", hash, fpath);
+    QHash<QString, QString> h = caches_.value(algo);
+    h.insert(fpath,hash);
+    emit sigGotHash(algo, hash, fpath);
 }
 
-void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
+void FileInfoWidget::updateHashingProgress(QString algo, int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
-        this->setProgress("md5", percent);
+        this->setProgress(algo, percent);
     }
 }
 
@@ -122,29 +129,25 @@ QSqlError FileInfoWidget::save2db()
     return QSqlError();
 }
 
-QString FileInfoWidget::getHash(QString fpath)
+QString FileInfoWidget::getHash(QString algo, QString fpath)
 {
-    if (!hash_cache_.contains(fpath)) {
-        hash_thread_ = new HashThread(fpath,QCryptographicHash::Md5,this);
+    QHash<QString, QString> h = caches_.value(algo);
+    if (!h.contains(fpath)) {
+        hash_thread_ = new HashThread(QCryptographicHash::Md5,fpath,this);
 
         connect(hash_thread_, SIGNAL(finished()),
                 hash_thread_, SLOT(deleteLater()));
-        connect(hash_thread_, SIGNAL(sigHash(QString,QString)),
-                this, SLOT(cacheFileHash(QString,QString)));
-        connect(hash_thread_, SIGNAL(sigHashingPercent(int,QString)),
-                this, SLOT(updateUiFileHashingPercent(int,QString)));
+        connect(hash_thread_, SIGNAL(sigHash(QString,QString,QString)),
+                this, SLOT(cacheFileHash(QString,QString,QString)));
+        connect(hash_thread_, SIGNAL(sigHashingPercent(QString, int,QString)),
+                this, SLOT(updateHashingProgress(QString, int,QString)));
 
-        hash_cache_.insert(fpath, "Hashing...");// Necessary ( guard too many threads )
+        h.insert(fpath, "Hashing...");// Necessary ( guard too many threads obj )
         hash_thread_->start();
         return QString();   // empty
     } else {
-        return hash_cache_.value(fpath);
+        return h.value(fpath);
     }
-}
-
-void FileInfoWidget::clearCache()
-{
-    hash_cache_.clear();
 }
 
 void FileInfoWidget::queryDB(QString fieldName, QString v)
@@ -171,6 +174,14 @@ void FileInfoWidget::queryDB(QString fieldName, QString v)
     for ( int i = 0; i< rec.count(); ++i){
         this->setValue(rec.fieldName(i), rec.value(i).toString(), false);
     }
+}
+
+void FileInfoWidget::updateLocalValue(QString fieldName, QString v, QString fpath)
+{
+    if (!(finfo.filePath() == fpath))
+        return;
+    else
+        this->setValue(fieldName, v);
 }
 
 void FileInfoWidget::populateUi()

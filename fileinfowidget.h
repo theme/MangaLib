@@ -34,15 +34,15 @@ signals:
     void sigGotHash(QString algoName, QString v, QString f);
 
 private slots:
-    void cacheFileHash(QString hash, QString fpath);
-    void updateUiFileHashingPercent(int percent, QString fpath);
+    void cacheFileHash(QString algo, QString hash, QString fpath);
+    void updateHashingProgress(QString algo, int percent, QString fpath);
     QSqlError save2db();
     void queryDB(QString fieldName, QString v);
+    void updateLocalValue(QString fieldName, QString v, QString fpath);
 
 private:
     void populateUi();
-    QString getHash(QString fpath);
-    void clearCache();
+    QString getHash(QString algo, QString fpath);
     void setValue(QString fieldName, QString v, bool local = true);
     void setProgress(QString fieldName, int p, bool local = true);
     Ui::FileInfoWidget *ui;
@@ -57,7 +57,7 @@ private:
 
     // hash
     HashThread *hash_thread_;
-    QHash<QString, QString> hash_cache_; // <fpath, hash>
+    QHash< QString, QHash<QString, QString> > caches_;
 };
 
 #endif // FILEINFOWIDGET_H

@@ -2,7 +2,7 @@
 
 QSemaphore HashThread::sem_(1);
 
-HashThread::HashThread(QString fpath, enum QCryptographicHash::Algorithm algo, QObject *parent):
+HashThread::HashThread(enum QCryptographicHash::Algorithm algo, QString fpath, QObject *parent):
     QThread(parent), fpath_(fpath), algo_(algo)
 {
 
@@ -28,14 +28,30 @@ void HashThread::run()
             len = f.read(buf, BUFSIZE);
             hash.addData(buf, len);   //100K
             rc += len;
-            emit sigHashingPercent(rc*100/size,fpath_);
+            emit sigHashingPercent(algoName(algo_), rc*100/size,fpath_);
         }
         hash_ = hash.result().toHex().toUpper();
-        emit sigHash(hash_, fpath_);
+        emit sigHash(algoName(algo_), hash_, fpath_);
     } else {
-        emit sigHashingError(f.errorString(), fpath_);
+        emit sigHashingError(algoName(algo_), f.errorString(), fpath_);
     }
     f.close();
     sem_.release();
 }
 
+QString HashThread::algoName(QCryptographicHash::Algorithm a)
+{
+    switch (a) {
+    case QCryptographicHash::Md5:
+        return "md5";
+        break;
+    case QCryptographicHash::Sha1:
+        return "sha1";
+        break;
+    case QCryptographicHash::Sha256:
+        return "sha256";
+        break;
+    default:
+        break;
+    }
+}

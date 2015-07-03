@@ -11,19 +11,20 @@ class HashThread : public QThread
 {
     Q_OBJECT
 public:
-    HashThread(QString fpath,
-               enum QCryptographicHash::Algorithm algo,
+    HashThread(QCryptographicHash::Algorithm algo,
+               QString fpath,
                QObject *parent = 0);
     QString fpath();
 signals:
-    void sigHash(QString hashString, QString fpath);
-    void sigHashingError(QString errorString, QString fpath);
-    void sigHashingPercent(int percent, QString fpath);
+    void sigHash(QString algoName, QString hashString, QString fpath);
+    void sigHashingError(QString algoName, QString errorString, QString fpath);
+    void sigHashingPercent(QString algoName, int percent, QString fpath);
 
 private:
     void run();
+    QString algoName(QCryptographicHash::Algorithm a);
     QString fpath_;
-    enum QCryptographicHash::Algorithm algo_;
+    QCryptographicHash::Algorithm algo_;
     QString hash_;
     static const uint BUFSIZE = 40960; // 40k
 
