@@ -35,6 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(db_, SIGNAL(sigOpened(bool)), closeAct, SLOT(setEnabled(bool)));
     connect(db_, SIGNAL(sigClosed()), this, SLOT(removeDBTabs()));
     connect(db_, SIGNAL(sigClosed(bool)), closeAct, SLOT(setDisabled(bool)));
+
+    // auto open "~/mangalib.db"
+    if( QFile::exists(QDir::homePath() + "/mangalib.db")){
+        db_->open(QDir::homePath() + "/mangalib.db");
+    }
 }
 
 MainWindow::~MainWindow()
@@ -42,15 +47,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::openDBfile()
+void MainWindow::openDBfile(QString fn)
 {
-    QString selfilter = tr("DB Files (*.db)");
-    QString fn = QFileDialog::getSaveFileName( this,
-                                               tr("Choose DB file"),
-                                               QDir::homePath(),
-                                               tr("DB Files (*.db)"),
-                                               &selfilter,
-                                               QFileDialog::DontConfirmOverwrite );
+    if ( fn.isEmpty() ){
+        QString selfilter = tr("DB Files (*.db)");
+        fn = QFileDialog::getSaveFileName( this,
+                                              tr("Choose DB file"),
+                                              QDir::homePath(),
+                                              tr("DB Files (*.db)"),
+                                              &selfilter,
+                                              QFileDialog::DontConfirmOverwrite );
+    }
 
     if (!fn.isEmpty()){
         db_->open(fn);

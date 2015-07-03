@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QDateTime>
 #include "hashthread.h"
 #include "dbschema.h"
@@ -27,21 +28,22 @@ public:
 
 public slots:
     void setFile(QString f);
-    void cacheFileHash(QString hash, QString fpath);
-    void updateUiFileHashingPercent(int percent, QString fpath);
-
-    void setValue(QString field, QString getValue, bool local = true);
 
 signals:
-    void sigSaved();
+    void sigSaved2DB();
+    void sigGotHash(QString algoName, QString v, QString f);
 
 private slots:
+    void cacheFileHash(QString hash, QString fpath);
+    void updateUiFileHashingPercent(int percent, QString fpath);
     QSqlError save2db();
+    void queryDB(QString fieldName, QString v);
 
 private:
     void populateUi();
     QString getHash(QString fpath);
     void clearCache();
+    void setValue(QString fieldName, QString v, bool local = true);
     Ui::FileInfoWidget *ui;
     QFileInfo finfo;   // local file info
 

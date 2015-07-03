@@ -29,7 +29,7 @@ signals:
     void sigStatusMsg(QString, int t = 2000);
 
 private slots:
-    void openDBfile();
+    void openDBfile(QString fn = QString());
     void closeDBconnection();
     void loadDBTabs();   // load db tables to view
     void removeDBTabs();
