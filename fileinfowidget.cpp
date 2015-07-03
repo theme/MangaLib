@@ -48,6 +48,10 @@ void FileInfoWidget::setFile(QString f)
     this->setValue("md5", this->getHash("md5", finfo.filePath()));
     this->setValue("size", QString::number(finfo.size()));
     this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
+    // db
+    if( !this->getValue("md5").isEmpty()){
+        this->queryDB("md5",this->getValue("md5"));
+    }
 }
 
 void FileInfoWidget::cacheFileHash(QString algo, QString hash, QString fpath)
