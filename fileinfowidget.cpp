@@ -52,6 +52,9 @@ void FileInfoWidget::setFile(QString f)
     if( !this->getValue("md5").isEmpty()){
         this->queryDB("md5",this->getValue("md5"));
     }
+    if( !this->getValue("size").isEmpty()){
+        this->queryDB("size",this->getValue("size"));
+    }
 }
 
 void FileInfoWidget::cacheFileHash(QString algo, QString hash, QString fpath)
