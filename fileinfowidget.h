@@ -36,14 +36,15 @@ signals:
 private slots:
     void cacheFileHash(QString algo, QString hash, QString fpath);
     void updateHashingProgress(QString algo, int percent, QString fpath);
-    QSqlError save2db();
-    void queryDB(QString fieldName, QString v);
+    QSqlError update2db();
+    QSqlRecord queryDB(QString fieldName, QString v);
     void updateLocalValue(QString fieldName, QString v, QString fpath);
 
 private:
     void populateUi();
     QString getHash(QString algo, QString fpath);
     void setValue(QString fieldName, QString v, bool local = true);
+    void clearValueAll();
     void setProgress(QString fieldName, int p, bool local = true);
     Ui::FileInfoWidget *ui;
     QFileInfo finfo;   // local file info

@@ -21,8 +21,8 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
     }
 
     //
-    connect(ui->save2dbButton, SIGNAL(clicked()),
-            this, SLOT(save2db()));
+    connect(ui->update2dbButton, SIGNAL(clicked()),
+            this, SLOT(update2db()));
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
             this, SLOT(updateLocalValue(QString,QString,QString)));
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
@@ -49,6 +49,7 @@ void FileInfoWidget::setFile(QString f)
     if (!finfo.isFile())
         return;
 
+    this->clearValueAll();
     // local
     this->setValue("name", finfo.fileName());
     this->setValue("md5", this->getHash("md5", finfo.filePath()));
@@ -84,6 +85,17 @@ void FileInfoWidget::setValue(QString fieldName, QString v, bool local )
     }
 }
 
+void FileInfoWidget::clearValueAll()
+{
+    QHashIterator<QString, LRline*> i(field_widgets_);
+    LRline *w;
+    while (i.hasNext()){
+        i.next();
+        w = i.value();
+        w->clear();
+    }
+}
+
 void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
 {
     QStringList sf = dbschema_->fields("file");
@@ -98,7 +110,7 @@ void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
     }
 }
 
-QSqlError FileInfoWidget::save2db()
+QSqlError FileInfoWidget::update2db()
 {
     // gen sql
     QStringList fields = dbschema_->fields("file");
@@ -150,10 +162,10 @@ QString FileInfoWidget::getHash(QString algo, QString fpath)
     }
 }
 
-void FileInfoWidget::queryDB(QString fieldName, QString v)
+QSqlRecord FileInfoWidget::queryDB(QString fieldName, QString v)
 {
     if ( fieldName.isEmpty() || v.isEmpty() )
-        return;
+        return QSqlRecord();
 
     QSqlQuery q(db_);
     QString sql = "select * from file where " + fieldName + " = " + "'" + v + "'";
@@ -165,15 +177,16 @@ void FileInfoWidget::queryDB(QString fieldName, QString v)
     }
     if(!q.first()){
         qDebug() << "! no result. (queryFileInfo)";
-        return;
+        return QSqlRecord();
     }
     QSqlRecord rec = q.record();
     if (rec.isEmpty())
-        return;
+        return QSqlRecord();
 
     for ( int i = 0; i< rec.count(); ++i){
         this->setValue(rec.fieldName(i), rec.value(i).toString(), false);
     }
+    return rec;
 }
 
 void FileInfoWidget::updateLocalValue(QString fieldName, QString v, QString fpath)

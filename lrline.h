@@ -25,6 +25,7 @@ public slots:
     void setLocalProgress(int p);
     void setRemoteProgress(int p);
     void hintIfEqual();
+    void clear();
 private:
     Ui::LocalAndDBinfoLine *ui;
 };

@@ -53,9 +53,9 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="save2dbButton">
+    <widget class="QPushButton" name="update2dbButton">
      <property name="text">
-      <string>&amp;Save to DB</string>
+      <string>&amp;Update DB</string>
      </property>
     </widget>
    </item>

@@ -55,6 +55,15 @@ void LRline::hintIfEqual()
     }
 }
 
+void LRline::clear()
+{
+    ui->localValue->clear();
+    ui->removeValue->clear();
+    ui->fieldName->setStyleSheet("QLabel { }");
+    ui->localProgress->hide();
+    ui->remoteProgress->hide();
+}
+
 bool LRline::isEqual() const
 {
     return ui->localValue->text() == ui->removeValue->text();
