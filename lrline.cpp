@@ -8,6 +8,11 @@ LRline::LRline(QWidget *parent, bool hasProgress) :
     ui->setupUi(this);
     ui->localProgress->setHidden(!hasProgress);
     ui->remoteProgress->setHidden(!hasProgress);
+
+    connect(ui->localValue, SIGNAL(textChanged(QString)),
+            this, SLOT(hintIfEqual()));
+    connect(ui->removeValue, SIGNAL(textChanged(QString)),
+            this, SLOT(hintIfEqual()));
 }
 
 LRline::~LRline()
@@ -43,8 +48,10 @@ void LRline::setRemoteProgress(int p)
 
 void LRline::hintIfEqual()
 {
-    if (isEqual()){
+    if ( !ui->localValue->text().isEmpty() && isEqual()){
         ui->fieldName->setStyleSheet("QLabel { background-color: green; color: yellow }");
+    } else {
+        ui->fieldName->setStyleSheet("QLabel { }");
     }
 }
 
@@ -61,7 +68,6 @@ QString LRline::value(bool local)
         return ui->removeValue->text();
     }
 }
-
 
 void LRline::setName(QString s)
 {
