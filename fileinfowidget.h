@@ -59,7 +59,7 @@ private:
 
     // hash
     HashThread *hash_thread_;
-    QHash< QString, QHash<QString, QString> > caches_;
+    QHash< QString, QString > hash_cache_;
 };
 
 #endif // FILEINFOWIDGET_H

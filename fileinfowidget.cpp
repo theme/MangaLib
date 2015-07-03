@@ -14,13 +14,6 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
     ui->layout->setMargin(1);
     this->populateUi();
 
-    // init cache
-    QStringList fields = dbschema_->fields("file");
-    for (int i=0; i<fields.size(); ++i){
-        caches_.insert(fields.at(i), QHash<QString, QString>());
-    }
-
-    //
     connect(ui->update2dbButton, SIGNAL(clicked()),
             this, SLOT(update2db()));
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
@@ -59,8 +52,7 @@ void FileInfoWidget::setFile(QString f)
 
 void FileInfoWidget::cacheFileHash(QString algo, QString hash, QString fpath)
 {
-    QHash<QString, QString> h = caches_.value(algo);
-    h.insert(fpath,hash);
+    hash_cache_.insert(algo+fpath, hash);
     emit sigGotHash(algo, hash, fpath);
 }
 
@@ -163,8 +155,7 @@ QSqlError FileInfoWidget::update2db(bool update)
 
 QString FileInfoWidget::getHash(QString algo, QString fpath)
 {
-    QHash<QString, QString> h = caches_.value(algo);
-    if (!h.contains(fpath)) {
+    if (!hash_cache_.contains(algo+fpath)) {
         hash_thread_ = new HashThread(QCryptographicHash::Md5,fpath,this);
 
         connect(hash_thread_, SIGNAL(finished()),
@@ -174,12 +165,10 @@ QString FileInfoWidget::getHash(QString algo, QString fpath)
         connect(hash_thread_, SIGNAL(sigHashingPercent(QString, int,QString)),
                 this, SLOT(updateHashingProgress(QString, int,QString)));
 
-        h.insert(fpath, "Hashing...");// Necessary ( guard too many threads obj )
+        hash_cache_.insert(algo+fpath, "");// Necessary ( guard too many threads obj )
         hash_thread_->start();
-        return QString();   // empty
-    } else {
-        return h.value(fpath);
     }
+    return hash_cache_.value(algo+fpath);
 }
 
 QSqlRecord FileInfoWidget::queryDB(QString fieldName, QString v)
