@@ -71,6 +71,13 @@ void FileInfoWidget::updateHashingProgress(QString algo, int percent, QString fp
     }
 }
 
+bool FileInfoWidget::isInDB()
+{
+    QString v = this->getValue("md5");
+    QSqlRecord rec = queryDB("md5", v);
+    return !rec.isEmpty();
+}
+
 void FileInfoWidget::setValue(QString fieldName, QString v, bool local )
 {
     QStringList sf = dbschema_->fields("file");
@@ -110,7 +117,7 @@ void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
     }
 }
 
-QSqlError FileInfoWidget::update2db()
+QSqlError FileInfoWidget::update2db(bool update)
 {
     // gen sql
     QStringList fields = dbschema_->fields("file");
@@ -124,10 +131,23 @@ QSqlError FileInfoWidget::update2db()
             values.append("'" + v + "'");
         }
     }
-    QString sql = "INSERT INTO file (" + keys.join(",") + ") ";
-    sql += "VALUES (" + values.join(",") + ")";
-    QSqlQuery q(db_);
 
+    QString sql;
+    if (update){
+        sql = " UPDATE file ";
+        sql += " SET ";
+        QStringList assigns;
+        for (int i =0; i< keys.size(); ++i){
+            assigns.append(" " + keys.at(i) + " = " + values.at(i) + " ");
+        }
+        sql += assigns.join(",");
+        sql += " WHERE md5 = '" + this->getValue("md5") + "'";
+    } else { //insert
+        sql = "INSERT INTO file (" + keys.join(",") + ") ";
+        sql += "VALUES (" + values.join(",") + ")";
+    }
+
+    QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "insert to |file| error: "+ q.lastError().text();
         qDebug()  << msg;
