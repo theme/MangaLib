@@ -1,8 +1,11 @@
 #include "hashthread.h"
 
+QSemaphore HashThread::sem_(1);
+
 HashThread::HashThread(QString fpath, enum QCryptographicHash::Algorithm algo, QObject *parent):
     QThread(parent), fpath_(fpath), algo_(algo)
 {
+
 }
 
 QString HashThread::fpath()
@@ -12,6 +15,7 @@ QString HashThread::fpath()
 
 void HashThread::run()
 {
+    sem_.acquire();
     QFile f(fpath_);
     qint64 size = f.size();
     char buf[BUFSIZE];
@@ -32,5 +36,6 @@ void HashThread::run()
         emit sigHashingError(f.errorString(), fpath_);
     }
     f.close();
+    sem_.release();
 }
 

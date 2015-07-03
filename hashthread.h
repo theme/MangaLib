@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QCryptographicHash>
 #include <QFile>
+#include <QSemaphore>
 
 class HashThread : public QThread
 {
@@ -25,6 +26,8 @@ private:
     enum QCryptographicHash::Algorithm algo_;
     QString hash_;
     static const uint BUFSIZE = 40960; // 40k
+
+    static QSemaphore sem_;
 };
 
 #endif // HASHTHREAD_H
