@@ -23,19 +23,12 @@
       <widget class="QTreeView" name="dirView"/>
      </item>
      <item>
-      <widget class="FilesTableView" name="filesView"/>
+      <widget class="QTableView" name="filesView"/>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>FilesTableView</class>
-   <extends>QTableView</extends>
-   <header>filestableview.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

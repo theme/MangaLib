@@ -52,6 +52,7 @@ QString HashThread::algoName(QCryptographicHash::Algorithm a)
         return "sha256";
         break;
     default:
+        throw "unknown QCryptographicHash::Algorithm name";
         break;
     }
 }

@@ -14,7 +14,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    filestableview.cpp \
     hashthread.cpp \
     dbtablewidget.cpp \
     dbschema.cpp \
@@ -24,7 +23,6 @@ SOURCES += main.cpp\
     lrline.cpp
 
 HEADERS  += mainwindow.h \
-    filestableview.h \
     hashthread.h \
     dbtablewidget.h \
     dbschema.h \

@@ -8,7 +8,6 @@
 #include <QShortcut>
 #include <QCompleter>
 #include <QDirModel>
-#include "filestableview.h"
 
 namespace Ui {
 class FileExplorer;
