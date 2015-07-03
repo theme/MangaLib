@@ -1,11 +1,13 @@
 #include "lrline.h"
 #include "ui_lrline.h"
 
-LRline::LRline(QWidget *parent) :
+LRline::LRline(QWidget *parent, bool hasProgress) :
     QWidget(parent),
     ui(new Ui::LocalAndDBinfoLine)
 {
     ui->setupUi(this);
+    ui->localProgress->setHidden(!hasProgress);
+    ui->remoteProgress->setHidden(!hasProgress);
 }
 
 LRline::~LRline()
@@ -15,14 +17,28 @@ LRline::~LRline()
 
 void LRline::setLocalValue(QString s)
 {
+    ui->localProgress->hide();
     ui->localValue->setText(s);
     hintIfEqual();
 }
 
 void LRline::setRemoveValue(QString s)
 {
+    ui->remoteProgress->hide();
     ui->removeValue->setText(s);
     hintIfEqual();
+}
+
+void LRline::setLocalProgress(int p)
+{
+    ui->localProgress->setValue(p);
+    ui->localProgress->setHidden(false);
+}
+
+void LRline::setRemoteProgress(int p)
+{
+    ui->remoteProgress->setValue(p);
+    ui->remoteProgress->setHidden(false);
 }
 
 void LRline::hintIfEqual()

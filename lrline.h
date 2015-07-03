@@ -12,7 +12,8 @@ class LRline : public QWidget
     Q_OBJECT
 
 public:
-    explicit LRline(QWidget *parent = 0);
+    explicit LRline(QWidget *parent = 0,
+                    bool hasProgress = false);
     ~LRline();
     bool isEqual() const;
     QString value( bool local = true);
@@ -21,6 +22,8 @@ public slots:
     void setName(QString s);
     void setLocalValue(QString s);
     void setRemoveValue(QString s);
+    void setLocalProgress(int p);
+    void setRemoteProgress(int p);
     void hintIfEqual();
 private:
     Ui::LocalAndDBinfoLine *ui;

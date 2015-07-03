@@ -44,6 +44,7 @@ private:
     QString getHash(QString fpath);
     void clearCache();
     void setValue(QString fieldName, QString v, bool local = true);
+    void setProgress(QString fieldName, int p, bool local = true);
     Ui::FileInfoWidget *ui;
     QFileInfo finfo;   // local file info
 

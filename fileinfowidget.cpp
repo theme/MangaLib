@@ -52,15 +52,14 @@ void FileInfoWidget::setFile(QString f)
 void FileInfoWidget::cacheFileHash(QString hash, QString fpath)
 {
     hash_cache_.insert(fpath, hash);
-    this->setValue("md5", this->getHash(finfo.filePath())); // TODO
+    this->setValue("md5", this->getHash(finfo.filePath()));
     emit sigGotHash("md5", hash, fpath);
 }
 
 void FileInfoWidget::updateUiFileHashingPercent(int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
-        hash_cache_.insert(fpath, "Hashing..." + QString::number(percent) + "%");
-        this->setValue("md5", this->getHash(finfo.filePath()));
+        this->setProgress("md5", percent);
     }
 }
 
@@ -75,6 +74,20 @@ void FileInfoWidget::setValue(QString fieldName, QString v, bool local )
         w->setLocalValue(v);
     } else {
         w->setRemoveValue(v);
+    }
+}
+
+void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
+{
+    QStringList sf = dbschema_->fields("file");
+    if (!sf.contains(fieldName))
+        return;
+
+    LRline* w = field_widgets_.value(fieldName);
+    if ( local ){
+        w->setLocalProgress(p);
+    } else {
+        w->setRemoteProgress(p);
     }
 }
 
