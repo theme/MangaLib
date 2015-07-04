@@ -132,7 +132,7 @@ QSqlError SQLiteDB::open(QString fn)
     if (db_.isValid()){
         qDebug() << "openDB() when db_.isValid () : db_.connectionName()" << db_.connectionName();
         if (fn == db_.connectionName()){ // same db
-            emit sigStatusMsg(tr("same DB file, do nothing."));
+            qDebug() << "SQLiteDB::open() same DB file, do nothing.";
             return QSqlError();
         }
         else {

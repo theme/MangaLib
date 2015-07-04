@@ -16,13 +16,12 @@ public:
                QObject *parent = 0);
     QString fpath();
 signals:
-    void sigHash(QString algoName, QString hashString, QString fpath);
-    void sigHashingError(QString algoName, QString errorString, QString fpath);
-    void sigHashingPercent(QString algoName, int percent, QString fpath);
+    void sigHash(int algo, QString hashString, QString fpath);
+    void sigHashingError(int algo, QString errorString, QString fpath);
+    void sigHashingPercent(int algo, int percent, QString fpath);
 
 private:
     void run();
-    QString algoName(QCryptographicHash::Algorithm a);
     QString fpath_;
     QCryptographicHash::Algorithm algo_;
     QString hash_;

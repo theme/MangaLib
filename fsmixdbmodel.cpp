@@ -1,19 +1,9 @@
 #include "fsmixdbmodel.h"
 #include <QDebug>
 
-FSmixDBmodel::FSmixDBmodel(SQLiteDB *db, QObject *parent):
-    QFileSystemModel(parent),db_(db)
+FSmixDBmodel::FSmixDBmodel(SQLiteDB *db, HashPool *hp, QObject *parent):
+    QFileSystemModel(parent),db_(db), hp_(hp)
 {
-    // how many coloums are there in parent model?
-    // 4
-    fscolnum_ = QFileSystemModel::columnCount();
-
-    // How many coloums are there in db?
-    // By schema
-
-    // What of them do I need in view?
-    // book rank, author rank
-
 }
 
 int FSmixDBmodel::rowCount(const QModelIndex &parent) const
@@ -23,7 +13,7 @@ int FSmixDBmodel::rowCount(const QModelIndex &parent) const
 
 int FSmixDBmodel::columnCount(const QModelIndex &parent) const
 {
-    return QFileSystemModel::columnCount(parent) +1;
+    return QFileSystemModel::columnCount(parent) +2;
 }
 
 QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
@@ -31,7 +21,10 @@ QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole){
         switch (index.column()){
         case 4:
-            return QVariant(QString("rank!?!?"));
+            return QVariant(hp_->getFileHash(QCryptographicHash::Md5,this->filePath(index)));
+            break;
+        case 5:
+            return QVariant();
             break;
         }
     }
@@ -43,6 +36,9 @@ QVariant FSmixDBmodel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Orientation::Horizontal && role == Qt::DisplayRole){
         switch (section){
         case 4:
+            return QVariant(QString("md5"));
+            break;
+        case 5:
             return QVariant(QString("DB rank"));
             break;
         }

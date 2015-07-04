@@ -30,8 +30,8 @@ signals:
     void sigSaved2DB();
 
 private slots:
-    void handleGotHash(QString algo, QString hash, QString fpath);
-    void updateHashingProgress(QString algo, int percent, QString fpath);
+    void handleGotHash(int algo, QString hash, QString fpath);
+    void updateHashingProgress(int algo, int percent, QString fpath);
     bool isInDB();
     bool update2db(bool update = true);
     void updateFromDB(QString fieldName, QString v);
@@ -39,7 +39,6 @@ private slots:
 
 private:
     void populateUi();
-    QString getHash(QString algo, QString fpath);
     void setValue(QString fieldName, QString v, bool local = true);
     void clearValueAll();
     void setProgress(QString fieldName, int p, bool local = true);

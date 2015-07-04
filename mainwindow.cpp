@@ -18,8 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: File explorer
     FSmixDBmodel *fmixd_;
-
-    fmixd_ = new FSmixDBmodel(db_, this);
+    fmixd_ = new FSmixDBmodel(db_, hp_, this);
     fmixd_->setRootPath(QDir::rootPath());
     fmixd_->setFilter(QDir::Files);
     fmixd_->setNameFilters(QStringList()

@@ -29,33 +29,15 @@ void HashThread::run()
             rc += len;
             np = rc*100/size;
             if ( p != np){
-                emit sigHashingPercent(algoName(algo_), np,fpath_);
+                emit sigHashingPercent(algo_, np,fpath_);
                 p = np;
             }
         }
         hash_ = hash.result().toHex().toUpper();
-        emit sigHash(algoName(algo_), hash_, fpath_);
+        emit sigHash(algo_, hash_, fpath_);
     } else {
-        emit sigHashingError(algoName(algo_), f.errorString(), fpath_);
+        emit sigHashingError(algo_, f.errorString(), fpath_);
     }
     f.close();
     sem_.release();
-}
-
-QString HashThread::algoName(QCryptographicHash::Algorithm a)
-{
-    switch (a) {
-    case QCryptographicHash::Md5:
-        return "md5";
-        break;
-    case QCryptographicHash::Sha1:
-        return "sha1";
-        break;
-    case QCryptographicHash::Sha256:
-        return "sha256";
-        break;
-    default:
-        throw "unknown QCryptographicHash::Algorithm name";
-        break;
-    }
 }

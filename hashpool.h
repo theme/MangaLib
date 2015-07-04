@@ -11,13 +11,14 @@ class HashPool : public QObject
 public:
     explicit HashPool(QObject *parent = 0);
     QString getFileHash(QCryptographicHash::Algorithm algo, QString fpath);
+    QString algoName(QCryptographicHash::Algorithm a) const;
+
 signals:
-    void sigHash(QString algoName, QString hashString, QString fpath);
-    void sigHashingError(QString algoName, QString errorString, QString fpath);
-    void sigHashingPercent(QString algoName, int percent, QString fpath);
+    void sigHash(int algo, QString hashString, QString fpath);
+    void sigHashingPercent(int algo, int percent, QString fpath);
 
 private slots:
-    void cacheFileHash(QString algo, QString hash, QString fpath);
+    void cacheFileHash(int algo, QString hash, QString fpath);
 private:
     QHash< QString, QString > file_hashes_;
 };

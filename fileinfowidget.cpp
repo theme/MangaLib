@@ -16,10 +16,10 @@ FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp,
     connect(ui->update2dbButton, SIGNAL(clicked()),
             this, SLOT(update2db()));
 
-    connect(hp_, SIGNAL(sigHash(QString,QString,QString)),
-            this, SLOT(handleGotHash(QString,QString,QString)));
-    connect(hp_, SIGNAL(sigHashingPercent(QString,int,QString)),
-            this, SLOT(updateHashingProgress(QString,int,QString)));
+    connect(hp_, SIGNAL(sigHash(int,QString,QString)),
+            this, SLOT(handleGotHash(int,QString,QString)));
+    connect(hp_, SIGNAL(sigHashingPercent(int,int,QString)),
+            this, SLOT(updateHashingProgress(int,int,QString)));
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -45,7 +45,7 @@ void FileInfoWidget::setFile(QString f)
     this->clearValueAll();
     // local
     this->setValue("name", finfo.fileName());
-    this->setValue("md5", this->getHash("md5", finfo.filePath()));
+    this->setValue("md5", hp_->getFileHash(QCryptographicHash::Md5, finfo.filePath()));
     this->setValue("size", QString::number(finfo.size()));
     this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
     // db
@@ -57,16 +57,16 @@ void FileInfoWidget::setFile(QString f)
     }
 }
 
-void FileInfoWidget::handleGotHash(QString algo, QString hash, QString fpath)
+void FileInfoWidget::handleGotHash(int algo, QString hash, QString fpath)
 {
-    updateLocalValue(algo, hash, fpath);
-    updateFromDB(algo,hash);
+    updateLocalValue(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)), hash, fpath);
+    updateFromDB(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)),hash);
 }
 
-void FileInfoWidget::updateHashingProgress(QString algo, int percent, QString fpath)
+void FileInfoWidget::updateHashingProgress(int algo, int percent, QString fpath)
 {
     if( fpath == finfo.filePath()){
-        this->setProgress(algo, percent);
+        this->setProgress(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)), percent);
     }
 }
 
@@ -134,11 +134,6 @@ bool FileInfoWidget::update2db(bool update)
     } else {
         return db_->insert("file", keys, values);
     }
-}
-
-QString FileInfoWidget::getHash(QString algo, QString fpath)
-{
-    return hp_->getFileHash(QCryptographicHash::Md5, fpath);
 }
 
 void FileInfoWidget::updateFromDB(QString fieldName, QString v)
