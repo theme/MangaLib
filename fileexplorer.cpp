@@ -38,6 +38,10 @@ FileExplorer::FileExplorer(QWidget *parent) :
     ui->filesView->setModel(files_model_);
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentFileChanged(QModelIndex,QModelIndex)));
+    connect(files_model_, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            ui->filesView, SLOT(resizeColumnsToContents()));
+    connect(files_model_, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            ui->filesView, SLOT(resizeColumnsToContents()));
 
     // handle path change
     connect(this, SIGNAL(sigPath(QString)), this, SLOT(setPath(QString)));
