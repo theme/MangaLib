@@ -56,6 +56,9 @@ private:
     // DB
     SQLiteDB *db_;
 
+    // file hash pool
+    HashPool *hp_;
+
     // ui: DB tabs
     QHash<DBTableWidget*, int> db_table_widgets_hash_;
 };

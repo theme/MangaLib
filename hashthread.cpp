@@ -20,15 +20,18 @@ void HashThread::run()
     qint64 size = f.size();
     char buf[BUFSIZE];
     qint64 rc = 0; // read count
-    int len;
-
+    int len, p = 0, np = 0;
     if (f.open(QFile::ReadOnly)){
         QCryptographicHash hash(algo_);
         while(!f.atEnd()){
             len = f.read(buf, BUFSIZE);
             hash.addData(buf, len);   //100K
             rc += len;
-            emit sigHashingPercent(algoName(algo_), rc*100/size,fpath_);
+            np = rc*100/size;
+            if ( p != np){
+                emit sigHashingPercent(algoName(algo_), np,fpath_);
+                p = np;
+            }
         }
         hash_ = hash.result().toHex().toUpper();
         emit sigHash(algoName(algo_), hash_, fpath_);

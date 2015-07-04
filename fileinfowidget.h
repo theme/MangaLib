@@ -7,6 +7,7 @@
 #include "hashthread.h"
 #include "lrline.h"
 #include "sqlitedb.h"
+#include "hashpool.h"
 
 namespace Ui {
 class FileInfoWidget;
@@ -18,6 +19,7 @@ class FileInfoWidget : public QWidget
 
 public:
     explicit FileInfoWidget(SQLiteDB *db,
+                            HashPool *hp,
                             QWidget *parent = 0);
     ~FileInfoWidget();
     QString getValue(QString field, bool local = true);
@@ -27,10 +29,9 @@ public slots:
 
 signals:
     void sigSaved2DB();
-    void sigGotHash(QString algoName, QString v, QString f);
 
 private slots:
-    void cacheFileHash(QString algo, QString hash, QString fpath);
+    void handleGotHash(QString algo, QString hash, QString fpath);
     void updateHashingProgress(QString algo, int percent, QString fpath);
     bool isInDB();
     bool update2db(bool update = true);
@@ -53,8 +54,7 @@ private:
     SQLiteDB *db_;
 
     // hash
-    HashThread *hash_thread_;
-    QHash< QString, QString > hash_cache_;
+    HashPool *hp_;
 };
 
 #endif // FILEINFOWIDGET_H

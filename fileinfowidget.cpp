@@ -1,11 +1,11 @@
 #include "fileinfowidget.h"
 #include "ui_fileinfowidget.h"
 
-FileInfoWidget::FileInfoWidget(SQLiteDB *db,
+FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp,
                                QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileInfoWidget),
-    db_(db)
+    db_(db), hp_(hp)
 {
     ui->setupUi(this);
     ui->layout->setContentsMargins(1,1,1,1);
@@ -15,10 +15,11 @@ FileInfoWidget::FileInfoWidget(SQLiteDB *db,
 
     connect(ui->update2dbButton, SIGNAL(clicked()),
             this, SLOT(update2db()));
-    connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
-            this, SLOT(updateLocalValue(QString,QString,QString)));
-    connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
-            this, SLOT(updateFromDB(QString,QString)));
+
+    connect(hp_, SIGNAL(sigHash(QString,QString,QString)),
+            this, SLOT(handleGotHash(QString,QString,QString)));
+    connect(hp_, SIGNAL(sigHashingPercent(QString,int,QString)),
+            this, SLOT(updateHashingProgress(QString,int,QString)));
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -56,10 +57,10 @@ void FileInfoWidget::setFile(QString f)
     }
 }
 
-void FileInfoWidget::cacheFileHash(QString algo, QString hash, QString fpath)
+void FileInfoWidget::handleGotHash(QString algo, QString hash, QString fpath)
 {
-    hash_cache_.insert(algo+fpath, hash);
-    emit sigGotHash(algo, hash, fpath);
+    updateLocalValue(algo, hash, fpath);
+    updateFromDB(algo,hash);
 }
 
 void FileInfoWidget::updateHashingProgress(QString algo, int percent, QString fpath)
@@ -137,20 +138,7 @@ bool FileInfoWidget::update2db(bool update)
 
 QString FileInfoWidget::getHash(QString algo, QString fpath)
 {
-    if (!hash_cache_.contains(algo+fpath)) {
-        hash_thread_ = new HashThread(QCryptographicHash::Md5,fpath,this);
-
-        connect(hash_thread_, SIGNAL(finished()),
-                hash_thread_, SLOT(deleteLater()));
-        connect(hash_thread_, SIGNAL(sigHash(QString,QString,QString)),
-                this, SLOT(cacheFileHash(QString,QString,QString)));
-        connect(hash_thread_, SIGNAL(sigHashingPercent(QString, int,QString)),
-                this, SLOT(updateHashingProgress(QString, int,QString)));
-
-        hash_cache_.insert(algo+fpath, "");// Necessary ( guard too many threads obj )
-        hash_thread_->start();
-    }
-    return hash_cache_.value(algo+fpath);
+    return hp_->getFileHash(QCryptographicHash::Md5, fpath);
 }
 
 void FileInfoWidget::updateFromDB(QString fieldName, QString v)

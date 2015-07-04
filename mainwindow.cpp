@@ -20,9 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // DB
     db_ = new SQLiteDB(":/dbschema.json", this);
+    // file hash pool
+    hp_ = new HashPool(this);
 
     // ui: File info
-    file_info_widget_ = new FileInfoWidget(db_, this);
+    file_info_widget_ = new FileInfoWidget(db_, hp_, this);
     file_exp_widget_->layout()->addWidget(file_info_widget_);
 //    ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),

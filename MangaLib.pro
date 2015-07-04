@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     fileinfowidget.cpp \
     sqlitedb.cpp \
     lrline.cpp \
-    fsmixdbmodel.cpp
+    fsmixdbmodel.cpp \
+    hashpool.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     fileinfowidget.h \
     sqlitedb.h \
     lrline.h \
-    fsmixdbmodel.h
+    fsmixdbmodel.h \
+    hashpool.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
