@@ -8,7 +8,6 @@
 #include <QShortcut>
 #include <QCompleter>
 #include <QDirModel>
-#include "fsmixdbmodel.h"
 
 namespace Ui {
 class FileExplorer;
@@ -19,10 +18,10 @@ class FileExplorer : public QWidget
     Q_OBJECT
 
 public:
-    explicit FileExplorer(QWidget *parent = 0);
+    explicit FileExplorer(QFileSystemModel* filesmodel,
+                          QWidget *parent = 0);
     ~FileExplorer();
     QString path() const;
-
 signals:
     void sigPath(QString path);
     void sigFilePath(QString fpath);

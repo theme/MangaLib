@@ -11,17 +11,29 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    // ui: File explorer
-    file_exp_widget_ = new FileExplorer(this);
-    ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
-
-    connect(this, SIGNAL(sigStatusMsg(QString, int)),
-            ui->statusBar, SLOT(showMessage(QString,int)));
-
     // DB
     db_ = new SQLiteDB(":/dbschema.json", this);
     // file hash pool
     hp_ = new HashPool(this);
+
+    // ui: File explorer
+    FSmixDBmodel *fmixd_  = new FSmixDBmodel(this);
+
+    fmixd_ = new FSmixDBmodel(this);
+    fmixd_->setRootPath(QDir::rootPath());
+    fmixd_->setFilter(QDir::Files);
+    fmixd_->setNameFilters(QStringList()
+                                 << "*.zip"
+                                 << "*.cb?"
+                                 << "*.rar");
+    fmixd_->setNameFilterDisables(false);
+    fmixd_->setReadOnly(false);
+    fmixd_->setDB(db_);
+    file_exp_widget_ = new FileExplorer(fmixd_, this);
+    ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
+
+    connect(this, SIGNAL(sigStatusMsg(QString, int)),
+            ui->statusBar, SLOT(showMessage(QString,int)));
 
     // ui: File info
     file_info_widget_ = new FileInfoWidget(db_, hp_, this);

@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QFileInfo>
 #include <QDateTime>
-#include "hashthread.h"
 #include "lrline.h"
 #include "sqlitedb.h"
 #include "hashpool.h"

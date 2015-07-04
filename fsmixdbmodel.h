@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QFileSystemModel>
 #include "sqlitedb.h"
+#include "hashpool.h"
 
 class FSmixDBmodel : public QFileSystemModel
 {
@@ -19,11 +20,12 @@ public:
 
     // DB
     void setDB(SQLiteDB* db);
+
 private:
     QList< int > db_col_indiecs_;
     QStringList db_col_names_;
     int fscolnum_;
-    SQLiteDB *db_;
+    QPointer<SQLiteDB> db_;
 };
 
 #endif // FSMIXDBMODEL_H

@@ -12,6 +12,7 @@
 #include "fileexplorer.h"
 #include "fileinfowidget.h"
 #include "dbtablewidget.h"
+#include "fsmixdbmodel.h"
 
 namespace Ui {
 class MainWindow;

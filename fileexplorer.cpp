@@ -1,9 +1,9 @@
 #include "fileexplorer.h"
 #include "ui_fileexplorer.h"
 
-FileExplorer::FileExplorer(QWidget *parent) :
+FileExplorer::FileExplorer(QFileSystemModel *filesmodel, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileExplorer)
+    ui(new Ui::FileExplorer), files_model_(filesmodel)
 {
     ui->setupUi(this);
 
@@ -27,15 +27,6 @@ FileExplorer::FileExplorer(QWidget *parent) :
     connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
     // files View
-    files_model_ = new FSmixDBmodel(this);
-    files_model_->setRootPath(QDir::rootPath());
-    files_model_->setFilter(QDir::Files);
-    files_model_->setNameFilters(QStringList()
-                                 << "*.zip"
-                                 << "*.cb?"
-                                 << "*.rar");
-    files_model_->setNameFilterDisables(false);
-    files_model_->setReadOnly(false);
     ui->filesView->setModel(files_model_);
     ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
