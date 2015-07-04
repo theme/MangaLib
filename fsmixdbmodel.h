@@ -18,6 +18,7 @@ public:
 private:
     QList< int > db_col_indiecs_;
     QStringList db_col_names_;
+    int fscolnum_;
 };
 
 #endif // FSMIXDBMODEL_H

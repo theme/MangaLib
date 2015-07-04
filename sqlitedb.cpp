@@ -19,6 +19,42 @@ QStringList SQLiteDB::tables() const
     return db_.tables();
 }
 
+QStringList SQLiteDB::fields(QString tableName) const
+{
+    QStringList dbfields;
+    QString sql("PRAGMA table_info( " + tableName + ")");
+    QSqlQuery q(db_);
+    if (!q.exec(sql)){
+        QString msg = "query table_info error. |"+tableName +"|"+ q.lastError().text();
+        qDebug() << msg;
+        return QStringList();
+    }
+    while(q.next()){
+        QSqlRecord rec = q.record();
+        dbfields.append(rec.value(1).toString());
+    }
+    return dbfields;
+}
+
+QString SQLiteDB::type(QString tableName, QString fieldName) const
+{
+    QString sql("PRAGMA table_info( " + tableName + ")");
+    QSqlQuery q(db_);
+    if (!q.exec(sql)){
+        QString msg = "query table_info error. |"+tableName +"|"+ q.lastError().text();
+        qDebug() << msg;
+        return QString();
+    }
+    QSqlRecord rec;
+    while(q.next()){
+        rec = q.record();
+        if ( fieldName == rec.value(1).toString() ){
+            return rec.value(2).toString();
+        }
+    }
+    return QString();
+}
+
 QSqlDatabase &SQLiteDB::connection()
 {
     return db_;

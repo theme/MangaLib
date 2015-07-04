@@ -12,6 +12,8 @@ public:
     explicit SQLiteDB(const DBSchema *schema,
                       QObject *parent = 0);
     QStringList tables() const;
+    QStringList fields(QString tableName) const;
+    QString type(QString tableName, QString fieldName) const;
     QSqlDatabase &connection();
 
 signals:

@@ -6,22 +6,13 @@ FSmixDBmodel::FSmixDBmodel(QObject *parent):
 {
     // how many coloums are there in parent model?
     // 4
-    qDebug() << QFileSystemModel::columnCount();
-
-    // what are the coloum names?
-    //QVariant(QString, "Name")
-    //QVariant(QString, "Size")
-    //QVariant(QString, "Type")
-    //QVariant(QString, "Date Modified")
-    for (int i=0; i< QFileSystemModel::columnCount(); ++i){
-        qDebug() << this->headerData(i, Qt::Horizontal, Qt::DisplayRole);
-    }
+    fscolnum_ = QFileSystemModel::columnCount();
 
     // How many coloums are there in db?
     // By schema
 
     // What of them do I need in view?
-    // bookrank, author rank
+    // book rank, author rank
 
 }
 
