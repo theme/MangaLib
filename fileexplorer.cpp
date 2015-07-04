@@ -23,9 +23,9 @@ FileExplorer::FileExplorer(QWidget *parent) :
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     ui->dirView->setModel(dir_model_);
+    ui->dirView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
-
     // files View
     files_model_ = new QFileSystemModel(this);
     files_model_->setRootPath(QDir::rootPath());
@@ -36,12 +36,9 @@ FileExplorer::FileExplorer(QWidget *parent) :
                                  << "*.rar");
     files_model_->setNameFilterDisables(false);
     ui->filesView->setModel(files_model_);
+    ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentFileChanged(QModelIndex,QModelIndex)));
-    connect(files_model_, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            ui->filesView, SLOT(resizeColumnsToContents()));
-    connect(files_model_, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            ui->filesView, SLOT(resizeColumnsToContents()));
 
     // handle path change
     connect(this, SIGNAL(sigPath(QString)), this, SLOT(setPath(QString)));
@@ -54,13 +51,11 @@ FileExplorer::~FileExplorer()
 
 void FileExplorer::onCurrentDirChanged(QModelIndex current, QModelIndex previous)
 {
-    qDebug() << dir_model_->filePath(current);
     emit sigPath( dir_model_->filePath(current) );
 }
 
 void FileExplorer::onCurrentFileChanged(QModelIndex current, QModelIndex previous)
 {
-    qDebug() << files_model_->filePath(current);
     emit sigFilePath( files_model_->filePath(current));
 }
 
