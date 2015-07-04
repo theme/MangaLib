@@ -2,8 +2,6 @@
     "file": [
         {"name": "varchar"},
         {"size": "integer"},
-        {"author": "varchar"},
-        {"bookname": "varchar"},
         {"timestamp": "varchar(30)"},
         {"md5": "varchar(32)"},
         {"sha1": "varchar(40)"},
@@ -14,7 +12,6 @@
         {"isbn": "integer"},
         {"author": "varchar"},
         {"year": "varchar(4)"},
-        {"rank": "integer"},
         {"timestamp": "varchar(30)"}
     ],
     "author": [
@@ -44,5 +41,9 @@
         {"name": "varchar"},
         {"URI": "varchar"},
         {"timestamp": "varchar(30)"}
+    ],
+    "rank": [
+        {"name": "varchar"},
+        {"rank": "integer"}
     ]
 }
