@@ -42,3 +42,14 @@ QVariant FSmixDBmodel::headerData(int section, Qt::Orientation orientation, int 
     return QFileSystemModel::headerData(section, orientation, role);
 }
 
+Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
+{
+    if ( !false ){ // ! db online
+        switch (index.column()){
+        case 4:
+            return QFileSystemModel::flags(index) & ~Qt::ItemIsEnabled;
+        }
+    }
+    return QFileSystemModel::flags(index);
+}
+
