@@ -1,8 +1,9 @@
 #include "dbschema.h"
 
-DBSchema::DBSchema(QObject *parent) :
+DBSchema::DBSchema(QString file, QObject *parent) :
     QObject(parent)
 {
+    this->parseJsonFile(file);
 }
 
 QStringList DBSchema::tables() const

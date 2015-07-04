@@ -14,15 +14,14 @@ class DBSchema : public QObject
 {
     Q_OBJECT
 public:
-    explicit DBSchema(QObject *parent = 0);
+    explicit DBSchema(QString file, QObject *parent = 0);
     QStringList tables() const;
     QStringList fields(QString tableName) const;
     QString type(QString tableName, QString fieldName) const;
     bool isReady() const;
 
-public slots:
-    bool parseJsonFile(QString file);
 private:
+    bool parseJsonFile(QString file);
     QJsonDocument jsondoc;
 };
 

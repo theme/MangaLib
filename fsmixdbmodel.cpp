@@ -2,7 +2,7 @@
 #include <QDebug>
 
 FSmixDBmodel::FSmixDBmodel(QObject *parent):
-    QFileSystemModel(parent)
+    QFileSystemModel(parent), db_(0)
 {
     // how many coloums are there in parent model?
     // 4
@@ -59,5 +59,10 @@ Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
         }
     }
     return QFileSystemModel::flags(index);
+}
+
+void FSmixDBmodel::setDB(SQLiteDB *db)
+{
+    db_ = db;
 }
 

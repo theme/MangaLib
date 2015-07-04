@@ -54,7 +54,6 @@ private:
     FileInfoWidget *file_info_widget_;
 
     // DB
-    DBSchema *dbschema_;
     SQLiteDB *db_;
 
     // ui: DB tabs

@@ -1,9 +1,12 @@
 #include "sqlitedb.h"
 
-SQLiteDB::SQLiteDB(const DBSchema *schema,
+SQLiteDB::SQLiteDB(QString schemafile,
                    QObject *parent) :
-    QObject(parent), dbschema_(schema)
+    QObject(parent)
 {
+    // schema
+    dbschema_ = new DBSchema(schemafile,this);
+
     // DB state machine
     dbsm_ = new QStateMachine(this);
     state_opened_ = new QState(dbsm_);
@@ -12,6 +15,11 @@ SQLiteDB::SQLiteDB(const DBSchema *schema,
     state_closed_->addTransition(this, SIGNAL(sigOpened()), state_opened_);
     state_opened_->addTransition(this, SIGNAL(sigClosed()), state_closed_);
     dbsm_->start();
+}
+
+bool SQLiteDB::isOpen() const
+{
+    return db_.isOpen();
 }
 
 QStringList SQLiteDB::tables() const

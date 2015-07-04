@@ -19,9 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->statusBar, SLOT(showMessage(QString,int)));
 
     // DB
-    dbschema_ = new DBSchema(this);
-    dbschema_->parseJsonFile(":/dbschema.json");
-    db_ = new SQLiteDB(dbschema_ ,this);
+    db_ = new SQLiteDB(":/dbschema.json", this);
 
     // ui: File info
     file_info_widget_ = new FileInfoWidget(db_, this);

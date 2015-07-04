@@ -9,8 +9,10 @@ class SQLiteDB : public QObject
 {
     Q_OBJECT
 public:
-    explicit SQLiteDB(const DBSchema *schema,
+    explicit SQLiteDB(QString schemafile,
                       QObject *parent = 0);
+    bool isOpen() const;
+
     QStringList tables() const;
     QStringList fields(QString tableName) const;
     QString type(QString tableName, QString fieldName) const;
