@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     hp_ = new HashPool(this);
 
     // ui: File explorer
-    FSmixDBmodel *fmixd_  = new FSmixDBmodel(this);
+    FSmixDBmodel *fmixd_;
 
-    fmixd_ = new FSmixDBmodel(this);
+    fmixd_ = new FSmixDBmodel(db_, this);
     fmixd_->setRootPath(QDir::rootPath());
     fmixd_->setFilter(QDir::Files);
     fmixd_->setNameFilters(QStringList()
@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
                                  << "*.rar");
     fmixd_->setNameFilterDisables(false);
     fmixd_->setReadOnly(false);
-    fmixd_->setDB(db_);
     file_exp_widget_ = new FileExplorer(fmixd_, this);
     ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
 

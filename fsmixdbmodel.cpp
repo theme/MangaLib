@@ -1,8 +1,8 @@
 #include "fsmixdbmodel.h"
 #include <QDebug>
 
-FSmixDBmodel::FSmixDBmodel(QObject *parent):
-    QFileSystemModel(parent)
+FSmixDBmodel::FSmixDBmodel(SQLiteDB *db, QObject *parent):
+    QFileSystemModel(parent),db_(db)
 {
     // how many coloums are there in parent model?
     // 4
@@ -43,7 +43,7 @@ QVariant FSmixDBmodel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Orientation::Horizontal && role == Qt::DisplayRole){
         switch (section){
         case 4:
-            return QVariant(QString("rank!?!?"));
+            return QVariant(QString("DB rank"));
             break;
         }
     }
@@ -54,7 +54,7 @@ Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
 {
     switch (index.column()){
     case 4:
-        if ( !db_.isNull() && db_->isOpen() ){
+        if ( db_->isOpen() ){
             return QFileSystemModel::flags(index);
         } else {
             return QFileSystemModel::flags(index) & ~Qt::ItemIsEnabled;
@@ -64,9 +64,3 @@ Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
         return QFileSystemModel::flags(index);
     }
 }
-
-void FSmixDBmodel::setDB(SQLiteDB *db)
-{
-    db_ = db;
-}
-

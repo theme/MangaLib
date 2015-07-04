@@ -10,7 +10,7 @@ class FSmixDBmodel : public QFileSystemModel
 {
     Q_OBJECT
 public:
-    FSmixDBmodel(QObject *parent = 0);
+    FSmixDBmodel(SQLiteDB *db, QObject *parent);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
@@ -18,14 +18,11 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    // DB
-    void setDB(SQLiteDB* db);
-
 private:
     QList< int > db_col_indiecs_;
     QStringList db_col_names_;
     int fscolnum_;
-    QPointer<SQLiteDB> db_;
+    SQLiteDB *db_;
 };
 
 #endif // FSMIXDBMODEL_H
