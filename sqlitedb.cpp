@@ -75,6 +75,7 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
         qDebug()  << msg;
         qDebug() << q.lastError().text();
     }
+    q.first();
     return q.record();
 }
 
