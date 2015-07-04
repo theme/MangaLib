@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     fileexplorer.cpp \
     fileinfowidget.cpp \
     sqlitedb.cpp \
-    lrline.cpp
+    lrline.cpp \
+    fsmixdbmodel.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     fileexplorer.h \
     fileinfowidget.h \
     sqlitedb.h \
-    lrline.h
+    lrline.h \
+    fsmixdbmodel.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \

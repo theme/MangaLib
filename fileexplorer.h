@@ -8,6 +8,7 @@
 #include <QShortcut>
 #include <QCompleter>
 #include <QDirModel>
+#include "fsmixdbmodel.h"
 
 namespace Ui {
 class FileExplorer;

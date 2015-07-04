@@ -27,7 +27,7 @@ FileExplorer::FileExplorer(QWidget *parent) :
     connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
     // files View
-    files_model_ = new QFileSystemModel(this);
+    files_model_ = new FSmixDBmodel(this);
     files_model_->setRootPath(QDir::rootPath());
     files_model_->setFilter(QDir::Files);
     files_model_->setNameFilters(QStringList()
