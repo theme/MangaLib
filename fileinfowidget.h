@@ -34,7 +34,7 @@ private slots:
     void updateHashingProgress(int algo, int percent, QString fpath);
     bool isInDB();
     bool update2db(bool update = true);
-    void updateFromDB(QString fieldName, QString v);
+    void updateFromDB(QString fieldName, QString v, QString fpath);
     void updateLocalValue(QString fieldName, QString v, QString fpath);
 
 private:

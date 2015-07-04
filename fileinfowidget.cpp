@@ -41,7 +41,6 @@ void FileInfoWidget::setFile(QString f)
     finfo.setFile(f);
     if (!finfo.isFile())
         return;
-
     this->clearValueAll();
     // local
     this->setValue("name", finfo.fileName());
@@ -50,17 +49,17 @@ void FileInfoWidget::setFile(QString f)
     this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
     // db
     if( !this->getValue("md5").isEmpty()){
-        this->updateFromDB("md5",this->getValue("md5"));
+        this->updateFromDB("md5",this->getValue("md5"), finfo.filePath());
     }
     if( !this->getValue("size").isEmpty()){
-        this->updateFromDB("size",this->getValue("size"));
+        this->updateFromDB("size",this->getValue("size"), finfo.filePath());
     }
 }
 
 void FileInfoWidget::handleGotHash(int algo, QString hash, QString fpath)
 {
     updateLocalValue(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)), hash, fpath);
-    updateFromDB(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)),hash);
+    updateFromDB(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)),hash, fpath);
 }
 
 void FileInfoWidget::updateHashingProgress(int algo, int percent, QString fpath)
@@ -135,8 +134,11 @@ bool FileInfoWidget::update2db(bool update)
     }
 }
 
-void FileInfoWidget::updateFromDB(QString fieldName, QString v)
+void FileInfoWidget::updateFromDB(QString fieldName, QString v, QString fpath)
 {
+    if (!(finfo.filePath() == fpath))
+        return;
+
     if ( fieldName.isEmpty() || v.isEmpty() )
         return;
 
