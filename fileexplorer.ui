@@ -18,7 +18,7 @@
     <widget class="QLineEdit" name="pathEdit"/>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,6">
      <item>
       <widget class="QTreeView" name="dirView"/>
      </item>

@@ -35,6 +35,7 @@ FileExplorer::FileExplorer(QWidget *parent) :
                                  << "*.cb?"
                                  << "*.rar");
     files_model_->setNameFilterDisables(false);
+    files_model_->setReadOnly(false);
     ui->filesView->setModel(files_model_);
     ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),

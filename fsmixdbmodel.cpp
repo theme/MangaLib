@@ -21,7 +21,7 @@ FSmixDBmodel::FSmixDBmodel(QObject *parent):
     // By schema
 
     // What of them do I need in view?
-    // rank
+    // bookrank, author rank
 
 }
 
