@@ -57,20 +57,66 @@ QSqlError SQLiteDB::open(QString fn)
 
     emit sigStatusMsg(tr("(DB file opened) fn: ") + fn);
 
-    // ensure we have needed table
+    // ensure we have needed tables
     QStringList tables = db_.tables();
     QStringList schema_tables = dbschema_->tables();
     while (!schema_tables.isEmpty()){
         QString stn = schema_tables.takeFirst();
         if (!tables.contains(stn,Qt::CaseInsensitive)){ // need table
+            QStringList fli = dbschema_->fields(stn);
             QSqlQuery q(db_);
-            if (!q.exec(dbschema_->createTableSql(stn))){
+            QString sql("CREATE TABLE ");
+            sql += stn + "(";
+            for (int i = 0; i < fli.size(); ++i){
+                sql += fli.at(i) + " " + dbschema_->type(stn,fli.at(i));
+                if (i+1 < fli.size()){
+                    sql += ", ";
+                } else {
+                    sql += ")";
+                }
+            }
+            qDebug() << sql;
+            if (!q.exec(sql)){
                 QString msg = "create table error. |"+stn +"|"+ q.lastError().text();
                 emit sigStatusMsg(msg);
                 qDebug()  << msg;
                 qDebug() << q.lastError();
                 return q.lastError();
             }
+        } else {    // table already exist, ensure fields
+            QStringList dbfields;
+            QStringList dbfieldtype;
+            // get fields in db table
+            QString sql("PRAGMA table_info( " + stn + ")");
+            QSqlQuery q(db_);
+            if (!q.exec(sql)){
+                QString msg = "query table_info error. |"+stn +"|"+ q.lastError().text();
+                qDebug() << msg;
+                return q.lastError();
+            }
+            while(q.next()){
+                QSqlRecord rec = q.record();
+                dbfields.append(rec.value(1).toString());
+                dbfieldtype.append(rec.value(2).toString());
+            }
+            q.finish();
+            // alter tabel, insert missing columns
+            QStringList schemafields = dbschema_->fields(stn);
+            for( int i = 0 ; i< schemafields.size(); ++i) {
+                QString fieldname = schemafields.at(i);
+                if(!dbfields.contains(fieldname)){
+                    sql = "ALTER TABLE "+ stn + " ADD COLUMN ";
+                    sql += fieldname + " " + dbschema_->type(stn, fieldname);
+                    if (!q.exec(sql)){
+                        QString msg = "db add column error. |"+ stn +"| "
+                                + fieldname + " " + q.lastError().text();
+                        qDebug() << msg;
+                        return q.lastError();
+                    }
+                    q.finish();
+                }
+            }
+            // now we have all columns
         }
     }
     emit sigStatusMsg("(DB ready.) fn: " + fn);

@@ -1,11 +1,13 @@
 {
     "file": [
-        {"name": "varcahr"},
+        {"name": "varchar"},
         {"size": "integer"},
-        {"md5": "varcahr(32)"},
+        {"timestamp": "varchar(30)"},
+        {"md5": "varchar(32)"},
+        {"author": "varchar"},
+        {"book": "varchar"},
         {"sha1": "varchar(40)"},
-        {"sha256": "varchar(64)"},
-        {"timestamp": "varchar(30)"}
+        {"sha256": "varchar(64)"}
     ],
     "book": [
         {"name": "varchar"},
