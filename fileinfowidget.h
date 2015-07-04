@@ -32,7 +32,6 @@ signals:
 private slots:
     void handleGotHash(int algo, QString hash, QString fpath);
     void updateHashingProgress(int algo, int percent, QString fpath);
-    bool isInDB();
     bool update2db(bool update = true);
     void updateFromDB(QString fieldName, QString v, QString fpath);
     void updateLocalValue(QString fieldName, QString v, QString fpath);
