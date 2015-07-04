@@ -79,12 +79,19 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
     return q.record();
 }
 
+bool SQLiteDB::hit(QString tn, QString col, QString v) const
+{
+    QSqlRecord rec = this->query1record(tn, col, v);
+    return !rec.value(col).toString().isEmpty();
+}
+
 bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs)
 {
     QString sql;
     sql = "INSERT INTO " + tn + " (" + cols.join(",") + ") ";
     sql += "VALUES (" + vs.join(",") + ")";
 
+    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::insert() "+ sql;
@@ -106,6 +113,7 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
     sql += assigns.join(",");
     sql += " WHERE " + key + " = '" + v + "'";
 
+    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::update() "+ sql;
