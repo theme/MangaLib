@@ -2,10 +2,10 @@
     "file": [
         {"name": "varchar"},
         {"size": "integer"},
+        {"author": "varchar"},
+        {"bookname": "varchar"},
         {"timestamp": "varchar(30)"},
         {"md5": "varchar(32)"},
-        {"author": "varchar"},
-        {"book": "varchar"},
         {"sha1": "varchar(40)"},
         {"sha256": "varchar(64)"}
     ],

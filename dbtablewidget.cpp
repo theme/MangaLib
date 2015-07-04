@@ -17,10 +17,7 @@ DBTableWidget::DBTableWidget(QString name,
     sql_table_model_->select();
     ui->tableView->setSortingEnabled(true);
     ui->tableView->setModel(sql_table_model_);
-    ui->tableView->resizeColumnsToContents();
-
-    connect(sql_table_model_, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            ui->tableView, SLOT(resizeColumnsToContents()));
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 DBTableWidget::~DBTableWidget()

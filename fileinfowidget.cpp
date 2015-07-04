@@ -132,7 +132,7 @@ QSqlError FileInfoWidget::update2db(bool update)
     }
 
     QString sql;
-    if (update){
+    if (update && this->isInDB()){
         sql = " UPDATE file ";
         sql += " SET ";
         QStringList assigns;
@@ -146,6 +146,7 @@ QSqlError FileInfoWidget::update2db(bool update)
         sql += "VALUES (" + values.join(",") + ")";
     }
 
+    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "insert to |file| error: "+ q.lastError().text();
