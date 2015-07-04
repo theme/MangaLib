@@ -14,7 +14,14 @@ public:
     QStringList tables() const;
     QStringList fields(QString tableName) const;
     QString type(QString tableName, QString fieldName) const;
-    QSqlDatabase &connection();
+
+    QSqlRecord query1record(QString tn, QString col, QString v) const;
+
+    bool insert(QString tn, const QStringList& cols, const QStringList& vs);
+    bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
+
+    QSqlDatabase &conn();
+    const DBSchema *schema() const;
 
 signals:
     void sigOpened(bool is = true);

@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     db_ = new SQLiteDB(dbschema_ ,this);
 
     // ui: File info
-    file_info_widget_ = new FileInfoWidget(dbschema_, db_->connection(), this);
+    file_info_widget_ = new FileInfoWidget(db_, this);
     file_exp_widget_->layout()->addWidget(file_info_widget_);
 //    ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
@@ -76,7 +76,7 @@ void MainWindow::loadDBTabs()
     QStringList tables = db_->tables();
     for( int i = 0; i < tables.size(); ++i){
         DBTableWidget* w = new DBTableWidget(tables.at(i),
-                                               db_->connection(),
+                                               db_->conn(),
                                                ui->topTabWidget);
 
         QString tname = QString("( &") + QString::number(i+1) + " ) "

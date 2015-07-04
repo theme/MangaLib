@@ -1,11 +1,10 @@
 #include "fileinfowidget.h"
 #include "ui_fileinfowidget.h"
 
-FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
+FileInfoWidget::FileInfoWidget(SQLiteDB *db,
                                QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileInfoWidget),
-    dbschema_(schema),
     db_(db)
 {
     ui->setupUi(this);
@@ -19,7 +18,7 @@ FileInfoWidget::FileInfoWidget(const DBSchema *schema, QSqlDatabase &db,
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
             this, SLOT(updateLocalValue(QString,QString,QString)));
     connect(this, SIGNAL(sigGotHash(QString,QString,QString)),
-            this, SLOT(queryDB(QString,QString)));
+            this, SLOT(updateFromDB(QString,QString)));
 }
 
 FileInfoWidget::~FileInfoWidget()
@@ -29,7 +28,7 @@ FileInfoWidget::~FileInfoWidget()
 
 QString FileInfoWidget::getValue(QString field, bool local)
 {
-    if (! dbschema_->fields("file").contains(field) )
+    if (! db_->schema()->fields("file").contains(field) )
         return QString();
 
     LRline *line = field_widgets_.value(field);
@@ -50,10 +49,10 @@ void FileInfoWidget::setFile(QString f)
     this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
     // db
     if( !this->getValue("md5").isEmpty()){
-        this->queryDB("md5",this->getValue("md5"));
+        this->updateFromDB("md5",this->getValue("md5"));
     }
     if( !this->getValue("size").isEmpty()){
-        this->queryDB("size",this->getValue("size"));
+        this->updateFromDB("size",this->getValue("size"));
     }
 }
 
@@ -72,14 +71,13 @@ void FileInfoWidget::updateHashingProgress(QString algo, int percent, QString fp
 
 bool FileInfoWidget::isInDB()
 {
-    QString v = this->getValue("md5");
-    QSqlRecord rec = queryDB("md5", v);
+    QSqlRecord rec = db_->query1record("file", "md5", this->getValue("md5"));
     return !rec.isEmpty();
 }
 
 void FileInfoWidget::setValue(QString fieldName, QString v, bool local )
 {
-    QStringList sf = dbschema_->fields("file");
+    QStringList sf = db_->schema()->fields("file");
     if (!sf.contains(fieldName))
         return;
 
@@ -104,7 +102,7 @@ void FileInfoWidget::clearValueAll()
 
 void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
 {
-    QStringList sf = dbschema_->fields("file");
+    QStringList sf = db_->schema()->fields("file");
     if (!sf.contains(fieldName))
         return;
 
@@ -116,10 +114,9 @@ void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
     }
 }
 
-QSqlError FileInfoWidget::update2db(bool update)
+bool FileInfoWidget::update2db(bool update)
 {
-    // gen sql
-    QStringList fields = dbschema_->fields("file");
+    QStringList fields = db_->schema()->fields("file");
     QString k,v;
     QStringList keys, values;
     for (int i = 0; i < fields.size(); ++i){
@@ -131,34 +128,11 @@ QSqlError FileInfoWidget::update2db(bool update)
         }
     }
 
-    QString sql;
     if (update && this->isInDB()){
-        sql = " UPDATE file ";
-        sql += " SET ";
-        QStringList assigns;
-        for (int i =0; i< keys.size(); ++i){
-            assigns.append(" " + keys.at(i) + " = " + values.at(i) + " ");
-        }
-        sql += assigns.join(",");
-        sql += " WHERE md5 = '" + this->getValue("md5") + "'";
-    } else { //insert
-        sql = "INSERT INTO file (" + keys.join(",") + ") ";
-        sql += "VALUES (" + values.join(",") + ")";
+        return db_->update("file", keys, values, "md5", this->getValue("md5"));
+    } else {
+        return db_->insert("file", keys, values);
     }
-
-    qDebug() << sql;
-    QSqlQuery q(db_);
-    if (!q.exec(sql)){
-        QString msg = "insert to |file| error: "+ q.lastError().text();
-        qDebug()  << msg;
-        qDebug() << q.lastError();
-        qDebug() << q.lastQuery();
-        return q.lastError();
-    }
-
-    emit sigSaved2DB();
-    q.finish();
-    return QSqlError();
 }
 
 QString FileInfoWidget::getHash(QString algo, QString fpath)
@@ -179,31 +153,18 @@ QString FileInfoWidget::getHash(QString algo, QString fpath)
     return hash_cache_.value(algo+fpath);
 }
 
-QSqlRecord FileInfoWidget::queryDB(QString fieldName, QString v)
+void FileInfoWidget::updateFromDB(QString fieldName, QString v)
 {
     if ( fieldName.isEmpty() || v.isEmpty() )
-        return QSqlRecord();
+        return;
 
-    QSqlQuery q(db_);
-    QString sql = "select * from file where " + fieldName + " = " + "'" + v + "'";
-    if (!q.exec(sql)){
-        QString msg = "FileInfoWidget::queryFileInfo() error: "+ q.lastError().text();
-        qDebug()  << msg;
-        qDebug() << q.lastError();
-        qDebug() << q.lastQuery();
-    }
-    if(!q.first()){
-        qDebug() << "! no result. (queryFileInfo)";
-        return QSqlRecord();
-    }
-    QSqlRecord rec = q.record();
+    QSqlRecord rec = db_->query1record("file", fieldName, v);
     if (rec.isEmpty())
-        return QSqlRecord();
+        return;
 
     for ( int i = 0; i< rec.count(); ++i){
         this->setValue(rec.fieldName(i), rec.value(i).toString(), false);
     }
-    return rec;
 }
 
 void FileInfoWidget::updateLocalValue(QString fieldName, QString v, QString fpath)
@@ -216,7 +177,7 @@ void FileInfoWidget::updateLocalValue(QString fieldName, QString v, QString fpat
 
 void FileInfoWidget::populateUi()
 {
-    QStringList fields = dbschema_->fields("file");
+    QStringList fields = db_->schema()->fields("file");
     LRline* line;
     for (int i = 0; i < fields.size(); ++i){
         line = new LRline(this);

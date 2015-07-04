@@ -55,9 +55,66 @@ QString SQLiteDB::type(QString tableName, QString fieldName) const
     return QString();
 }
 
-QSqlDatabase &SQLiteDB::connection()
+QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
+{
+    if ( col.isEmpty() || v.isEmpty() )
+        return QSqlRecord();
+
+    QSqlQuery q(db_);
+    QString sql = "select * from " + tn + " where " + col + " = " + "'" + v + "'";
+    if (!q.exec(sql)){
+        QString msg = "error: SQLiteDB::query1record() "+ sql;
+        qDebug()  << msg;
+        qDebug() << q.lastError().text();
+    }
+    return q.record();
+}
+
+bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs)
+{
+    QString sql;
+    sql = "INSERT INTO " + tn + " (" + cols.join(",") + ") ";
+    sql += "VALUES (" + vs.join(",") + ")";
+
+    QSqlQuery q(db_);
+    if (!q.exec(sql)){
+        QString msg = "error: SQLiteDB::insert() "+ sql;
+            qDebug()  << msg;
+            qDebug() << q.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs, QString key, QString v)
+{
+    QString sql;
+    sql = " UPDATE " + tn + " SET ";
+    QStringList assigns;
+    for (int i =0; i< cols.size(); ++i){
+        assigns.append(" " + cols.at(i) + " = " + vs.at(i) + " ");
+    }
+    sql += assigns.join(",");
+    sql += " WHERE " + key + " = '" + v + "'";
+
+    QSqlQuery q(db_);
+    if (!q.exec(sql)){
+        QString msg = "error: SQLiteDB::update() "+ sql;
+            qDebug()  << msg;
+            qDebug() << q.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+QSqlDatabase &SQLiteDB::conn()
 {
     return db_;
+}
+
+const DBSchema *SQLiteDB::schema() const
+{
+    return dbschema_;
 }
 
 QSqlError SQLiteDB::open(QString fn)

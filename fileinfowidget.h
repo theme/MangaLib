@@ -3,13 +3,10 @@
 
 #include <QWidget>
 #include <QFileInfo>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlRecord>
 #include <QDateTime>
 #include "hashthread.h"
-#include "dbschema.h"
 #include "lrline.h"
+#include "sqlitedb.h"
 
 namespace Ui {
 class FileInfoWidget;
@@ -20,8 +17,7 @@ class FileInfoWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit FileInfoWidget(const DBSchema *schema,
-                            QSqlDatabase &db,
+    explicit FileInfoWidget(SQLiteDB *db,
                             QWidget *parent = 0);
     ~FileInfoWidget();
     QString getValue(QString field, bool local = true);
@@ -37,8 +33,8 @@ private slots:
     void cacheFileHash(QString algo, QString hash, QString fpath);
     void updateHashingProgress(QString algo, int percent, QString fpath);
     bool isInDB();
-    QSqlError update2db(bool update = true);
-    QSqlRecord queryDB(QString fieldName, QString v);
+    bool update2db(bool update = true);
+    void updateFromDB(QString fieldName, QString v);
     void updateLocalValue(QString fieldName, QString v, QString fpath);
 
 private:
@@ -48,14 +44,13 @@ private:
     void clearValueAll();
     void setProgress(QString fieldName, int p, bool local = true);
     Ui::FileInfoWidget *ui;
-    QFileInfo finfo;   // local file info
+    QFileInfo finfo;
 
-    // db file schema
-    const DBSchema *dbschema_;
+    // will populate
     QHash< QString, LRline* > field_widgets_;
 
     // db ref
-    QSqlDatabase &db_;
+    SQLiteDB *db_;
 
     // hash
     HashThread *hash_thread_;
