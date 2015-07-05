@@ -1,25 +1,27 @@
 #include "tagtypeselector.h"
 #include "ui_tagtypeselector.h"
 
-TagTypeSelector::TagTypeSelector(QString tagName, QStringList options, QString current, QWidget *parent) :
+TagTypeSelector::TagTypeSelector(QString tagName, TagPool *tp, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TagTypeSelector),
-    current_type_(current),
-    opts_(options)
+    tag_name_(tagName),
+    tp_(tp)
 {
     ui->setupUi(this);
     ui->tagName->setText(tagName);
 
     QRadioButton* w;
-    QString t;
-    for (int i = 0; i < options.size(); ++i){
-        t = options.at(i);
-        w = new QRadioButton(t);
-        if (current == t){
+    QString o;
+    opts_ = tp_->typeOptions();
+    current_type_ = tp_->tagType(tagName);
+    for (int i = 0; i < opts_.size(); ++i){
+        o = opts_.at(i);
+        w = new QRadioButton(o);
+        if ( current_type_ == o){
             w->setChecked(true);
         }
 
-        type_buttons_.insert(t, w);
+        type_buttons_.insert(o, w);
 
         ui->verticalLayout->addWidget(w);
         connect(w, SIGNAL(pressed()),
@@ -35,17 +37,17 @@ TagTypeSelector::~TagTypeSelector()
 void TagTypeSelector::onButtonChecked()
 {
     QRadioButton* w;
-    QString t;
+    QString o;
     for (int i=0; i< opts_.size(); ++i){
-        t = opts_.at(i);
-        w = type_buttons_.value(t);
+        o = opts_.at(i);
+        w = type_buttons_.value(o);
 
         if (w->isChecked()){
-            if (t != current_type_){
-                current_type_ = t;
-                emit sigTypeChanged(current_type_, t);
+            if (o != current_type_){
+                current_type_ = o;
+                emit sigTypeChanged(current_type_, o, tag_name_);
             } else {
-                emit sigTypeChoosed(t);
+                emit sigTypeChoosed(o, tag_name_);
             }
         }
     }

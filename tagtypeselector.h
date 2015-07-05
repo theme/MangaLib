@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QRadioButton>
+#include "tagpool.h"
 
 namespace Ui {
 class TagTypeSelector;
@@ -14,21 +15,22 @@ class TagTypeSelector : public QWidget
 
 public:
     explicit TagTypeSelector(QString tagName,
-                             QStringList options,
-                             QString current,
+                             TagPool *tp,
                              QWidget *parent = 0);
     ~TagTypeSelector();
 signals:
-    void sigTypeChoosed(QString t);
-    void sigTypeChanged(QString from, QString to);
+    void sigTypeChoosed(QString t, QString tagName);
+    void sigTypeChanged(QString from, QString to, QString tagName);
 
 private slots:
     void onButtonChecked();
 
 private:
     Ui::TagTypeSelector *ui;
-    QStringList opts_;
     QHash<QString, QRadioButton* > type_buttons_;
+    QString tag_name_;
+    TagPool *tp_;
+    QStringList opts_;
     QString current_type_;
 };
 

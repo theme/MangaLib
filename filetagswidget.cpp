@@ -12,7 +12,7 @@ FileTagsWidget::FileTagsWidget(QString fn, TagPool *tp, QWidget *parent) :
     QString t;
     for (int i=0; i< tags.size(); ++i){
         t = tags.at(i);
-        TagTypeSelector *w = new TagTypeSelector(t,tp_->typeOptions(), tp_->tagType(t),this);
+        TagTypeSelector *w = new TagTypeSelector(t,tp_,this);
         tag_type_selectors_.insert(t, w);
         ui->tagsLayout->addWidget(w);
     }
