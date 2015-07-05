@@ -125,7 +125,7 @@ bool FileInfoWidget::update2db(bool update)
         }
     }
 
-    if (update && db_->hit("file", "md5", this->getValue("md5")) ){
+    if (update && db_->hitValue("file", "md5", this->getValue("md5")) ){
         return db_->update("file", keys, values, "md5", this->getValue("md5"));
     } else {
         return db_->insert("file", keys, values);

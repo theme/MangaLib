@@ -44,7 +44,7 @@ QStringList SQLiteDB::fields(QString tableName) const
     return dbfields;
 }
 
-QString SQLiteDB::type(QString tableName, QString fieldName) const
+QString SQLiteDB::fieldType(QString tableName, QString fieldName) const
 {
     QString sql("PRAGMA table_info( " + tableName + ")");
     QSqlQuery q(db_);
@@ -79,7 +79,7 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
     return q.record();
 }
 
-bool SQLiteDB::hit(QString tn, QString col, QString v) const
+bool SQLiteDB::hitValue(QString tn, QString col, QString v) const
 {
     QSqlRecord rec = this->query1record(tn, col, v);
     return !rec.value(col).toString().isEmpty();
@@ -89,7 +89,7 @@ QString SQLiteDB::whichTableContains(QString name) const
 {
     QStringList tables = dbschema_->tables();
     for (int i = 0 ; i < tables.size(); ++i){
-        if (hit(tables.at(i), "name", name))
+        if (hitValue(tables.at(i), "name", name))
             return tables.at(i);
     }
     return QString();

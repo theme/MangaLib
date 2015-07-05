@@ -19,6 +19,9 @@ signals:
 
 public slots:
 
+private slots:
+    void loadDBtags();
+
 private:
     QString queryType(QString tag);
     QHash< QString, QString > tcache_;

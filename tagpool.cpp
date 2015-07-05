@@ -55,6 +55,11 @@ QStringList TagPool::tagsInString(QString str) const
     return tgt;
 }
 
+void TagPool::loadDBtags()
+{
+
+}
+
 QString TagPool::queryType(QString tag)
 {
     if (!db_->isOpen())
