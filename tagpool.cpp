@@ -57,6 +57,19 @@ QStringList TagPool::tagsInString(QString str) const
     return tgt;
 }
 
+QStringList TagPool::tagsInStringKai(QString s) const
+{
+    QStringList tgts;
+    // rip file extension name
+    QRegExp rExt("\.(zip|rar|cbz|cbr)$");
+
+    // en - cjk cut
+
+    // regex brackets section take out
+
+    // return results
+}
+
 QStringList TagPool::typeOptions() const
 {
     QStringList li = db_->schema()->tables();

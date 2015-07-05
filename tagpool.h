@@ -15,6 +15,8 @@ public:
     // return empty when unknown
     QString tagType(QString tag);
     QStringList tagsInString(QString s) const;
+    QStringList tagsInStringKai(QString s) const;
+
 
     QStringList typeOptions()const;
 signals:
