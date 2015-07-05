@@ -7,6 +7,7 @@
 #include "lrline.h"
 #include "sqlitedb.h"
 #include "hashpool.h"
+#include "tagpool.h"
 
 namespace Ui {
 class FileInfoWidget;
@@ -19,6 +20,7 @@ class FileInfoWidget : public QWidget
 public:
     explicit FileInfoWidget(SQLiteDB *db,
                             HashPool *hp,
+                            TagPool *tp,
                             QWidget *parent = 0);
     ~FileInfoWidget();
     QString getValue(QString field, bool local = true);
@@ -52,6 +54,8 @@ private:
 
     // hash
     HashPool *hp_;
+
+    TagPool *tp_;
 };
 
 #endif // FILEINFOWIDGET_H

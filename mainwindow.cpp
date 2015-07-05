@@ -26,15 +26,16 @@ MainWindow::MainWindow(QWidget *parent) :
                                  << "*.cb?"
                                  << "*.rar");
     fmixd_->setNameFilterDisables(false);
-    fmixd_->setReadOnly(false);
+//    fmixd_->setReadOnly(false);
     file_exp_widget_ = new FileExplorer(fmixd_, this);
     ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
 
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
+    tp_ = new TagPool(db_,this);
     // ui: File info
-    file_info_widget_ = new FileInfoWidget(db_, hp_, this);
+    file_info_widget_ = new FileInfoWidget(db_, hp_, tp_, this);
     file_exp_widget_->layout()->addWidget(file_info_widget_);
 //    ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),

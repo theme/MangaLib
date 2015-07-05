@@ -1,11 +1,11 @@
 #include "fileinfowidget.h"
 #include "ui_fileinfowidget.h"
 
-FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp,
+FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp, TagPool *tp,
                                QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileInfoWidget),
-    db_(db), hp_(hp)
+    db_(db), hp_(hp), tp_(tp)
 {
     ui->setupUi(this);
     ui->layout->setContentsMargins(1,1,1,1);
@@ -41,6 +41,9 @@ void FileInfoWidget::setFile(QString f)
     finfo.setFile(f);
     if (!finfo.isFile())
         return;
+
+    tp_->tagsInString(finfo.fileName());
+
     this->clearValueAll();
     // local
     this->setValue("name", finfo.fileName());

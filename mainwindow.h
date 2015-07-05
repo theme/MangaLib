@@ -13,6 +13,7 @@
 #include "fileinfowidget.h"
 #include "dbtablewidget.h"
 #include "fsmixdbmodel.h"
+#include "tagpool.h"
 
 namespace Ui {
 class MainWindow;
@@ -59,6 +60,8 @@ private:
 
     // file hash pool
     HashPool *hp_;
+
+    TagPool *tp_;
 
     // ui: DB tabs
     QHash<DBTableWidget*, int> db_table_widgets_hash_;
