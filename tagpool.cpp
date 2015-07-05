@@ -69,13 +69,20 @@ QStringList TagPool::typeOptions() const
 
 void TagPool::handleTagTypeChange(QString tagName, QString type, QString oldType)
 {
-    QStringList cols, vs;
-    cols << "name" << "type";
-    vs << tagName <<  type;
-    if( db_->hitValue("tag", "name", tagName) ){ // update
-        db_->update("tag", cols, vs, "name", tagName );
-    } else { // insert
-        db_->insert("tag", cols, vs);
+    if ( tagName.isEmpty())
+        return;
+    if (type.isEmpty()){    //remove
+        db_->remove("tag", "name", tagName);
+        tagcache_.remove(tagName);
+    } else {
+        QStringList cols, vs;
+        cols << "name" << "type";
+        vs << tagName <<  type;
+        if( db_->hitValue("tag", "name", tagName) ){ // exist, update
+            db_->update("tag", cols, vs, "name", tagName );
+        } else {
+            db_->insert("tag", cols, vs);
+        }
     }
 }
 

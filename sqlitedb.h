@@ -24,9 +24,9 @@ public:
                                              QString exceptTable = QString()) const;
     QSqlQuery selectAll(QString tableName) const;
 
-    bool insert(QString tn, QString name, QString v);
     bool insert(QString tn, const QStringList& cols, const QStringList& vs);
     bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
+    bool remove(QString tn, QString fieldName, QString v);
 
     QSqlDatabase &conn();
     const DBSchema *schema() const;

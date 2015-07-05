@@ -185,6 +185,22 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
     return true;
 }
 
+bool SQLiteDB::remove(QString tn, QString fieldName, QString v)
+{
+    QString sql = " DELETE FROM " + tn + " WHERE "
+            + " " +fieldName + " = '" +v + "' ";
+
+    qDebug() << sql;
+    QSqlQuery q(db_);
+    if (!q.exec(sql)){
+        QString msg = "error: SQLiteDB::remove() "+ sql;
+            qDebug()  << msg;
+            qDebug() << q.lastError().text();
+        return false;
+    }
+    return true;
+}
+
 QSqlDatabase &SQLiteDB::conn()
 {
     return db_;

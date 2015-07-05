@@ -13,6 +13,7 @@ TagTypeSelector::TagTypeSelector(QString tagName, TagPool *tp, QWidget *parent) 
     QRadioButton* w;
     QString o;
     opts_ = tp_->typeOptions();
+    opts_.append("");
     current_type_ = tp_->tagType(tagName);
     for (int i = 0; i < opts_.size(); ++i){
         o = opts_.at(i);
