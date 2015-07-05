@@ -8,6 +8,7 @@ FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp, TagPool *tp,
     db_(db), hp_(hp), tp_(tp)
 {
     ui->setupUi(this);
+    this->hide();
     ui->layout->setContentsMargins(1,1,1,1);
     ui->layout->setSpacing(1);
     ui->layout->setMargin(1);
@@ -39,18 +40,22 @@ QString FileInfoWidget::getValue(QString field, bool local)
 void FileInfoWidget::setFile(QString f)
 {
     QFileInfo fi(f);
-    if (!fi.isFile())
+    if (!fi.isFile()){
+        this->hide();
         return;
+    }
+    this->show();
 
     if (fi.filePath() != finfo_.filePath()){
         emit sigFileChanged(finfo_.filePath(), fi.filePath());
         finfo_.setFile(f);
-    }
 
-    FileTagsWidget *w = new FileTagsWidget(finfo_.fileName(),tp_,this);
-    ui->layout->addWidget(w);
-    connect(this, SIGNAL(sigFileChanged(QString,QString)),
-            w, SLOT(deleteLater()));
+
+        FileTagsWidget *w = new FileTagsWidget(finfo_.fileName(),tp_,this);
+        ui->layout->addWidget(w);
+        connect(this, SIGNAL(sigFileChanged(QString,QString)),
+                w, SLOT(deleteLater()));
+    }
 
     this->clearValueAll();
     // local
