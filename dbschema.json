@@ -45,5 +45,8 @@
     "rank": [
         {"name": "varchar"},
         {"rank": "integer"}
+    ],
+    "publisher": [
+        {"name": "varchar"}
     ]
 }
