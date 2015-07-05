@@ -20,6 +20,7 @@ public:
 signals:
 
 public slots:
+    void handleTagTypeChange(QString tagName, QString type, QString oldType);
 
 private slots:
     void loadDBtags();

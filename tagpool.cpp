@@ -64,6 +64,18 @@ QStringList TagPool::typeOptions() const
     return li;
 }
 
+void TagPool::handleTagTypeChange(QString tagName, QString type, QString oldType)
+{
+    QStringList cols, vs;
+    cols << "name" << "type";
+    vs << tagName <<  type;
+    if( db_->hitValue("tag", "name", tagName) ){ // update
+        db_->update("tag", cols, vs, "name", tagName );
+    } else { // insert
+        db_->insert("tag", cols, vs);
+    }
+}
+
 void TagPool::loadDBtags()
 {
     QStringList names = db_->allTableNameDotValuesOfField("name", "file");
@@ -75,6 +87,11 @@ void TagPool::loadDBtags()
         n  = ndv.left(pos);
         v = ndv.mid(pos+1);
         tagcache_.insert(v, n);
+    }
+
+    QSqlQuery q = db_->selectAll("tag");
+    while(q.next()){
+        tagcache_.insert(q.record().value(0).toString(), q.record().value(1).toString());
     }
 }
 

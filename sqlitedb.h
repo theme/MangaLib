@@ -22,7 +22,9 @@ public:
     QString whichTableContainsName(QString name) const;
     QStringList allTableNameDotValuesOfField(QString fieldName,
                                              QString exceptTable = QString()) const;
+    QSqlQuery selectAll(QString tableName) const;
 
+    bool insert(QString tn, QString name, QString v);
     bool insert(QString tn, const QStringList& cols, const QStringList& vs);
     bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
 

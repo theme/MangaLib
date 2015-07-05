@@ -109,6 +109,21 @@ QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString ex
     return names;
 }
 
+QSqlQuery SQLiteDB::selectAll(QString tableName) const
+{
+    if ( tableName.isEmpty() )
+        return QSqlQuery();
+
+    QSqlQuery q(db_);
+    QString sql = "select * from " + tableName;
+    if (!q.exec(sql)){
+        QString msg = "error: SQLiteDB::selectAll() "+ sql;
+        qDebug()  << msg;
+        qDebug() << q.lastError().text();
+    }
+    return q;
+}
+
 bool SQLiteDB::hitValue(QString tn, QString col, QString v) const
 {
     QSqlRecord rec = this->query1record(tn, col, v);
@@ -127,9 +142,15 @@ QString SQLiteDB::whichTableContainsName(QString name) const
 
 bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs)
 {
+    QStringList a, b;
+    for (int i = 0; i < cols.size(); ++i){
+        a.append("'" + cols.at(i) + "'");
+        b.append("'" + vs.at(i) + "'");
+    }
+
     QString sql;
-    sql = "INSERT INTO " + tn + " (" + cols.join(",") + ") ";
-    sql += "VALUES (" + vs.join(",") + ")";
+    sql = "INSERT INTO " + tn + " ( " + a.join(" , ") + " ) ";
+    sql += "VALUES ( " + b.join(" , ") + " ) ";
 
     qDebug() << sql;
     QSqlQuery q(db_);
@@ -148,7 +169,7 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
     sql = " UPDATE " + tn + " SET ";
     QStringList assigns;
     for (int i =0; i< cols.size(); ++i){
-        assigns.append(" " + cols.at(i) + " = " + vs.at(i) + " ");
+        assigns.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
     }
     sql += assigns.join(",");
     sql += " WHERE " + key + " = '" + v + "'";

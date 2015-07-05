@@ -151,6 +151,7 @@ void FileInfoWidget::updateFromDB(QString fieldName, QString v, QString fpath)
     QSqlRecord rec = db_->query1record("file", fieldName, v);
     if (rec.isEmpty())
         return;
+
     for ( int i = 0; i< rec.count(); ++i){
         this->setValue(rec.fieldName(i), rec.value(i).toString(), false);
     }

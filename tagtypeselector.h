@@ -19,8 +19,7 @@ public:
                              QWidget *parent = 0);
     ~TagTypeSelector();
 signals:
-    void sigTypeChoosed(QString t, QString tagName);
-    void sigTypeChanged(QString from, QString to, QString tagName);
+    void sigTypeChoosed(QString tagName, QString type, QString oldType = QString());
 
 private slots:
     void onButtonChecked();

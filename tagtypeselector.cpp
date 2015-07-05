@@ -24,13 +24,19 @@ TagTypeSelector::TagTypeSelector(QString tagName, TagPool *tp, QWidget *parent) 
         type_buttons_.insert(o, w);
 
         ui->verticalLayout->addWidget(w);
-        connect(w, SIGNAL(pressed()),
+        connect(w, SIGNAL(toggled(bool)),
                 this, SLOT(onButtonChecked()));
     }
+
+    connect(this, SIGNAL(sigTypeChoosed(QString,QString,QString)),
+            tp_, SLOT(handleTagTypeChange(QString,QString,QString)));
 }
 
 TagTypeSelector::~TagTypeSelector()
 {
+
+    disconnect(this, SIGNAL(sigTypeChoosed(QString,QString,QString)),
+               tp_, SLOT(handleTagTypeChange(QString,QString,QString)));
     delete ui;
 }
 
@@ -43,12 +49,8 @@ void TagTypeSelector::onButtonChecked()
         w = type_buttons_.value(o);
 
         if (w->isChecked()){
-            if (o != current_type_){
-                current_type_ = o;
-                emit sigTypeChanged(current_type_, o, tag_name_);
-            } else {
-                emit sigTypeChoosed(o, tag_name_);
-            }
+            emit sigTypeChoosed(tag_name_, o, current_type_);
+            current_type_ = o;
         }
     }
 }

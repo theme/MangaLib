@@ -48,5 +48,9 @@
     ],
     "publisher": [
         {"name": "varchar"}
+    ],
+    "tag": [
+        {"name": "varchar"},
+        {"type": "varchar"}
     ]
 }
