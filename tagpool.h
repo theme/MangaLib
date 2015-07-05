@@ -24,7 +24,7 @@ private slots:
 
 private:
     QString queryType(QString tag);
-    QHash< QString, QString > tcache_;
+    QHash< QString, QString > tagcache_;
     SQLiteDB *db_;
 };
 

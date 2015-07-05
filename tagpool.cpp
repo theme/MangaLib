@@ -3,12 +3,14 @@
 TagPool::TagPool(SQLiteDB *db, QObject *parent) :
     QObject(parent),db_(db)
 {
+    connect(db_, SIGNAL(sigOpened()),
+            this, SLOT(loadDBtags()));
 }
 
 QString TagPool::type(QString tag)
 {
-    if (tcache_.contains(tag)){
-        return tcache_.value(tag);
+    if (tagcache_.contains(tag)){
+        return tagcache_.value(tag);
     } else {
         return queryType(tag);
     }
@@ -37,7 +39,7 @@ QStringList TagPool::tagsInString(QString str) const
         tags.clear();
         for (int j=0; j<tmps.size(); ++j){
             t = tmps.at(j);
-            if (tcache_.contains(t)){   // hit cache
+            if (tagcache_.contains(t)){   // hit cache
                 tgt.append(t);
             } else {
                 tags.append(t); // next round
@@ -57,7 +59,17 @@ QStringList TagPool::tagsInString(QString str) const
 
 void TagPool::loadDBtags()
 {
-
+    QStringList names = db_->allTableNameDotValuesOfField("name");
+    QString ndv, n, v;
+    int pos;
+    for (int i = 0; i < names.size(); ++i){
+        ndv = names.at(i);
+        pos = ndv.indexOf(".");
+        n  = ndv.left(pos);
+        v = ndv.mid(pos+1);
+        tagcache_.insert(v, n);
+        qDebug() << v << " t " << n;
+    }
 }
 
 QString TagPool::queryType(QString tag)
@@ -65,5 +77,5 @@ QString TagPool::queryType(QString tag)
     if (!db_->isOpen())
         return QString();
 
-    return db_->whichTableContains(tag);
+    return db_->whichTableContainsName(tag);
 }

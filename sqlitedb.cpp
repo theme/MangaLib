@@ -79,13 +79,41 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
     return q.record();
 }
 
+QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName) const
+{
+    QStringList names, fields;
+    QStringList tables = dbschema_->tables();
+    QString tn;
+    for (int i = 0 ; i < tables.size(); ++i){
+        tn = tables.at(i);
+        fields = dbschema_->fields(tn);
+        if (fields.contains(fieldName)){
+            QString sql = "SELECT * FROM " + tn;
+            QSqlQuery q(db_);
+            if (!q.exec(sql)){
+                QString msg = "error: SQLiteDB::allNames() "+ sql;
+                qDebug()  << msg;
+                qDebug() << q.lastError().text();
+            }
+            while(q.next()){
+                QVariant v = q.record().value(fields.indexOf(fieldName));
+                QString s = v.toString();
+                if (!s.isEmpty())
+                    names.append(tn + "." +s);
+            }
+            q.finish();
+        }
+    }
+    return names;
+}
+
 bool SQLiteDB::hitValue(QString tn, QString col, QString v) const
 {
     QSqlRecord rec = this->query1record(tn, col, v);
     return !rec.value(col).toString().isEmpty();
 }
 
-QString SQLiteDB::whichTableContains(QString name) const
+QString SQLiteDB::whichTableContainsName(QString name) const
 {
     QStringList tables = dbschema_->tables();
     for (int i = 0 ; i < tables.size(); ++i){
