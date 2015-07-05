@@ -79,13 +79,15 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
     return q.record();
 }
 
-QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName) const
+QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString exceptTable) const
 {
     QStringList names, fields;
     QStringList tables = dbschema_->tables();
     QString tn;
     for (int i = 0 ; i < tables.size(); ++i){
         tn = tables.at(i);
+        if ( tn == exceptTable )
+            continue;
         fields = dbschema_->fields(tn);
         if (fields.contains(fieldName)){
             QString sql = "SELECT * FROM " + tn;

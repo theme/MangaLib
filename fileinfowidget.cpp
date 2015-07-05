@@ -44,6 +44,7 @@ void FileInfoWidget::setFile(QString f)
 
     tp_->tagsInString(finfo.fileName());
 
+
     this->clearValueAll();
     // local
     this->setValue("name", finfo.fileName());

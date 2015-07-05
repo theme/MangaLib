@@ -59,7 +59,7 @@ QStringList TagPool::tagsInString(QString str) const
 
 void TagPool::loadDBtags()
 {
-    QStringList names = db_->allTableNameDotValuesOfField("name");
+    QStringList names = db_->allTableNameDotValuesOfField("name", "file");
     QString ndv, n, v;
     int pos;
     for (int i = 0; i < names.size(); ++i){
@@ -68,7 +68,6 @@ void TagPool::loadDBtags()
         n  = ndv.left(pos);
         v = ndv.mid(pos+1);
         tagcache_.insert(v, n);
-        qDebug() << v << " t " << n;
     }
 }
 
