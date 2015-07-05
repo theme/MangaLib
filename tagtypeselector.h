@@ -22,7 +22,7 @@ signals:
     void sigTypeChoosed(QString tagName, QString type, QString oldType = QString());
 
 private slots:
-    void onButtonToggled(bool checked);
+    void onButtonToggled();
 
 private:
     Ui::TagTypeSelector *ui;

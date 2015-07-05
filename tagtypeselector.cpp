@@ -25,7 +25,7 @@ TagTypeSelector::TagTypeSelector(QString tagName, TagPool *tp, QWidget *parent) 
 
         ui->verticalLayout->addWidget(w);
         connect(w, SIGNAL(toggled(bool)),
-                this, SLOT(onButtonToggled(bool)));
+                this, SLOT(onButtonToggled()));
     }
 
     connect(this, SIGNAL(sigTypeChoosed(QString,QString,QString)),
@@ -40,7 +40,7 @@ TagTypeSelector::~TagTypeSelector()
     delete ui;
 }
 
-void TagTypeSelector::onButtonToggled(bool checked)
+void TagTypeSelector::onButtonToggled()
 {
     QRadioButton* w;
     QString o;
@@ -48,8 +48,7 @@ void TagTypeSelector::onButtonToggled(bool checked)
         o = opts_.at(i);
         w = type_buttons_.value(o);
 
-        if (w->isChecked()){
-            qDebug() << o, w;
+        if (w->isChecked() && o != current_type_){
             emit sigTypeChoosed(tag_name_, o, current_type_);
             current_type_ = o;
         }
