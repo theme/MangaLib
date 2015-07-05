@@ -85,6 +85,16 @@ bool SQLiteDB::hit(QString tn, QString col, QString v) const
     return !rec.value(col).toString().isEmpty();
 }
 
+QString SQLiteDB::whichTableContains(QString name) const
+{
+    QStringList tables = dbschema_->tables();
+    for (int i = 0 ; i < tables.size(); ++i){
+        if (hit(tables.at(i), "name", name))
+            return tables.at(i);
+    }
+    return QString();
+}
+
 bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs)
 {
     QString sql;

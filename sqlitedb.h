@@ -19,6 +19,7 @@ public:
 
     QSqlRecord query1record(QString tn, QString col, QString v) const;
     bool hit(QString tn, QString col, QString v) const;
+    QString whichTableContains(QString name) const;
 
     bool insert(QString tn, const QStringList& cols, const QStringList& vs);
     bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
