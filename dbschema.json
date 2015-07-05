@@ -1,6 +1,6 @@
 {
     "file": [
-        {"name": "varchar"},
+        {"name": "varchar(255)"},
         {"size": "integer"},
         {"timestamp": "varchar(30)"},
         {"md5": "varchar(32)"},
@@ -8,49 +8,48 @@
         {"sha256": "varchar(64)"}
     ],
     "book": [
-        {"name": "varchar"},
+        {"name": "varchar(255)"},
         {"isbn": "integer"},
-        {"author": "varchar"},
+        {"author": "varchar(255)"},
         {"year": "varchar(4)"},
         {"timestamp": "varchar(30)"}
     ],
     "author": [
-        {"name": "varchar"},
-        {"country": "varchar"},
-        {"site": "varchar"},
+        {"name": "varchar(255)"},
+        {"country": "varchar(20)"},
+        {"site": "varchar(2000)"},
         {"timestamp": "varchar(30)"}
     ],
     "circle": [
-        {"name": "varchar"},
-        {"site": "varchar"},
+        {"name": "varchar(255)"},
+        {"site": "varchar(2000)"},
         {"timestamp": "varchar(30)"}
     ],
     "uploader": [
-        {"name": "varchar"},
-        {"location": "varchar"},
-        {"site": "varchar"},
+        {"name": "varchar(255)"},
         {"timestamp": "varchar(30)"}
     ],
     "translator": [
-        {"name": "varchar"},
-        {"language": "varchar"},
-        {"site": "varchar"},
+        {"name": "varchar(255)"},
+        {"language": "varchar(50)"},
+        {"site": "varchar(2000)"},
         {"timestamp": "varchar(30)"}
     ],
     "publisher": [
-        {"name": "varchar"}
+        {"name": "varchar(255)"}
     ],
     "rank": [
-        {"name": "varchar"},
+        {"name": "varchar(255)"},
+        {"type": "varchar(20)"},
         {"rank": "integer"}
     ],
     "link": [
-        {"name": "varchar"},
-        {"URI": "varchar"},
+        {"name": "varchar(255)"},
+        {"URI": "varchar(2000)"},
         {"timestamp": "varchar(30)"}
     ],
     "tag": [
-        {"name": "varchar"},
-        {"type": "varchar"}
+        {"name": "varchar(20)"},
+        {"type": "varchar(20)"}
     ]
 }
