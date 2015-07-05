@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     lrline.cpp \
     fsmixdbmodel.cpp \
     hashpool.cpp \
-    tagpool.cpp
+    tagpool.cpp \
+    tagtypeselector.cpp \
+    filetagswidget.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -35,13 +37,17 @@ HEADERS  += mainwindow.h \
     lrline.h \
     fsmixdbmodel.h \
     hashpool.h \
-    tagpool.h
+    tagpool.h \
+    tagtypeselector.h \
+    filetagswidget.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
     fileexplorer.ui \
     fileinfowidget.ui \
-    lrline.ui
+    lrline.ui \
+    tagtypeselector.ui \
+    filetagswidget.ui
 
 RESOURCES += \
     icon.qrc

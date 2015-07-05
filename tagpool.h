@@ -13,8 +13,10 @@ public:
                      QObject *parent = 0);
     // return type of tag
     // return empty when unknown
-    QString type(QString tag);
+    QString tagType(QString tag);
     QStringList tagsInString(QString s) const;
+
+    QStringList typeOptions()const;
 signals:
 
 public slots:

@@ -8,6 +8,7 @@
 #include "sqlitedb.h"
 #include "hashpool.h"
 #include "tagpool.h"
+#include "filetagswidget.h"
 
 namespace Ui {
 class FileInfoWidget;
@@ -30,6 +31,7 @@ public slots:
 
 signals:
     void sigSaved2DB();
+    void sigFileChanged(QString old, QString now);
 
 private slots:
     void handleGotHash(int algo, QString hash, QString fpath);
@@ -44,7 +46,7 @@ private:
     void clearValueAll();
     void setProgress(QString fieldName, int p, bool local = true);
     Ui::FileInfoWidget *ui;
-    QFileInfo finfo;
+    QFileInfo finfo_;
 
     // will populate
     QHash< QString, LRline* > field_widgets_;

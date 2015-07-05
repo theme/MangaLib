@@ -38,25 +38,32 @@ QString FileInfoWidget::getValue(QString field, bool local)
 
 void FileInfoWidget::setFile(QString f)
 {
-    finfo.setFile(f);
-    if (!finfo.isFile())
+    QFileInfo fi(f);
+    if (!fi.isFile())
         return;
 
-    tp_->tagsInString(finfo.fileName());
+    if (fi.filePath() != finfo_.filePath()){
+        emit sigFileChanged(finfo_.filePath(), fi.filePath());
+        finfo_.setFile(f);
+    }
 
+    FileTagsWidget *w = new FileTagsWidget(finfo_.fileName(),tp_,this);
+    ui->layout->addWidget(w);
+    connect(this, SIGNAL(sigFileChanged(QString,QString)),
+            w, SLOT(deleteLater()));
 
     this->clearValueAll();
     // local
-    this->setValue("name", finfo.fileName());
-    this->setValue("md5", hp_->getFileHash(QCryptographicHash::Md5, finfo.filePath()));
-    this->setValue("size", QString::number(finfo.size()));
-    this->setValue("timestamp", finfo.lastModified().toString(Qt::ISODate));
+    this->setValue("name", finfo_.fileName());
+    this->setValue("md5", hp_->getFileHash(QCryptographicHash::Md5, finfo_.filePath()));
+    this->setValue("size", QString::number(finfo_.size()));
+    this->setValue("timestamp", finfo_.lastModified().toString(Qt::ISODate));
     // db
     if( !this->getValue("md5").isEmpty()){
-        this->updateFromDB("md5",this->getValue("md5"), finfo.filePath());
+        this->updateFromDB("md5",this->getValue("md5"), finfo_.filePath());
     }
     if( !this->getValue("size").isEmpty()){
-        this->updateFromDB("size",this->getValue("size"), finfo.filePath());
+        this->updateFromDB("size",this->getValue("size"), finfo_.filePath());
     }
 }
 
@@ -68,7 +75,7 @@ void FileInfoWidget::handleGotHash(int algo, QString hash, QString fpath)
 
 void FileInfoWidget::updateHashingProgress(int algo, int percent, QString fpath)
 {
-    if( fpath == finfo.filePath()){
+    if( fpath == finfo_.filePath()){
         this->setProgress(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)), percent);
     }
 }
@@ -135,7 +142,7 @@ bool FileInfoWidget::update2db(bool update)
 
 void FileInfoWidget::updateFromDB(QString fieldName, QString v, QString fpath)
 {
-    if (!(finfo.filePath() == fpath))
+    if (!(finfo_.filePath() == fpath))
         return;
 
     if ( fieldName.isEmpty() || v.isEmpty() )
@@ -151,7 +158,7 @@ void FileInfoWidget::updateFromDB(QString fieldName, QString v, QString fpath)
 
 void FileInfoWidget::updateLocalValue(QString fieldName, QString v, QString fpath)
 {
-    if (!(finfo.filePath() == fpath))
+    if (!(finfo_.filePath() == fpath))
         return;
     else
         this->setValue(fieldName, v);

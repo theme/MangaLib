@@ -7,7 +7,7 @@ TagPool::TagPool(SQLiteDB *db, QObject *parent) :
             this, SLOT(loadDBtags()));
 }
 
-QString TagPool::type(QString tag)
+QString TagPool::tagType(QString tag)
 {
     if (tagcache_.contains(tag)){
         return tagcache_.value(tag);
@@ -55,6 +55,13 @@ QStringList TagPool::tagsInString(QString str) const
         qDebug() <<"... "<<  tgt.at(k);
     }
     return tgt;
+}
+
+QStringList TagPool::typeOptions() const
+{
+    QStringList li = db_->schema()->tables();
+    li.removeAll("file");
+    return li;
 }
 
 void TagPool::loadDBtags()
