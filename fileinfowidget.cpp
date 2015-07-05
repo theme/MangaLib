@@ -133,8 +133,8 @@ bool FileInfoWidget::update2db(bool update)
         k = fields.at(i);
         v = this->getValue(k);
         if (!v.isEmpty()){
-            keys.append("'" + k + "'");
-            values.append("'" + v + "'");
+            keys.append(k);
+            values.append(v);
         }
     }
 
