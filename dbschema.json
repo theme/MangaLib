@@ -37,17 +37,17 @@
         {"site": "varchar"},
         {"timestamp": "varchar(30)"}
     ],
-    "link": [
-        {"name": "varchar"},
-        {"URI": "varchar"},
-        {"timestamp": "varchar(30)"}
+    "publisher": [
+        {"name": "varchar"}
     ],
     "rank": [
         {"name": "varchar"},
         {"rank": "integer"}
     ],
-    "publisher": [
-        {"name": "varchar"}
+    "link": [
+        {"name": "varchar"},
+        {"URI": "varchar"},
+        {"timestamp": "varchar(30)"}
     ],
     "tag": [
         {"name": "varchar"},

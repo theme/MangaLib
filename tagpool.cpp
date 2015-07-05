@@ -61,6 +61,9 @@ QStringList TagPool::typeOptions() const
 {
     QStringList li = db_->schema()->tables();
     li.removeAll("file");
+    li.removeAll("rank");
+    li.removeAll("tag");
+    li.removeAll("link");
     return li;
 }
 
