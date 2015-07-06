@@ -14,6 +14,11 @@
         {"year": "varchar(4)"},
         {"timestamp": "varchar(30)"}
     ],
+    "magazine": [
+        {"name": "varchar(255)"},
+        {"publisher": "varchar(255)"},
+        {"timestamp": "varchar(30)"}
+    ],
     "author": [
         {"name": "varchar(255)"},
         {"country": "varchar(20)"},

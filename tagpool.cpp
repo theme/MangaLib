@@ -18,56 +18,43 @@ QString TagPool::tagType(QString tag)
 
 QStringList TagPool::tagsInString(QString str) const
 {
-    QStringList sps = QString("[ ] ( ) 「 」 【 】 .").split(' ');
-    sps.append(" ");
-
-    QStringList tags, tmps, tgt;
-    QString t,s;
-    tags.append(str);
-
-    for (int i = 0; i< sps.size(); ++i){
-        s = sps.at(i);
-        // process tag list
-        for (int j=0; j< tags.size(); ++j){
-            t = tags.at(j);
-            if (t.isEmpty())
-                continue;
-            // split
-            tmps.append(t.split(s));
-        }
-
-        tags.clear();
-        for (int j=0; j<tmps.size(); ++j){
-            t = tmps.at(j);
-            if (tagcache_.contains(t)){   // hit cache
-                tgt.append(t);
-            } else {
-                tags.append(t); // next round
-            }
-        }
-        tmps.clear();
-    }
-
-    tgt.append(tags);
-
-    // debug
-    for (int k=0; k < tgt.size(); ++k){
-        qDebug() <<"... "<<  tgt.at(k);
-    }
-    return tgt;
-}
-
-QStringList TagPool::tagsInStringKai(QString s) const
-{
     QStringList tgts;
+
     // rip file extension name
-    QRegExp rExt("\.(zip|rar|cbz|cbr)$");
+    QRegExp rx(".*(?=(\\.(zip|rar|cb[zr]))$)");
+    int pos = 0;
+    if ((pos = rx.indexIn(str, pos)) != -1){
+        str = rx.cap();
+    }
+    qDebug() << str;
 
-    // en - cjk cut
-
-    // regex brackets section take out
+    // regex section take out
+    QStringList expli;
+    QMap<int,QString> caps;
+    expli << "([^\\[\\]]+)(?=\\])"      // [*]
+          << "([^\\(\\)]+)(?=\\))"      // (*)
+          << "([^【】]+)(?=】)"      // 【 】
+          << "([^（）]+)(?=）)"      // （）
+          << "([^\\[\\]\\(\\)【】（）\\~\\s\\-]+)";
+    for ( int i =0; i< expli.size(); ++i){
+        rx.setPattern(expli.at(i));
+        pos = 0;
+        while ((pos = rx.indexIn(str, pos)) != -1) {
+            if (!caps.contains(pos)){
+                caps.insert(pos,rx.cap());
+            }
+            pos += rx.matchedLength();
+        }
+    }
+    auto e = caps.begin();
+    while( e != caps.end()){
+        tgts << e.value();
+        ++e;
+    }
+    qDebug() << tgts;
 
     // return results
+    return tgts;
 }
 
 QStringList TagPool::typeOptions() const
