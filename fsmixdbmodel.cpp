@@ -1,8 +1,8 @@
 #include "fsmixdbmodel.h"
 #include <QDebug>
 
-FSmixDBmodel::FSmixDBmodel(SQLiteDB *db, HashPool *hp, QObject *parent):
-    QFileSystemModel(parent),db_(db), hp_(hp)
+FSmixDBmodel::FSmixDBmodel(HashPool *hp, RankPool *rp, QObject *parent):
+    QFileSystemModel(parent), rp_(rp), hp_(hp)
 {
 }
 
@@ -19,12 +19,12 @@ int FSmixDBmodel::columnCount(const QModelIndex &parent) const
 QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole){
-        switch (index.column()){
-        case 4:
+        switch (index.column() - QFileSystemModel::columnCount()){
+        case DB_MD5_COL:
             return QVariant(hp_->getFileHash(QCryptographicHash::Md5,this->filePath(index)));
             break;
-        case 5:
-            return QVariant();
+        case DB_RANK_COL:
+            return QVariant(rp_->getFileRank(this->filePath(index)));
             break;
         }
     }
@@ -34,12 +34,12 @@ QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
 QVariant FSmixDBmodel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole){
-        switch (section){
-        case 4:
-            return QVariant(QString("md5"));
+        switch (section - QFileSystemModel::columnCount()){
+        case DB_MD5_COL:
+            return QVariant(QString("Md5"));
             break;
-        case 5:
-            return QVariant(QString("DB rank"));
+        case DB_RANK_COL:
+            return QVariant(QString("Rank"));
             break;
         }
     }
@@ -48,9 +48,9 @@ QVariant FSmixDBmodel::headerData(int section, Qt::Orientation orientation, int 
 
 Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
 {
-    switch (index.column()){
-    case 4:
-        if ( db_->isOpen() ){
+    switch (index.column() - QFileSystemModel::columnCount()){
+    case DB_RANK_COL:
+        if ( rp_->isRankable() ){
             return QFileSystemModel::flags(index);
         } else {
             return QFileSystemModel::flags(index) & ~Qt::ItemIsEnabled;
@@ -59,4 +59,14 @@ Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
     default:
         return QFileSystemModel::flags(index);
     }
+}
+
+int FSmixDBmodel::colIndex(FSmixDBmodel::DBcol col) const
+{
+    return QFileSystemModel::columnCount() + col;
+}
+
+bool FSmixDBmodel::isDBcol(int col) const
+{
+    return col < QFileSystemModel::columnCount();
 }

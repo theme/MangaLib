@@ -3,14 +3,15 @@
 
 #include <QObject>
 #include <QFileSystemModel>
-#include "sqlitedb.h"
-#include "hashpool.h"
+#include "rankpool.h"
 
 class FSmixDBmodel : public QFileSystemModel
 {
     Q_OBJECT
 public:
-    FSmixDBmodel(SQLiteDB *db, HashPool *hp, QObject *parent);
+    FSmixDBmodel(HashPool *hp,
+                 RankPool *rp,
+                 QObject *parent);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
@@ -19,11 +20,19 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
 private:
+    enum DBcol {
+        DB_RANK_COL = 0,
+        DB_MD5_COL
+    };
+
+    int colIndex(enum DBcol col) const;
+    bool isDBcol(int col) const;
+
     QList< int > db_col_indiecs_;
     QStringList db_col_names_;
     int fscolnum_;
-    SQLiteDB *db_;
     HashPool *hp_;
+    RankPool *rp_;
 };
 
 #endif // FSMIXDBMODEL_H

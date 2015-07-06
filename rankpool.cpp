@@ -4,7 +4,8 @@ RankPool::RankPool(SQLiteDB *db, HashPool *hp, QObject *parent) :
     QObject(parent),
     db_(db),hp_(hp)
 {
-    this->loadRankFromDB();
+    connect( db_, SIGNAL(sigOpened()), this, SLOT(loadRankFromDB()));
+    connect( db_, SIGNAL(sigClosed()), this, SLOT(clearCache()));
 }
 
 int RankPool::getFileRank(QString fpath)
@@ -61,6 +62,11 @@ bool RankPool::setRank(QString fpath, int rank)
     }
 }
 
+bool RankPool::isRankable() const
+{
+    return db_->isOpen();
+}
+
 void RankPool::loadRankFromDB()
 {
     QSqlQuery q = db_->select("rank");
@@ -74,6 +80,11 @@ void RankPool::loadRankFromDB()
                                q.value("rank").toInt());
         }
     }
+}
+
+void RankPool::clearCache()
+{
+    rank_cache_.clear();
 }
 
 QString RankPool::cacheKeyFile(int size, QString md5)

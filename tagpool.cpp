@@ -3,8 +3,8 @@
 TagPool::TagPool(SQLiteDB *db, QObject *parent) :
     QObject(parent),db_(db)
 {
-    connect(db_, SIGNAL(sigOpened()),
-            this, SLOT(loadDBtags()));
+    connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBtags()));
+    connect(db_, SIGNAL(sigClosed()), this, SLOT(clearCache()));
 }
 
 QString TagPool::tagType(QString tag)
@@ -111,6 +111,11 @@ void TagPool::loadDBtags()
     while(q.next()){
         tagcache_.insert(q.record().value(0).toString(), q.record().value(1).toString());
     }
+}
+
+void TagPool::clearCache()
+{
+    tagcache_.clear();
 }
 
 void TagPool::addTag(QString tagName, QString type)

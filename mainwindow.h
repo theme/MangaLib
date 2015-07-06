@@ -15,6 +15,7 @@
 #include "fsmixdbmodel.h"
 #include "tagpool.h"
 #include "dbmanager.h"
+#include "rankpool.h"
 
 namespace Ui {
 class MainWindow;
@@ -66,6 +67,8 @@ private:
     HashPool *hp_;
 
     TagPool *tp_;
+
+    RankPool *rp_;
 
     // ui: DB tabs
     QHash<DBTableWidget*, int> db_table_widgets_hash_;

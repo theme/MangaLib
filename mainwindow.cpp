@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     db_ = new SQLiteDB(":/dbschema.json", this);
     hp_ = new HashPool(db_,this);
     tp_ = new TagPool(db_,this);
+    rp_ = new RankPool(db_, hp_,this);
 
     // ui::menu
     createActions();
@@ -17,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: File explorer
     FSmixDBmodel *fmixd_;
-    fmixd_ = new FSmixDBmodel(db_, hp_, this);
+    fmixd_ = new FSmixDBmodel(hp_, rp_, this);
     fmixd_->setRootPath(QDir::rootPath());
     fmixd_->setFilter(QDir::Files);
     fmixd_->setNameFilters(QStringList()

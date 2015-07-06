@@ -25,6 +25,7 @@ public slots:
 
 private slots:
     void loadDBtags();
+    void clearCache();
     void addTag(QString tagName, QString type);
     void removeTag(QString tagName, QString type);
 
