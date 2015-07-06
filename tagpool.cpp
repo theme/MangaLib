@@ -35,7 +35,7 @@ QStringList TagPool::tagsInString(QString str) const
           << "([^\\(\\)]+)(?=\\))"      // (*)
           << "([^【】]+)(?=】)"      // 【 】
           << "([^（）]+)(?=）)"      // （）
-          << "([^\\[\\]\\(\\)【】（）\\~\\s\\-]+)";
+          << "([^\\[\\]\\(\\)【】（）~\\s\\-]+)";
     for ( int i =0; i< expli.size(); ++i){
         rx.setPattern(expli.at(i));
         pos = 0;
@@ -82,6 +82,22 @@ void TagPool::handleTagTypeChange(QString tagName, QString type, QString oldType
             db_->update("tag", cols, vs, "name", tagName );
         } else {
             db_->insert("tag", cols, vs);
+        }
+    }
+}
+
+void TagPool::insertTags2Table()
+{
+    QSqlQuery q = db_->selectAll("tag");
+    QString ttype, tn;
+    while(q.next()){
+        ttype = q.record().value(1).toString();
+        tn = q.record().value(0).toString();
+        if (!db_->hitValue(ttype,"name",tn)){
+            QStringList cols, vs;
+            cols << "name";
+            vs << tn;
+            db_->insert(ttype,cols,vs);
         }
     }
 }

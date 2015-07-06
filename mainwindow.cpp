@@ -7,14 +7,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    hp_ = new HashPool(this);
+    db_ = new SQLiteDB(":/dbschema.json", this);
+    tp_ = new TagPool(db_,this);
+
     // ui::menu
     createActions();
     createMenus();
-
-    // DB
-    db_ = new SQLiteDB(":/dbschema.json", this);
-    // file hash pool
-    hp_ = new HashPool(this);
 
     // ui: File explorer
     FSmixDBmodel *fmixd_;
@@ -33,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
-    tp_ = new TagPool(db_,this);
     // ui: File info
     file_info_widget_ = new FileInfoWidget(db_, hp_, tp_, this);
     file_exp_widget_->layout()->addWidget(file_info_widget_);
@@ -44,8 +42,12 @@ MainWindow::MainWindow(QWidget *parent) :
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));
     connect(db_, SIGNAL(sigOpened(bool)), closeAct, SLOT(setEnabled(bool)));
+    connect(db_, SIGNAL(sigOpened(bool)), dbManAct, SLOT(setEnabled(bool)));
+    connect(db_, SIGNAL(sigOpened(bool)), tags2DBAct, SLOT(setEnabled(bool)));
     connect(db_, SIGNAL(sigClosed()), this, SLOT(removeDBTabs()));
     connect(db_, SIGNAL(sigClosed(bool)), closeAct, SLOT(setDisabled(bool)));
+    connect(db_, SIGNAL(sigClosed(bool)), dbManAct, SLOT(setDisabled(bool)));
+    connect(db_, SIGNAL(sigClosed(bool)), tags2DBAct, SLOT(setDisabled(bool)));
 
     // auto open "~/mangalib.db"
     if( QFile::exists(QDir::homePath() + "/mangalib.db")){
@@ -84,7 +86,14 @@ void MainWindow::closeDBconnection()
 
 void MainWindow::loadDBTabs()
 {
-    QStringList tables = db_->tables();
+    QStringList dbtables = db_->tables();
+    QStringList tables, filter;
+    filter << "file" << "tag" << "book" << "author";
+    for (int i = 0; i < filter.size(); ++i){
+        if (dbtables.contains(filter.at(i))){
+            tables.append(filter.at(i));
+        }
+    }
     for( int i = 0; i < tables.size(); ++i){
         DBTableWidget* w = new DBTableWidget(tables.at(i),
                                                db_->conn(),
@@ -105,6 +114,13 @@ void MainWindow::removeDBTabs()
         iter.key()->deleteLater();
     }
     db_table_widgets_hash_.clear();
+}
+
+void MainWindow::openDBManager()
+{
+    DBManager *w = new DBManager(db_, this);
+    connect(w, SIGNAL(finished(int)), w, SLOT(deleteLater()));
+    w->showMaximized();
 }
 
 void MainWindow::saveLocalFileInfo()
@@ -129,6 +145,14 @@ void MainWindow::createActions()
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
     connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+    dbManAct = new QAction(tr("DB &Manager"), this);
+    dbManAct->setStatusTip(tr("Open DB Manager"));
+    connect(dbManAct, SIGNAL(triggered()), this, SLOT(openDBManager()));
+
+    tags2DBAct = new QAction(tr("insert &Tags to DB tables"), this);
+    tags2DBAct->setStatusTip(tr("insert Tags to DB tables, where tag type = table name."));
+    connect(tags2DBAct, SIGNAL(triggered()), tp_, SLOT(insertTags2Table()));
 }
 
 void MainWindow::createMenus()
@@ -137,5 +161,8 @@ void MainWindow::createMenus()
     DBMenu->addAction(openAct);
     DBMenu->addAction(closeAct);
     DBMenu->addSeparator();
+    DBMenu->addAction(dbManAct);
+    DBMenu->addSeparator();
+    DBMenu->addAction(tags2DBAct);
     DBMenu->addAction(quitAct);
 }
