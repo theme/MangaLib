@@ -44,9 +44,10 @@
         {"name": "varchar(255)"}
     ],
     "rank": [
-        {"name": "varchar(255)"},
         {"type": "varchar(20)"},
-        {"rank": "integer"}
+        {"name": "varchar(255)"},
+        {"rank": "integer"},
+        {"by": "varchar(255)"}
     ],
     "link": [
         {"name": "varchar(255)"},
