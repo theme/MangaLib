@@ -44,8 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));
     connect(db_, SIGNAL(sigOpened(bool)), closeAct, SLOT(setEnabled(bool)));
+    connect(db_, SIGNAL(sigOpened(bool)), dbManAct, SLOT(setEnabled(bool)));
     connect(db_, SIGNAL(sigClosed()), this, SLOT(removeDBTabs()));
     connect(db_, SIGNAL(sigClosed(bool)), closeAct, SLOT(setDisabled(bool)));
+    connect(db_, SIGNAL(sigClosed(bool)), dbManAct, SLOT(setDisabled(bool)));
 
     // auto open "~/mangalib.db"
     if( QFile::exists(QDir::homePath() + "/mangalib.db")){
@@ -107,6 +109,13 @@ void MainWindow::removeDBTabs()
     db_table_widgets_hash_.clear();
 }
 
+void MainWindow::openDBManager()
+{
+    DBManager *w = new DBManager(db_, this);
+    connect(w, SIGNAL(finished(int)), w, SLOT(deleteLater()));
+    w->showMaximized();
+}
+
 void MainWindow::saveLocalFileInfo()
 {
 //    QSqlQuery q(db_);
@@ -129,6 +138,10 @@ void MainWindow::createActions()
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
     connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+    dbManAct = new QAction(tr("DB &Manager"), this);
+    dbManAct->setStatusTip(tr("Open DB Manager"));
+    connect(dbManAct, SIGNAL(triggered()), this, SLOT(openDBManager()));
 }
 
 void MainWindow::createMenus()
@@ -136,6 +149,8 @@ void MainWindow::createMenus()
     DBMenu = menuBar()->addMenu(tr("&Database"));
     DBMenu->addAction(openAct);
     DBMenu->addAction(closeAct);
+    DBMenu->addSeparator();
+    DBMenu->addAction(dbManAct);
     DBMenu->addSeparator();
     DBMenu->addAction(quitAct);
 }

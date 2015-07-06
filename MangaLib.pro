@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     hashpool.cpp \
     tagpool.cpp \
     tagtypeselector.cpp \
-    filetagswidget.cpp
+    filetagswidget.cpp \
+    dbmanager.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     hashpool.h \
     tagpool.h \
     tagtypeselector.h \
-    filetagswidget.h
+    filetagswidget.h \
+    dbmanager.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
@@ -47,7 +49,8 @@ FORMS    += mainwindow.ui \
     fileinfowidget.ui \
     lrline.ui \
     tagtypeselector.ui \
-    filetagswidget.ui
+    filetagswidget.ui \
+    dbmanager.ui
 
 RESOURCES += \
     icon.qrc

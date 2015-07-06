@@ -14,6 +14,7 @@
 #include "dbtablewidget.h"
 #include "fsmixdbmodel.h"
 #include "tagpool.h"
+#include "dbmanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,6 +36,7 @@ private slots:
     void closeDBconnection();
     void loadDBTabs();   // load db tables to view
     void removeDBTabs();
+    void openDBManager();
 
     // save file info
     void saveLocalFileInfo();
@@ -47,6 +49,7 @@ private:
     QMenu *DBMenu;
     QAction *openAct;
     QAction *closeAct;  // close DB
+    QAction *dbManAct;
     QAction *quitAct;
 
     // ui: File explorer

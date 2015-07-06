@@ -35,7 +35,7 @@ QStringList TagPool::tagsInString(QString str) const
           << "([^\\(\\)]+)(?=\\))"      // (*)
           << "([^【】]+)(?=】)"      // 【 】
           << "([^（）]+)(?=）)"      // （）
-          << "([^\\[\\]\\(\\)【】（）\\~\\s\\-]+)";
+          << "([^\\[\\]\\(\\)【】（）~\\s\\-]+)";
     for ( int i =0; i< expli.size(); ++i){
         rx.setPattern(expli.at(i));
         pos = 0;
