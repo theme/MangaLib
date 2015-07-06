@@ -26,7 +26,7 @@ QStringList TagPool::tagsInString(QString str) const
     if ((pos = rx.indexIn(str, pos)) != -1){
         str = rx.cap();
     }
-    qDebug() << str;
+//    qDebug() << str;
 
     // regex section take out
     QStringList expli;
@@ -51,7 +51,7 @@ QStringList TagPool::tagsInString(QString str) const
         tgts << e.value();
         ++e;
     }
-    qDebug() << tgts;
+//    qDebug() << tgts;
 
     // return results
     return tgts;
