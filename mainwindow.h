@@ -50,6 +50,7 @@ private:
     QAction *openAct;
     QAction *closeAct;  // close DB
     QAction *dbManAct;
+    QAction *tags2DBAct;
     QAction *quitAct;
 
     // ui: File explorer

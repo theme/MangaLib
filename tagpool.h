@@ -21,6 +21,7 @@ signals:
 
 public slots:
     void handleTagTypeChange(QString tagName, QString type, QString oldType);
+    void insertTags2Table();
 
 private slots:
     void loadDBtags();

@@ -7,14 +7,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    hp_ = new HashPool(this);
+    db_ = new SQLiteDB(":/dbschema.json", this);
+    tp_ = new TagPool(db_,this);
+
     // ui::menu
     createActions();
     createMenus();
-
-    // DB
-    db_ = new SQLiteDB(":/dbschema.json", this);
-    // file hash pool
-    hp_ = new HashPool(this);
 
     // ui: File explorer
     FSmixDBmodel *fmixd_;
@@ -33,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
-    tp_ = new TagPool(db_,this);
     // ui: File info
     file_info_widget_ = new FileInfoWidget(db_, hp_, tp_, this);
     file_exp_widget_->layout()->addWidget(file_info_widget_);
@@ -45,9 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));
     connect(db_, SIGNAL(sigOpened(bool)), closeAct, SLOT(setEnabled(bool)));
     connect(db_, SIGNAL(sigOpened(bool)), dbManAct, SLOT(setEnabled(bool)));
+    connect(db_, SIGNAL(sigOpened(bool)), tags2DBAct, SLOT(setEnabled(bool)));
     connect(db_, SIGNAL(sigClosed()), this, SLOT(removeDBTabs()));
     connect(db_, SIGNAL(sigClosed(bool)), closeAct, SLOT(setDisabled(bool)));
     connect(db_, SIGNAL(sigClosed(bool)), dbManAct, SLOT(setDisabled(bool)));
+    connect(db_, SIGNAL(sigClosed(bool)), tags2DBAct, SLOT(setDisabled(bool)));
 
     // auto open "~/mangalib.db"
     if( QFile::exists(QDir::homePath() + "/mangalib.db")){
@@ -149,6 +149,10 @@ void MainWindow::createActions()
     dbManAct = new QAction(tr("DB &Manager"), this);
     dbManAct->setStatusTip(tr("Open DB Manager"));
     connect(dbManAct, SIGNAL(triggered()), this, SLOT(openDBManager()));
+
+    tags2DBAct = new QAction(tr("insert &Tags to DB tables"), this);
+    tags2DBAct->setStatusTip(tr("insert Tags to DB tables, where tag type = table name."));
+    connect(tags2DBAct, SIGNAL(triggered()), tp_, SLOT(insertTags2Table()));
 }
 
 void MainWindow::createMenus()
@@ -159,5 +163,6 @@ void MainWindow::createMenus()
     DBMenu->addSeparator();
     DBMenu->addAction(dbManAct);
     DBMenu->addSeparator();
+    DBMenu->addAction(tags2DBAct);
     DBMenu->addAction(quitAct);
 }

@@ -86,6 +86,19 @@ void TagPool::handleTagTypeChange(QString tagName, QString type, QString oldType
     }
 }
 
+void TagPool::insertTags2Table()
+{
+    QSqlQuery q = db_->selectAll("tag");
+    QStringList cols, vs;
+    while(q.next()){
+        cols << "name";
+        vs << q.record().value(0).toString();
+        db_->insert(q.record().value(1).toString(),cols,vs);
+        cols.clear();
+        vs.clear();
+    }
+}
+
 void TagPool::loadDBtags()
 {
     QStringList names = db_->allTableNameDotValuesOfField("name", "file");
