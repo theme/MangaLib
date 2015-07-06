@@ -14,9 +14,6 @@ FileInfoWidget::FileInfoWidget(SQLiteDB *db, HashPool *hp, TagPool *tp,
     ui->layout->setMargin(1);
     this->populateUi();
 
-    connect(ui->update2dbButton, SIGNAL(clicked()),
-            this, SLOT(update2db()));
-
     connect(hp_, SIGNAL(sigHash(int,QString,QString)),
             this, SLOT(handleGotHash(int,QString,QString)));
     connect(hp_, SIGNAL(sigHashingPercent(int,int,QString)),
@@ -130,27 +127,6 @@ void FileInfoWidget::setProgress(QString fieldName, int p, bool local)
         w->setLocalProgress(p);
     } else {
         w->setRemoteProgress(p);
-    }
-}
-
-bool FileInfoWidget::update2db(bool update)
-{
-    QStringList fields = db_->schema()->fields("file");
-    QString k,v;
-    QStringList keys, values;
-    for (int i = 0; i < fields.size(); ++i){
-        k = fields.at(i);
-        v = this->getValue(k);
-        if (!v.isEmpty()){
-            keys.append(k);
-            values.append(v);
-        }
-    }
-
-    if (update && db_->hitValue("file", "md5", this->getValue("md5")) ){
-        return db_->update("file", keys, values, "md5", this->getValue("md5"));
-    } else {
-        return db_->insert("file", keys, values);
     }
 }
 

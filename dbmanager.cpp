@@ -26,7 +26,6 @@ void DBManager::loadDBTabs()
 
         QString tname = QString("( &") + QString::number(i+1) + " ) "
                 + tables.at(i);
-        int tabIndex = ui->tablesTab->addTab(w,tname);
-//        db_table_widgets_hash_.insert(w,tabIndex);
+        ui->tablesTab->addTab(w,tname);
     }
 }

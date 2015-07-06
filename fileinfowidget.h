@@ -31,13 +31,11 @@ public slots:
     void showHide(bool show = true);
 
 signals:
-    void sigSaved2DB();
     void sigFileChanged(QString old, QString now);
 
 private slots:
     void handleGotHash(int algo, QString hash, QString fpath);
     void updateHashingProgress(int algo, int percent, QString fpath);
-    bool update2db(bool update = true);
     void updateFromDB(QString fieldName, QString v, QString fpath);
     void updateLocalValue(QString fieldName, QString v, QString fpath);
 

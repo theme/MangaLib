@@ -52,13 +52,6 @@
      </item>
     </layout>
    </item>
-   <item>
-    <widget class="QPushButton" name="update2dbButton">
-     <property name="text">
-      <string>&amp;Update DB</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>
