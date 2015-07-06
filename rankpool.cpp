@@ -22,6 +22,10 @@ int RankPool::getFileRank(QString fpath)
         return rank_cache_.value(key);
     }
 
+    if (!db_->isOpen()){
+        return -1;
+    }
+
     QStringList cols, vs;
     cols << "size";
     vs << QString::number(fi.size());
@@ -49,26 +53,35 @@ bool RankPool::setRank(QString fpath, int rank)
         return false;
     }
 
+    if (!db_->isOpen()){
+        return false;
+    }
+
     QStringList cols, vs;
-    cols << "md5" << "size";
-    vs << md5 << QString::number(fi.size());
+    cols << "size" << "rank" << "name" << "type";
+    vs << QString::number(fi.size()) << QString::number(rank)
+       << fi.fileName() << "file";
 
     if( getFileRank(fpath) < 0){    // net exist, insert
-        cols << "rank" << "name" << "type";
-        vs << QString::number(rank) << fi.fileName() << "file";
+        cols << "md5";
+        vs << md5;
         return db_->insert("rank", cols, vs);
     } else {    // update
-        return db_->update("rank", cols, vs, "rank", QString::number(rank));
+        rank_cache_.remove(cacheKeyFile(fi.size(),md5));
+        return db_->update("rank", cols, vs, "md5", md5);
     }
 }
 
-bool RankPool::isRankable() const
+bool RankPool::isReady() const
 {
     return db_->isOpen();
 }
 
 void RankPool::loadRankFromDB()
 {
+    if (!db_->isOpen()){
+        return;
+    }
     QSqlQuery q = db_->select("rank");
     while(q.next()){
         if ( q.value("type") == "file"){

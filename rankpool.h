@@ -16,7 +16,7 @@ public:
     // save rank of file into DB
     // limits controled by DB schema
     bool setRank(QString fpath, int rank);
-    bool isRankable() const;
+    bool isReady() const;
 
 signals:
 

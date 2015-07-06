@@ -206,7 +206,7 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     sql = "INSERT INTO " + tn + " ( " + a.join(" , ") + " ) ";
     sql += "VALUES ( " + b.join(" , ") + " ) ";
 
-//    qDebug() << sql;
+    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::insert() "+ sql;
@@ -217,7 +217,8 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     return true;
 }
 
-bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs, QString key, QString v)
+bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs,
+                      QString where_key, QString where_v)
 {
     if (!db_.isOpen()){
         return false;
@@ -226,10 +227,10 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
     sql = " UPDATE " + tn + " SET ";
     QStringList exprs;
     for (int i =0; i< cols.size(); ++i){
-        exprs.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
+        exprs.append(" " + cols.at(i) + " = '" + vs.at(i) + "' ");
     }
     sql += exprs.join(",");
-    sql += " WHERE " + key + " = '" + v + "'";
+    sql += " WHERE " + where_key + " = '" + where_v + "'";
 
     qDebug() << sql;
     QSqlQuery q(db_);
