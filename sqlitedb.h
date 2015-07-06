@@ -17,16 +17,20 @@ public:
     QStringList fields(QString tableName) const;
     QString fieldType(QString tableName, QString fieldName) const;
 
-    QSqlRecord query1record(QString tn, QString col, QString v) const;
-    bool hitValue(QString tn, QString col, QString v) const;
+    QSqlRecord query1record(QString tn, QString where_col, QString where_v) const;
+    QString query1value(QString table, QString filed, QStringList where_cols, QStringList where_vs)const;
+    bool hitValue(QString tn, QString where_col, QString where_v) const;
     QString whichTableContainsName(QString name) const;
     QStringList allTableNameDotValuesOfField(QString fieldName,
                                              QString exceptTable = QString()) const;
-    QSqlQuery selectAll(QString tableName) const;
 
+    QSqlQuery select(QString tableName,
+                     const QStringList& cols = QStringList(),
+                     const QStringList& vs = QStringList()) const;
     bool insert(QString tn, const QStringList& cols, const QStringList& vs);
     bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
-    bool remove(QString tn, QString fieldName, QString v);
+    bool remove(QString tn, const QStringList& cols, const QStringList& vs);
+    bool removeAll(QString tn, QString fieldName, QString v);
 
     QSqlDatabase &conn();
     const DBSchema *schema() const;

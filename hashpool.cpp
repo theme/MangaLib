@@ -2,16 +2,32 @@
 #include <QDebug>
 #include <QFileInfo>
 
-HashPool::HashPool(QObject *parent) : QObject(parent)
+HashPool::HashPool(SQLiteDB *db, QObject *parent) : QObject(parent), db_(db)
 {
 
 }
 
 QString HashPool::getFileHash(QCryptographicHash::Algorithm algo, QString fpath)
 {
-    if (!QFileInfo(fpath).isFile())
+    QFileInfo fi(fpath);
+    if (!fi.isFile())
         return QString();
+
+    if (!file_hashes_.contains(QString::number(algo)+fpath)){
+        QString h = this->queryFileHash(algo,
+                                        fi.fileName(),
+                                        QString::number(fi.size()),
+                                        fi.lastModified().toString(Qt::ISODate));
+        if (!h.isEmpty()){
+            qDebug() << "HashPool::getFileHash() hit DB";
+            file_hashes_.insert(QString::number(algo)+fpath, h);
+        } else {
+            qDebug() << "HashPool::getFileHash() miss DB" << h;
+        }
+    }
+
     if (!file_hashes_.contains(QString::number(algo)+fpath)) {
+        qDebug() << "HashPool::getFileHash() threading ..." << fi.filePath();
         HashThread *t = new HashThread(algo,fpath,this);
         connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
         connect(t, SIGNAL(sigHash(int,QString,QString)),
@@ -31,6 +47,14 @@ void HashPool::cacheFileHash(int algo, QString hash, QString fpath)
 {
     file_hashes_.insert(QString::number(algo)+fpath, hash);
     emit sigHash(algo, hash, fpath);
+}
+
+QString HashPool::queryFileHash(QCryptographicHash::Algorithm algo, QString fname, QString size, QString mtime)
+{
+    QStringList cols, vs;
+    cols << "name" << "size" << "timestamp";
+    vs << fname << size << mtime;
+    return db_->query1value("file", this->algoName(algo), cols, vs);
 }
 
 QString HashPool::algoName(QCryptographicHash::Algorithm a) const

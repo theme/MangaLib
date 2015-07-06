@@ -63,13 +63,13 @@ QString SQLiteDB::fieldType(QString tableName, QString fieldName) const
     return QString();
 }
 
-QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
+QSqlRecord SQLiteDB::query1record(QString tn, QString where_col, QString where_v) const
 {
-    if ( col.isEmpty() || v.isEmpty() )
+    if ( where_col.isEmpty() || where_v.isEmpty() )
         return QSqlRecord();
 
     QSqlQuery q(db_);
-    QString sql = "select * from " + tn + " where " + col + " = " + "'" + v + "'";
+    QString sql = "select * from " + tn + " where " + where_col + " = " + "'" + where_v + "'";
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::query1record() "+ sql;
         qDebug()  << msg;
@@ -77,6 +77,18 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString col, QString v) const
     }
     q.first();
     return q.record();
+}
+
+QString SQLiteDB::query1value(QString table, QString filed, QStringList where_cols, QStringList where_vs) const
+{
+    QSqlQuery q = this->select(table, where_cols, where_vs);
+    if ( q.next() ){
+        qDebug() << "SQLiteDB::query1value() hit";
+        return q.record().value(filed).toString();
+    } else {
+        qDebug() << "SQLiteDB::query1value() miss";
+        return QString();
+    }
 }
 
 QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString exceptTable) const
@@ -109,13 +121,24 @@ QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString ex
     return names;
 }
 
-QSqlQuery SQLiteDB::selectAll(QString tableName) const
+QSqlQuery SQLiteDB::select(QString tableName, const QStringList &cols, const QStringList &vs) const
 {
     if ( tableName.isEmpty() )
         return QSqlQuery();
 
     QSqlQuery q(db_);
-    QString sql = "select * from " + tableName;
+    QString sql = "SELECT * FROM " + tableName;
+
+    if ( cols.size() != 0 && cols.size() == vs.size()){
+        sql += " WHERE ";
+        QStringList exprs;
+        for (int i =0; i< cols.size(); ++i){
+            exprs.append(" " + cols.at(i) + " = '" + vs.at(i) + "' ");
+        }
+        sql += exprs.join(" AND ");
+    }
+
+    qDebug() << sql;
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::selectAll() "+ sql;
         qDebug()  << msg;
@@ -124,10 +147,10 @@ QSqlQuery SQLiteDB::selectAll(QString tableName) const
     return q;
 }
 
-bool SQLiteDB::hitValue(QString tn, QString col, QString v) const
+bool SQLiteDB::hitValue(QString tn, QString where_col, QString where_v) const
 {
-    QSqlRecord rec = this->query1record(tn, col, v);
-    return !rec.value(col).toString().isEmpty();
+    QSqlRecord rec = this->query1record(tn, where_col, where_v);
+    return !rec.value(where_col).toString().isEmpty();
 }
 
 QString SQLiteDB::whichTableContainsName(QString name) const
@@ -156,8 +179,8 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::insert() "+ sql;
-            qDebug()  << msg;
-            qDebug() << q.lastError().text();
+        qDebug()  << msg;
+        qDebug() << q.lastError().text();
         return false;
     }
     return true;
@@ -167,38 +190,54 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
 {
     QString sql;
     sql = " UPDATE " + tn + " SET ";
-    QStringList assigns;
+    QStringList exprs;
     for (int i =0; i< cols.size(); ++i){
-        assigns.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
+        exprs.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
     }
-    sql += assigns.join(",");
+    sql += exprs.join(",");
     sql += " WHERE " + key + " = '" + v + "'";
 
     qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::update() "+ sql;
-            qDebug()  << msg;
-            qDebug() << q.lastError().text();
+        qDebug()  << msg;
+        qDebug() << q.lastError().text();
         return false;
     }
     return true;
 }
 
-bool SQLiteDB::remove(QString tn, QString fieldName, QString v)
+bool SQLiteDB::remove(QString tn, const QStringList &cols, const QStringList &vs)
 {
-    QString sql = " DELETE FROM " + tn + " WHERE "
-            + " " +fieldName + " = '" +v + "' ";
+    if ( cols.size() == 0 || cols.size() != vs.size())
+        return false;
+
+    QString sql = " DELETE FROM " + tn + " WHERE ";
+    QStringList exprs;
+    for (int i =0; i< cols.size(); ++i){
+        exprs.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
+    }
+    sql += exprs.join(" AND ");
 
     qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::remove() "+ sql;
-            qDebug()  << msg;
-            qDebug() << q.lastError().text();
+        qDebug()  << msg;
+        qDebug() << q.lastError().text();
         return false;
     }
     return true;
+}
+
+bool SQLiteDB::removeAll(QString tn, QString fieldName, QString v)
+{
+    QStringList cols, vs;
+    cols << fieldName;
+    vs << v;
+
+    return this->remove(tn, cols, vs);
 }
 
 QSqlDatabase &SQLiteDB::conn()

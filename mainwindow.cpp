@@ -7,8 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    hp_ = new HashPool(this);
     db_ = new SQLiteDB(":/dbschema.json", this);
+    hp_ = new HashPool(db_,this);
     tp_ = new TagPool(db_,this);
 
     // ui::menu
