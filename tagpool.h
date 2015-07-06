@@ -25,6 +25,8 @@ public slots:
 
 private slots:
     void loadDBtags();
+    void addTag(QString tagName, QString type);
+    void removeTag(QString tagName, QString type);
 
 private:
     QString queryType(QString tag);

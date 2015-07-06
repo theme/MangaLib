@@ -72,17 +72,9 @@ void TagPool::handleTagTypeChange(QString tagName, QString type, QString oldType
     if ( tagName.isEmpty())
         return;
     if (type.isEmpty()){    //remove
-        db_->removeAll("tag", "name", tagName);
-        tagcache_.remove(tagName);
+        this->removeTag(tagName,type);
     } else {
-        QStringList cols, vs;
-        cols << "name" << "type";
-        vs << tagName <<  type;
-        if( db_->hitValue("tag", "name", tagName) ){ // exist, update
-            db_->update("tag", cols, vs, "name", tagName );
-        } else {
-            db_->insert("tag", cols, vs);
-        }
+        this->addTag(tagName,type);
     }
 }
 
@@ -119,6 +111,25 @@ void TagPool::loadDBtags()
     while(q.next()){
         tagcache_.insert(q.record().value(0).toString(), q.record().value(1).toString());
     }
+}
+
+void TagPool::addTag(QString tagName, QString type)
+{
+    QStringList cols, vs;
+    cols << "name" << "type";
+    vs << tagName <<  type;
+    if( db_->hitValue("tag", "name", tagName) ){ // exist, update
+        db_->update("tag", cols, vs, "name", tagName );
+    } else {
+        db_->insert("tag", cols, vs);
+    }
+    tagcache_.insert(tagName,type);
+}
+
+void TagPool::removeTag(QString tagName, QString type)
+{
+    db_->removeAll("tag", "name", tagName);
+    tagcache_.remove(tagName);
 }
 
 QString TagPool::queryType(QString tag)
