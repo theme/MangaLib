@@ -55,7 +55,7 @@ QString HashPool::queryFileHash(QCryptographicHash::Algorithm algo, QString fnam
     QStringList cols, vs;
     cols << "name" << "size" << "timestamp";
     vs << fname << size << mtime;
-    return db_->query1value("file", this->algoName(algo), cols, vs);
+    return db_->query1valueString("file", this->algoName(algo), cols, vs);
 }
 
 QString HashPool::algoName(QCryptographicHash::Algorithm a) const
@@ -95,7 +95,7 @@ void HashPool::saveHash2DB(int algo, QString hash, QString fpath)
     QStringList cols, vs;
     cols << "name" << "size" << "timestamp";
     vs << fi.fileName() << QString::number(fi.size()) << fi.lastModified().toString(Qt::ISODate);
-    QString h = db_->query1value("file",
+    QString h = db_->query1valueString("file",
                                  this->algoName(static_cast<QCryptographicHash::Algorithm>(algo)),
                                  cols,
                                  vs);

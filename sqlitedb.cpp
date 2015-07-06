@@ -79,15 +79,23 @@ QSqlRecord SQLiteDB::query1record(QString tn, QString where_col, QString where_v
     return q.record();
 }
 
-QString SQLiteDB::query1value(QString table, QString filed, QStringList where_cols, QStringList where_vs) const
+QString SQLiteDB::query1valueString(QString table, QString filed, QStringList where_cols, QStringList where_vs) const
 {
     QSqlQuery q = this->select(table, where_cols, where_vs);
     if ( q.next() ){
-//        qDebug() << "SQLiteDB::query1value() hit";
         return q.record().value(filed).toString();
     } else {
-//        qDebug() << "SQLiteDB::query1value() miss";
         return QString();
+    }
+}
+
+int SQLiteDB::query1valueInt(QString table, QString filed, QStringList where_cols, QStringList where_vs) const
+{
+    QSqlQuery q = this->select(table, where_cols, where_vs);
+    if ( q.next() ){
+        return q.record().value(filed).toInt();
+    } else {
+        return -1;
     }
 }
 

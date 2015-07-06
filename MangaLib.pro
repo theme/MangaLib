@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     tagpool.cpp \
     tagtypeselector.cpp \
     filetagswidget.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    rankpool.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     tagpool.h \
     tagtypeselector.h \
     filetagswidget.h \
-    dbmanager.h
+    dbmanager.h \
+    rankpool.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \

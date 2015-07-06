@@ -44,9 +44,11 @@
         {"name": "varchar(255)"}
     ],
     "rank": [
+        {"rank": "integer"},
         {"type": "varchar(20)"},
         {"name": "varchar(255)"},
-        {"rank": "integer"},
+        {"md5": "varchar(255)"},
+        {"size": "integer"},
         {"by": "varchar(255)"}
     ],
     "link": [

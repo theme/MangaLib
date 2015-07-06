@@ -18,7 +18,8 @@ public:
     QString fieldType(QString tableName, QString fieldName) const;
 
     QSqlRecord query1record(QString tn, QString where_col, QString where_v) const;
-    QString query1value(QString table, QString filed, QStringList where_cols, QStringList where_vs)const;
+    QString query1valueString(QString table, QString filed, QStringList where_cols, QStringList where_vs)const;
+    int query1valueInt(QString table, QString filed, QStringList where_cols, QStringList where_vs)const;
     bool hitValue(QString tn, QString where_col, QString where_v) const;
     QString whichTableContainsName(QString name) const;
     QStringList allTableNameDotValuesOfField(QString fieldName,

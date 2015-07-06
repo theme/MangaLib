@@ -46,7 +46,7 @@ QStringList TagPool::tagsInString(QString str) const
             pos += rx.matchedLength();
         }
     }
-    auto e = caps.begin();
+    QMap<int,QString>::const_iterator e = caps.begin();
     while( e != caps.end()){
         tgts << e.value();
         ++e;
