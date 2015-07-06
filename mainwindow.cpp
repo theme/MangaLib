@@ -86,7 +86,14 @@ void MainWindow::closeDBconnection()
 
 void MainWindow::loadDBTabs()
 {
-    QStringList tables = db_->tables();
+    QStringList dbtables = db_->tables();
+    QStringList tables, filter;
+    filter << "file" << "tag" << "book" << "author";
+    for (int i = 0; i < filter.size(); ++i){
+        if (dbtables.contains(filter.at(i))){
+            tables.append(filter.at(i));
+        }
+    }
     for( int i = 0; i < tables.size(); ++i){
         DBTableWidget* w = new DBTableWidget(tables.at(i),
                                                db_->conn(),
