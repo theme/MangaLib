@@ -22,13 +22,17 @@ LRline::~LRline()
 
 void LRline::setLocalValue(QString s)
 {
+    if (s.isEmpty())
+        return;
     ui->localProgress->hide();
     ui->localValue->setText(s);
     hintIfEqual();
 }
 
-void LRline::setRemoveValue(QString s)
+void LRline::setRemoteValue(QString s)
 {
+    if (s.isEmpty())
+        return;
     ui->remoteProgress->hide();
     ui->removeValue->setText(s);
     hintIfEqual();

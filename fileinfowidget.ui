@@ -14,8 +14,26 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="layout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -31,7 +49,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>fields</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -41,7 +59,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>remote</string>
+          <string>DB</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>

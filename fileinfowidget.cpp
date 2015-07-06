@@ -101,7 +101,13 @@ void FileInfoWidget::setValue(QString fieldName, QString v, bool local )
     if ( local ){
         w->setLocalValue(v);
     } else {
-        w->setRemoveValue(v);
+        w->setRemoteValue(v);
+    }
+
+    if( !v.isEmpty() ){
+        w->show();
+    } else {
+        w->hide();
     }
 }
 
@@ -113,6 +119,7 @@ void FileInfoWidget::clearValueAll()
         i.next();
         w = i.value();
         w->clear();
+        w->hide();
     }
 }
 
@@ -163,6 +170,7 @@ void FileInfoWidget::populateUi()
         line = new LRline(this);
         line->setName(fields.at(i));
         ui->layout->addWidget(line);
+        line->hide();
         field_widgets_.insert(fields.at(i), line);
     }
 }

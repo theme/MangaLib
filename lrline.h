@@ -21,7 +21,7 @@ public:
 public slots:
     void setName(QString s);
     void setLocalValue(QString s);
-    void setRemoveValue(QString s);
+    void setRemoteValue(QString s);
     void setLocalProgress(int p);
     void setRemoteProgress(int p);
     void hintIfEqual();
