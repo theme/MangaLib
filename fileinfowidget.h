@@ -28,6 +28,7 @@ public:
 
 public slots:
     void setFile(QString f);
+    void showHide(bool show = true);
 
 signals:
     void sigSaved2DB();

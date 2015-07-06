@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->topTabWidget->addTab(file_info_widget_, "&File info");
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
             file_info_widget_, SLOT(setFile(QString)));
+    connect(file_exp_widget_, SIGNAL(sigFileNameSelected(bool)),
+            file_info_widget_, SLOT(showHide(bool)));
 
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));

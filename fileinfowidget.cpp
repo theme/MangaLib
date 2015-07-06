@@ -72,6 +72,15 @@ void FileInfoWidget::setFile(QString f)
     }
 }
 
+void FileInfoWidget::showHide(bool show)
+{
+    if (show){
+        this->show();
+    } else {
+        this->hide();
+    }
+}
+
 void FileInfoWidget::handleGotHash(int algo, QString hash, QString fpath)
 {
     updateLocalValue(hp_->algoName(static_cast<QCryptographicHash::Algorithm>(algo)), hash, fpath);

@@ -48,7 +48,14 @@ void FileExplorer::onCurrentDirChanged(QModelIndex current, QModelIndex previous
 
 void FileExplorer::onCurrentFileChanged(QModelIndex current, QModelIndex previous)
 {
-    emit sigFilePath( files_model_->filePath(current));
+    if (files_model_->filePath(current) != files_model_->filePath(previous))
+        emit sigFilePath( files_model_->filePath(current));
+
+    if (current.column() == 0){
+        emit sigFileNameSelected(true);
+    } else {
+        emit sigFileNameSelected(false);
+    }
 }
 
 void FileExplorer::setPath(QString path)

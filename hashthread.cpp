@@ -1,6 +1,6 @@
 #include "hashthread.h"
 
-QSemaphore HashThread::sem_(1);
+QSemaphore HashThread::sem_(2);
 
 HashThread::HashThread(enum QCryptographicHash::Algorithm algo, QString fpath, QObject *parent):
     QThread(parent), fpath_(fpath), algo_(algo)

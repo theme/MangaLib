@@ -20,6 +20,7 @@ signals:
     void sigHashingPercent(int algo, int percent, QString fpath);
 
 private slots:
+    void saveHash2DB(int algo, QString hash, QString fpath);
     void cacheFileHash(int algo, QString hash, QString fpath);
     QString queryFileHash(QCryptographicHash::Algorithm algo, QString fname, QString size, QString mtime);
 

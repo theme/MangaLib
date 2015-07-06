@@ -25,6 +25,7 @@ public:
 signals:
     void sigPath(QString path);
     void sigFilePath(QString fpath);
+    void sigFileNameSelected(bool select = true);
 
 private slots:
     void onCurrentDirChanged(QModelIndex current, QModelIndex previous);

@@ -4,7 +4,8 @@
 
 HashPool::HashPool(SQLiteDB *db, QObject *parent) : QObject(parent), db_(db)
 {
-
+    connect(this, SIGNAL(sigHash(int,QString,QString)),
+            this, SLOT(saveHash2DB(int,QString,QString)));
 }
 
 QString HashPool::getFileHash(QCryptographicHash::Algorithm algo, QString fpath)
@@ -12,20 +13,20 @@ QString HashPool::getFileHash(QCryptographicHash::Algorithm algo, QString fpath)
     QFileInfo fi(fpath);
     if (!fi.isFile())
         return QString();
-
+    // search DB
     if (!file_hashes_.contains(QString::number(algo)+fpath)){
         QString h = this->queryFileHash(algo,
                                         fi.fileName(),
                                         QString::number(fi.size()),
                                         fi.lastModified().toString(Qt::ISODate));
         if (!h.isEmpty()){
-            qDebug() << "HashPool::getFileHash() hit DB";
+//            qDebug() << "HashPool::getFileHash() hit DB";
             file_hashes_.insert(QString::number(algo)+fpath, h);
         } else {
-            qDebug() << "HashPool::getFileHash() miss DB" << h;
+//            qDebug() << "HashPool::getFileHash() miss DB" << h;
         }
     }
-
+    // calculate
     if (!file_hashes_.contains(QString::number(algo)+fpath)) {
         qDebug() << "HashPool::getFileHash() threading ..." << fi.filePath();
         HashThread *t = new HashThread(algo,fpath,this);
@@ -82,7 +83,26 @@ QString HashPool::algoName(QCryptographicHash::Algorithm a) const
         return "sha512";
         break;
     default:
-        throw "unknown QCryptographicHash::Algorithm name";
+        throw "unknownHashName";
         break;
+    }
+}
+
+void HashPool::saveHash2DB(int algo, QString hash, QString fpath)
+{
+    QFileInfo fi(fpath);
+
+    QStringList cols, vs;
+    cols << "name" << "size" << "timestamp";
+    vs << fi.fileName() << QString::number(fi.size()) << fi.lastModified().toString(Qt::ISODate);
+    QString h = db_->query1value("file",
+                                 this->algoName(static_cast<QCryptographicHash::Algorithm>(algo)),
+                                 cols,
+                                 vs);
+    if( h.isEmpty() || h != hash){
+        cols << this->algoName(static_cast<QCryptographicHash::Algorithm>(algo));
+        vs  << hash;
+        db_->insert("file", cols, vs);
+        qDebug() << "HashPool::saveHash2DB()" << hash << " " << fi.fileName();
     }
 }

@@ -83,10 +83,10 @@ QString SQLiteDB::query1value(QString table, QString filed, QStringList where_co
 {
     QSqlQuery q = this->select(table, where_cols, where_vs);
     if ( q.next() ){
-        qDebug() << "SQLiteDB::query1value() hit";
+//        qDebug() << "SQLiteDB::query1value() hit";
         return q.record().value(filed).toString();
     } else {
-        qDebug() << "SQLiteDB::query1value() miss";
+//        qDebug() << "SQLiteDB::query1value() miss";
         return QString();
     }
 }
@@ -138,7 +138,7 @@ QSqlQuery SQLiteDB::select(QString tableName, const QStringList &cols, const QSt
         sql += exprs.join(" AND ");
     }
 
-    qDebug() << sql;
+//    qDebug() << sql;
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::selectAll() "+ sql;
         qDebug()  << msg;
@@ -175,7 +175,7 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     sql = "INSERT INTO " + tn + " ( " + a.join(" , ") + " ) ";
     sql += "VALUES ( " + b.join(" , ") + " ) ";
 
-    qDebug() << sql;
+//    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::insert() "+ sql;
