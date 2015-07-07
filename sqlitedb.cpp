@@ -29,6 +29,10 @@ QStringList SQLiteDB::tables() const
 
 QStringList SQLiteDB::fields(QString tableName) const
 {
+    if (!db_.isOpen()){
+        return QStringList();
+    }
+
     QStringList dbfields;
     QString sql("PRAGMA table_info( " + tableName + ")");
     QSqlQuery q(db_);
@@ -46,6 +50,10 @@ QStringList SQLiteDB::fields(QString tableName) const
 
 QString SQLiteDB::fieldType(QString tableName, QString fieldName) const
 {
+    if (!db_.isOpen()){
+        return QString();
+    }
+
     QString sql("PRAGMA table_info( " + tableName + ")");
     QSqlQuery q(db_);
     if (!q.exec(sql)){
@@ -65,6 +73,10 @@ QString SQLiteDB::fieldType(QString tableName, QString fieldName) const
 
 QSqlRecord SQLiteDB::query1record(QString tn, QString where_col, QString where_v) const
 {
+    if (!db_.isOpen()){
+        return QSqlRecord();
+    }
+
     if ( where_col.isEmpty() || where_v.isEmpty() )
         return QSqlRecord();
 
@@ -101,6 +113,10 @@ int SQLiteDB::query1valueInt(QString table, QString filed, QStringList where_col
 
 QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString exceptTable) const
 {
+    if (!db_.isOpen()){
+        return QStringList();
+    }
+
     QStringList names, fields;
     QStringList tables = dbschema_->tables();
     QString tn;
@@ -131,6 +147,10 @@ QStringList SQLiteDB::allTableNameDotValuesOfField(QString fieldName, QString ex
 
 QSqlQuery SQLiteDB::select(QString tableName, const QStringList &cols, const QStringList &vs) const
 {
+    if (!db_.isOpen()){
+        return QSqlQuery();
+    }
+
     if ( tableName.isEmpty() )
         return QSqlQuery();
 
@@ -173,6 +193,9 @@ QString SQLiteDB::whichTableContainsName(QString name) const
 
 bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs)
 {
+    if (!db_.isOpen()){
+        return false;
+    }
     QStringList a, b;
     for (int i = 0; i < cols.size(); ++i){
         a.append("'" + cols.at(i) + "'");
@@ -183,7 +206,7 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     sql = "INSERT INTO " + tn + " ( " + a.join(" , ") + " ) ";
     sql += "VALUES ( " + b.join(" , ") + " ) ";
 
-//    qDebug() << sql;
+    qDebug() << sql;
     QSqlQuery q(db_);
     if (!q.exec(sql)){
         QString msg = "error: SQLiteDB::insert() "+ sql;
@@ -194,16 +217,20 @@ bool SQLiteDB::insert(QString tn, const QStringList &cols, const QStringList &vs
     return true;
 }
 
-bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs, QString key, QString v)
+bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs,
+                      QString where_key, QString where_v)
 {
+    if (!db_.isOpen()){
+        return false;
+    }
     QString sql;
     sql = " UPDATE " + tn + " SET ";
     QStringList exprs;
     for (int i =0; i< cols.size(); ++i){
-        exprs.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
+        exprs.append(" " + cols.at(i) + " = '" + vs.at(i) + "' ");
     }
     sql += exprs.join(",");
-    sql += " WHERE " + key + " = '" + v + "'";
+    sql += " WHERE " + where_key + " = '" + where_v + "'";
 
     qDebug() << sql;
     QSqlQuery q(db_);
@@ -218,6 +245,9 @@ bool SQLiteDB::update(QString tn, const QStringList &cols, const QStringList &vs
 
 bool SQLiteDB::remove(QString tn, const QStringList &cols, const QStringList &vs)
 {
+    if (!db_.isOpen()){
+        return false;
+    }
     if ( cols.size() == 0 || cols.size() != vs.size())
         return false;
 

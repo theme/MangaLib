@@ -29,7 +29,8 @@ public:
                      const QStringList& cols = QStringList(),
                      const QStringList& vs = QStringList()) const;
     bool insert(QString tn, const QStringList& cols, const QStringList& vs);
-    bool update(QString tn, const QStringList& cols, const QStringList& vs, QString key, QString v);
+    bool update(QString tn, const QStringList& cols, const QStringList& vs,
+                QString where_key, QString where_v);
     bool remove(QString tn, const QStringList& cols, const QStringList& vs);
     bool removeAll(QString tn, QString fieldName, QString v);
 

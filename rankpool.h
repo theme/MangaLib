@@ -16,13 +16,17 @@ public:
     // save rank of file into DB
     // limits controled by DB schema
     bool setRank(QString fpath, int rank);
+    bool isReady() const;
 
 signals:
 
 public slots:
 
-private:
+private slots:
     void loadRankFromDB();
+    void clearCache();
+
+private:
     QString cacheKeyFile(int size, QString md5);
     SQLiteDB * db_;
     HashPool *hp_;
