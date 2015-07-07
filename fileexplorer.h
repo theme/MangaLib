@@ -9,6 +9,7 @@
 #include <QCompleter>
 #include <QDirModel>
 #include "rankdelegate.h"
+#include "fsfilterproxymodel.h"
 
 namespace Ui {
 class FileExplorer;
@@ -39,6 +40,7 @@ private:
     Ui::FileExplorer *ui;
     QFileInfo finfo_;
     QFileSystemModel *dir_model_;
+    FSfilterProxyModel *dir_proxy_model_;
     QFileSystemModel *files_model_;
     QShortcut *sc_editpath_;
 };

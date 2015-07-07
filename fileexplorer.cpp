@@ -20,9 +20,11 @@ FileExplorer::FileExplorer(QFileSystemModel *filesmodel, QWidget *parent) :
 
     // dir View
     dir_model_ = new QFileSystemModel(this);
+    dir_proxy_model_ = new FSfilterProxyModel(this);
     dir_model_->setRootPath(QDir::rootPath());
     dir_model_->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-    ui->dirView->setModel(dir_model_);
+    dir_proxy_model_->setSourceModel(dir_model_);
+    ui->dirView->setModel(dir_proxy_model_);
     ui->dirView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
@@ -49,7 +51,7 @@ FileExplorer::~FileExplorer()
 
 void FileExplorer::onCurrentDirChanged(QModelIndex current, QModelIndex previous)
 {
-    emit sigPath( dir_model_->filePath(current) );
+    emit sigPath( dir_model_->filePath(dir_proxy_model_->mapToSource( current)) );
 }
 
 void FileExplorer::onCurrentFileChanged(QModelIndex current, QModelIndex previous)

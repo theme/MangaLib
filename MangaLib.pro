@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     rankpool.cpp \
     rankdelegate.cpp \
     rank/stareditor.cpp \
-    rank/starrating.cpp
+    rank/starrating.cpp \
+    fsfilterproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -49,7 +50,8 @@ HEADERS  += mainwindow.h \
     rankpool.h \
     rankdelegate.h \
     rank/stareditor.h \
-    rank/starrating.h
+    rank/starrating.h \
+    fsfilterproxymodel.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
