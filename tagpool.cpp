@@ -20,6 +20,10 @@ QStringList TagPool::tagsInString(QString str) const
 {
     QStringList tgts;
 
+    // remove path
+    QFileInfo fi(str);
+    str = fi.fileName();
+
     // rip file extension name
     QRegExp rx(".*(?=(\\.(zip|rar|cb[zr]))$)");
     int pos = 0;
