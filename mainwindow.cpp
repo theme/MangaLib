@@ -33,14 +33,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
 
-    // ui: File info
-    file_info_widget_ = new FileInfoWidget(db_, hp_, tp_, this);
-    file_exp_widget_->layout()->addWidget(file_info_widget_);
-//    ui->topTabWidget->addTab(file_info_widget_, "&File info");
+    // ui: tags
+    FileTagsWidget *w = new FileTagsWidget(tp_,this);
+    ui->centralWidget->layout()->addWidget(w);
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
-            file_info_widget_, SLOT(setFile(QString)));
+            w, SLOT(setFileName(QString)));
     connect(file_exp_widget_, SIGNAL(sigFileNameSelected(bool)),
-            file_info_widget_, SLOT(showHide(bool)));
+            w, SLOT(setVisible(bool)));
 
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));

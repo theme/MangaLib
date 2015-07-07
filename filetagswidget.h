@@ -17,6 +17,7 @@ public:
     explicit FileTagsWidget(TagPool *tp,
                             QWidget *parent = 0);
     ~FileTagsWidget();
+public slots:
     void setFileName(QString fn);
 
 private:

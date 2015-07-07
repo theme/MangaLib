@@ -16,10 +16,7 @@ FileTagsWidget::~FileTagsWidget()
 void FileTagsWidget::setFileName(QString fn)
 {
     this->clearSelectors();
-
-    ui->fileName->setText(fn);
     QStringList tags = tp_->tagsInString(fn);
-
     this->addSelectorList(tags);
 }
 

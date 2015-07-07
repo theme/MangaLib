@@ -10,7 +10,6 @@
 
 #include "sqlitedb.h"
 #include "fileexplorer.h"
-#include "fileinfowidget.h"
 #include "dbtablewidget.h"
 #include "fsmixdbmodel.h"
 #include "tagpool.h"
@@ -56,9 +55,6 @@ private:
 
     // ui: File explorer
     FileExplorer *file_exp_widget_;
-
-    // ui: File info
-    FileInfoWidget *file_info_widget_;
 
     // DB
     SQLiteDB *db_;

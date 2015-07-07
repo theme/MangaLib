@@ -15,15 +15,19 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLineEdit" name="pathEdit"/>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,6">
+    <layout class="QVBoxLayout" name="vLayout">
      <item>
-      <widget class="QTreeView" name="dirView"/>
+      <widget class="QLineEdit" name="pathEdit"/>
      </item>
      <item>
-      <widget class="QTableView" name="filesView"/>
+      <layout class="QHBoxLayout" name="naviLayout" stretch="2,6">
+       <item>
+        <widget class="QTreeView" name="dirView"/>
+       </item>
+       <item>
+        <widget class="QTableView" name="filesView"/>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

@@ -18,9 +18,7 @@ SOURCES += main.cpp\
     dbtablewidget.cpp \
     dbschema.cpp \
     fileexplorer.cpp \
-    fileinfowidget.cpp \
     sqlitedb.cpp \
-    lrline.cpp \
     fsmixdbmodel.cpp \
     hashpool.cpp \
     tagpool.cpp \
@@ -38,9 +36,7 @@ HEADERS  += mainwindow.h \
     dbtablewidget.h \
     dbschema.h \
     fileexplorer.h \
-    fileinfowidget.h \
     sqlitedb.h \
-    lrline.h \
     fsmixdbmodel.h \
     hashpool.h \
     tagpool.h \
@@ -56,8 +52,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
     fileexplorer.ui \
-    fileinfowidget.ui \
-    lrline.ui \
     tagtypeselector.ui \
     filetagswidget.ui \
     dbmanager.ui

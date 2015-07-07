@@ -10,6 +10,7 @@
 #include <QDirModel>
 #include "rankdelegate.h"
 #include "fsfilterproxymodel.h"
+#include "filetagswidget.h"
 
 namespace Ui {
 class FileExplorer;
