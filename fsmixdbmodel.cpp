@@ -23,7 +23,7 @@ QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
         case DB_RANK_COL:
             if (rp_->getFileRank(this->filePath(index))<0)
                 return QVariant();
-            return QVariant(rp_->getFileRank(this->filePath(index)));
+            return QVariant::fromValue(StarRating(rp_->getFileRank(this->filePath(index))));
             break;
         case DB_MD5_COL:
             return QVariant(hp_->getFileHash(QCryptographicHash::Md5,this->filePath(index)));
@@ -65,9 +65,11 @@ Qt::ItemFlags FSmixDBmodel::flags(const QModelIndex &index) const
 
 bool FSmixDBmodel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    StarRating starRating;
     switch (index.column() - QFileSystemModel::columnCount()){
     case DB_RANK_COL:
-        return rp_->setRank(this->filePath(index), value.toInt());
+        starRating = qvariant_cast<StarRating>(value);
+        return rp_->setRank(this->filePath(index), starRating.starCount());
     default:
         return QFileSystemModel::setData(index,value,role);
     }

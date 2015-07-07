@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QFileSystemModel>
 #include "rankpool.h"
+#include "rank/starrating.h"
 
 class FSmixDBmodel : public QFileSystemModel
 {

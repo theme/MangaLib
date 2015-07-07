@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     tagtypeselector.cpp \
     filetagswidget.cpp \
     dbmanager.cpp \
-    rankpool.cpp
+    rankpool.cpp \
+    rankdelegate.cpp \
+    rank/stareditor.cpp \
+    rank/starrating.cpp
 
 HEADERS  += mainwindow.h \
     hashthread.h \
@@ -43,7 +46,10 @@ HEADERS  += mainwindow.h \
     tagtypeselector.h \
     filetagswidget.h \
     dbmanager.h \
-    rankpool.h
+    rankpool.h \
+    rankdelegate.h \
+    rank/stareditor.h \
+    rank/starrating.h
 
 FORMS    += mainwindow.ui \
     dbtablewidget.ui \
@@ -52,7 +58,8 @@ FORMS    += mainwindow.ui \
     lrline.ui \
     tagtypeselector.ui \
     filetagswidget.ui \
-    dbmanager.ui
+    dbmanager.ui \
+    rank/stareditor.ui
 
 RESOURCES += \
     icon.qrc
