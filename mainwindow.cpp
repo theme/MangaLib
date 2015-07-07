@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui: tags
     FileTagsWidget *w = new FileTagsWidget(tp_,this);
+    w->hide();
     ui->centralWidget->layout()->addWidget(w);
     connect(file_exp_widget_, SIGNAL(sigFilePath(QString)),
             w, SLOT(setFileName(QString)));
