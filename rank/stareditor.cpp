@@ -1,19 +1,10 @@
 #include "stareditor.h"
-#include "ui_stareditor.h"
 
 StarEditor::StarEditor(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::StarEditor)
+    QWidget(parent)
 {
-    ui->setupUi(this);
-
     setMouseTracking(true);
     setAutoFillBackground(true);
-}
-
-StarEditor::~StarEditor()
-{
-    delete ui;
 }
 
 QSize StarEditor::sizeHint() const

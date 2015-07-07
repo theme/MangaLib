@@ -6,17 +6,12 @@
 #include <QMouseEvent>
 #include "rank/starrating.h"
 
-namespace Ui {
-class StarEditor;
-}
-
 class StarEditor : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit StarEditor(QWidget *parent = 0);
-    ~StarEditor();
 
     QSize sizeHint() const;
     void setStarRating(const StarRating &starRating) {
@@ -36,7 +31,6 @@ private:
     int starAtPosition(int x);
 
     StarRating myStarRating;
-    Ui::StarEditor *ui;
 };
 
 #endif // STAREDITOR_H

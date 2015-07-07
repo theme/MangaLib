@@ -1,8 +1,6 @@
 #include "dbtablewidget.h"
 #include "ui_dbtablewidget.h"
 
-#include <QDebug>
-
 DBTableWidget::DBTableWidget(QString name,
                              QSqlDatabase& db,
                              QWidget *parent) :

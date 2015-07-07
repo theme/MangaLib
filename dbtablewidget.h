@@ -5,6 +5,8 @@
 #include <QSqlTableModel>
 #include <QtSql>
 
+#include <QDebug>
+
 namespace Ui {
 class DBTableWidget;
 }

@@ -1,6 +1,4 @@
 #include "hashpool.h"
-#include <QDebug>
-#include <QFileInfo>
 
 HashPool::HashPool(SQLiteDB *db, QObject *parent) : QObject(parent), db_(db)
 {

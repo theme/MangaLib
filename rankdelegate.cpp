@@ -1,5 +1,4 @@
 #include "rankdelegate.h"
-#include <QDebug>
 
 RankDelegate::RankDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -50,7 +49,6 @@ void RankDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
         StarRating starRating = qvariant_cast<StarRating>(index.data());
         StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
         starEditor->setStarRating(starRating);
-        qDebug() << "RankDelegate::setEditorData() index, index.data()" << index << index.data();
     } else {
         QStyledItemDelegate::setEditorData(editor, index);
     }
@@ -60,7 +58,6 @@ void RankDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 {
     if (index.data().canConvert<StarRating>()) {
         StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-        qDebug() << "RankDelegate::setModelData()  star count " << starEditor->starRating().starCount();
         model->setData(index, QVariant::fromValue(starEditor->starRating()));
     } else {
         QStyledItemDelegate::setModelData(editor, model, index);

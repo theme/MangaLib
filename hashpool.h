@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QHash>
+#include <QDebug>
+#include <QFileInfo>
 #include "hashthread.h"
 #include "sqlitedb.h"
 

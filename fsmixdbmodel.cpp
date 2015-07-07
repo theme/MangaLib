@@ -1,5 +1,4 @@
 #include "fsmixdbmodel.h"
-#include <QDebug>
 
 FSmixDBmodel::FSmixDBmodel(HashPool *hp, RankPool *rp, QObject *parent):
     QFileSystemModel(parent), rp_(rp), hp_(hp)

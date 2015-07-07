@@ -60,8 +60,7 @@ FORMS    += mainwindow.ui \
     lrline.ui \
     tagtypeselector.ui \
     filetagswidget.ui \
-    dbmanager.ui \
-    rank/stareditor.ui
+    dbmanager.ui
 
 RESOURCES += \
     icon.qrc
