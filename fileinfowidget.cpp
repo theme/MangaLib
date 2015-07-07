@@ -48,7 +48,8 @@ void FileInfoWidget::setFile(QString f)
         finfo_.setFile(f);
 
 
-        FileTagsWidget *w = new FileTagsWidget(finfo_.fileName(),tp_,this);
+        FileTagsWidget *w = new FileTagsWidget(tp_,this);
+        w->setFileName(finfo_.fileName());
         ui->layout->addWidget(w);
         connect(this, SIGNAL(sigFileChanged(QString,QString)),
                 w, SLOT(deleteLater()));
