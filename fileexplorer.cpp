@@ -26,8 +26,14 @@ FileExplorer::FileExplorer(QFileSystemModel *filesmodel, QWidget *parent) :
     ui->dirView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->dirView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentDirChanged(QModelIndex,QModelIndex)));
+
     // files View
     ui->filesView->setModel(files_model_);
+    ui->filesView->setItemDelegate(new RankDelegate(this));
+
+    ui->filesView->setEditTriggers(QAbstractItemView::DoubleClicked
+                                | QAbstractItemView::SelectedClicked);
+    ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->filesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(onCurrentFileChanged(QModelIndex,QModelIndex)));
