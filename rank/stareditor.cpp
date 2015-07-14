@@ -36,8 +36,13 @@ void StarEditor::mouseReleaseEvent(QMouseEvent *event)
 
 int StarEditor::starAtPosition(int x)
 {
-    int star = (x / (myStarRating.sizeHint().width()
-                     / myStarRating.maxStarCount())) + 1;
+    int starWidth = (myStarRating.sizeHint().width()
+                     / myStarRating.maxStarCount());
+    int star = (x / starWidth) + 1;
+
+    if ( x < starWidth / 2 )
+        return 0;
+
     if (star <= 0 || star > myStarRating.maxStarCount())
         return -1;
 
