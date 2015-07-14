@@ -20,8 +20,6 @@ QVariant FSmixDBmodel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole){
         switch (index.column() - QFileSystemModel::columnCount()){
         case DB_RANK_COL:
-            if (rp_->getFileRank(this->filePath(index))<0)
-                return QVariant();
             return QVariant::fromValue(StarRating(rp_->getFileRank(this->filePath(index))));
             break;
         case DB_MD5_COL:
