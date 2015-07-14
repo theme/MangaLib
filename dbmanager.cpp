@@ -28,4 +28,5 @@ void DBManager::loadDBTabs()
                 + tables.at(i);
         ui->tablesTab->addTab(w,tname);
     }
+    ui->dbFileName->setText(db_->conn().databaseName());
 }

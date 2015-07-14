@@ -7,6 +7,7 @@
 #include <QShortcut>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 
 #include "sqlitedb.h"
 #include "fileexplorer.h"
