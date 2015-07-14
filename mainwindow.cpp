@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
             w, SLOT(setFileName(QString)));
     connect(file_exp_widget_, SIGNAL(sigFileNameSelected(bool)),
             w, SLOT(setVisible(bool)));
+    file_tags_widget_ = w;
 
     // ui: Library ( DB ) View
     connect(db_, SIGNAL(sigOpened()), this, SLOT(loadDBTabs()));
@@ -180,4 +181,11 @@ void MainWindow::createMenus()
     DBMenu->addSeparator();
     DBMenu->addAction(tags2DBAct);
     DBMenu->addAction(quitAct);
+}
+
+void MainWindow::on_topTabWidget_currentChanged(int index)
+{
+    if ( ui->topTabWidget->widget(index) != file_exp_widget_ ) {
+        file_tags_widget_->setHidden(true);
+    }
 }

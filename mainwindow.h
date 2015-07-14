@@ -42,6 +42,8 @@ private slots:
     // save file info
     void saveLocalFileInfo();
 
+    void on_topTabWidget_currentChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     // ui::Menu
@@ -56,6 +58,9 @@ private:
 
     // ui: File explorer
     FileExplorer *file_exp_widget_;
+
+    // ui: tags
+    FileTagsWidget *file_tags_widget_;
 
     // DB
     SQLiteDB *db_;
