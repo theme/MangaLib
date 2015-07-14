@@ -2,8 +2,8 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-        QMainWindow(parent),
-        ui(new Ui::MainWindow)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -22,11 +22,11 @@ MainWindow::MainWindow(QWidget *parent) :
     fmixd_->setRootPath(QDir::rootPath());
     fmixd_->setFilter(QDir::Files);
     fmixd_->setNameFilters(QStringList()
-                                 << "*.zip"
-                                 << "*.cb?"
-                                 << "*.rar");
+                           << "*.zip"
+                           << "*.cb?"
+                           << "*.rar");
     fmixd_->setNameFilterDisables(false);
-//    fmixd_->setReadOnly(false);
+    //    fmixd_->setReadOnly(false);
     file_exp_widget_ = new FileExplorer(fmixd_, this);
     ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
 
@@ -53,7 +53,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(db_, SIGNAL(sigClosed(bool)), tags2DBAct, SLOT(setDisabled(bool)));
 
     // auto open "~/mangalib.db"
-    if( QFile::exists(QDir::homePath() + "/mangalib.db")){
+    QCoreApplication::setOrganizationName("theme");
+    QCoreApplication::setOrganizationDomain("github.com/theme");
+    QCoreApplication::setApplicationName("MangaLib");
+
+    QSettings sett;
+    QString sqlfile = sett.value("db/sqliteFile").toString();
+
+    if( QFile::exists(sqlfile) ){
+        db_->open(sqlfile);
+    } else if( QFile::exists(QDir::homePath() + "/mangalib.db")){
         db_->open(QDir::homePath() + "/mangalib.db");
     }
 }
@@ -68,15 +77,18 @@ void MainWindow::openDBfile(QString fn)
     if ( fn.isEmpty() ){
         QString selfilter = tr("DB Files (*.db)");
         fn = QFileDialog::getSaveFileName( this,
-                                              tr("Choose DB file"),
-                                              QDir::homePath(),
-                                              tr("DB Files (*.db)"),
-                                              &selfilter,
-                                              QFileDialog::DontConfirmOverwrite );
+                                           tr("Choose DB file"),
+                                           QDir::homePath(),
+                                           tr("DB Files (*.db)"),
+                                           &selfilter,
+                                           QFileDialog::DontConfirmOverwrite );
     }
 
     if (!fn.isEmpty()){
         db_->open(fn);
+        QSettings sett;
+        sett.setValue("db/sqliteFile", fn);
+        sett.sync();
     } else {
         emit sigStatusMsg(tr("no file selected."));
     }
@@ -99,11 +111,11 @@ void MainWindow::loadDBTabs()
     }
     for( int i = 0; i < tables.size(); ++i){
         DBTableWidget* w = new DBTableWidget(tables.at(i),
-                                               db_->conn(),
-                                               ui->topTabWidget);
+                                             db_->conn(),
+                                             ui->topTabWidget);
 
         QString tname = QString("( &") + QString::number(i+1) + " ) "
-                        + tables.at(i);
+                + tables.at(i);
         int tabIndex = ui->topTabWidget->addTab(w,tname);
         db_table_widgets_hash_.insert(w,tabIndex);
     }
@@ -128,7 +140,7 @@ void MainWindow::openDBManager()
 
 void MainWindow::saveLocalFileInfo()
 {
-//    QSqlQuery q(db_);
+    //    QSqlQuery q(db_);
 
 }
 
