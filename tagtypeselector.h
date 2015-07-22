@@ -23,6 +23,7 @@ signals:
 
 private slots:
     void onButtonToggled();
+    void onTagNameEdited();
 
 private:
     Ui::TagTypeSelector *ui;

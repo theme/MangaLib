@@ -31,6 +31,8 @@ TagTypeSelector::TagTypeSelector(QString tagName, TagPool *tp, QWidget *parent) 
 
     connect(this, SIGNAL(sigTypeChoosed(QString,QString,QString)),
             tp_, SLOT(handleTagTypeChange(QString,QString,QString)));
+    connect(ui->tagName, SIGNAL(editingFinished()),
+            this, SLOT(onTagNameEdited()));
 }
 
 TagTypeSelector::~TagTypeSelector()
@@ -54,4 +56,9 @@ void TagTypeSelector::onButtonToggled()
             current_type_ = o;
         }
     }
+}
+
+void TagTypeSelector::onTagNameEdited()
+{
+    tag_name_ = ui->tagName->text();
 }
