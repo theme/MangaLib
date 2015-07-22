@@ -1,5 +1,6 @@
 *.pro.user*
 *.png
+*.exe
 *.ico
 **/node_modules/
 

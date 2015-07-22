@@ -4,13 +4,20 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql svg
+QT       += core gui sql
+
+static {
+    QT += svg
+}
+
+win32 {
+    RC_ICONS = icons\MangaLib.ico
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MangaLib
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \
