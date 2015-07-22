@@ -254,7 +254,7 @@ bool SQLiteDB::remove(QString tn, const QStringList &cols, const QStringList &vs
     QString sql = " DELETE FROM " + tn + " WHERE ";
     QStringList exprs;
     for (int i =0; i< cols.size(); ++i){
-        exprs.append(" '" + cols.at(i) + "' = '" + vs.at(i) + "' ");
+        exprs.append(cols.at(i) + " = '" + vs.at(i) + "' ");
     }
     sql += exprs.join(" AND ");
 
