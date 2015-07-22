@@ -39,9 +39,6 @@ private slots:
     void removeDBTabs();
     void openDBManager();
 
-    // save file info
-    void saveLocalFileInfo();
-
     void on_topTabWidget_currentChanged(int index);
 
 private:

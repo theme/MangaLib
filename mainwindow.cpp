@@ -139,12 +139,6 @@ void MainWindow::openDBManager()
     w->showMaximized();
 }
 
-void MainWindow::saveLocalFileInfo()
-{
-    //    QSqlQuery q(db_);
-
-}
-
 void MainWindow::createActions()
 {
     openAct = new QAction(tr("&Open Sqlite DB file"), this);
