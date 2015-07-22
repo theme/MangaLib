@@ -38,6 +38,7 @@ private slots:
     void loadDBTabs();   // load db tables to view
     void removeDBTabs();
     void openDBManager();
+    void onQuitAct();
 
     void on_topTabWidget_currentChanged(int index);
 

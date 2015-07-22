@@ -24,7 +24,10 @@ public:
     explicit FileExplorer(QFileSystemModel* filesmodel,
                           QWidget *parent = 0);
     ~FileExplorer();
-    QString path() const;
+    QString currentPath() const;
+public slots:
+    void setPath(QString path);
+
 signals:
     void sigPath(QString path);
     void sigFilePath(QString fpath);
@@ -33,7 +36,6 @@ signals:
 private slots:
     void onCurrentDirChanged(QModelIndex current, QModelIndex previous);
     void onCurrentFileChanged(QModelIndex current, QModelIndex previous);
-    void setPath(QString path);
 
     void on_pathEdit_editingFinished();
 

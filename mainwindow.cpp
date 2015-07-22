@@ -7,6 +7,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // settings
+    QCoreApplication::setOrganizationName("theme");
+    QCoreApplication::setOrganizationDomain("github.com/theme");
+    QCoreApplication::setApplicationName("MangaLib");
+    QSettings settings;
+
     db_ = new SQLiteDB(":/dbschema.json", this);
     hp_ = new HashPool(db_,this);
     tp_ = new TagPool(db_,this);
@@ -26,12 +32,17 @@ MainWindow::MainWindow(QWidget *parent) :
                            << "*.cb?"
                            << "*.rar");
     fmixd_->setNameFilterDisables(false);
-    //    fmixd_->setReadOnly(false);
     file_exp_widget_ = new FileExplorer(fmixd_, this);
     ui->topTabWidget->addTab(file_exp_widget_, "&Explorer");
 
     connect(this, SIGNAL(sigStatusMsg(QString, int)),
             ui->statusBar, SLOT(showMessage(QString,int)));
+
+    QString expath = settings.value("file_exp/lastPath").toString();
+    QFileInfo expi( expath );
+    if ( expi.isDir() ) {
+        file_exp_widget_->setPath(expath);  // recover last time path
+    }
 
     // ui: tags
     FileTagsWidget *w = new FileTagsWidget(tp_,this);
@@ -54,12 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(db_, SIGNAL(sigClosed(bool)), tags2DBAct, SLOT(setDisabled(bool)));
 
     // auto open "~/mangalib.db"
-    QCoreApplication::setOrganizationName("theme");
-    QCoreApplication::setOrganizationDomain("github.com/theme");
-    QCoreApplication::setApplicationName("MangaLib");
 
-    QSettings sett;
-    QString sqlfile = sett.value("db/sqliteFile").toString();
+    QString sqlfile = settings.value("db/sqliteFile").toString();
 
     if( QFile::exists(sqlfile) ){
         db_->open(sqlfile);
@@ -154,7 +161,7 @@ void MainWindow::createActions()
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
-    connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
+    connect(quitAct, SIGNAL(triggered()), this, SLOT(onQuitAct()));
 
     dbManAct = new QAction(tr("DB &Manager"), this);
     dbManAct->setStatusTip(tr("Open DB Manager"));
@@ -182,4 +189,13 @@ void MainWindow::on_topTabWidget_currentChanged(int index)
     if ( ui->topTabWidget->widget(index) != file_exp_widget_ ) {
         file_tags_widget_->setHidden(true);
     }
+}
+
+void MainWindow::onQuitAct()
+{
+    // remember current file explorer path
+    QSettings sett;
+    sett.setValue("file_exp/lastPath", file_exp_widget_->currentPath());
+    sett.sync();
+    close();
 }

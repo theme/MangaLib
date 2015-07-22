@@ -49,6 +49,11 @@ FileExplorer::~FileExplorer()
     delete ui;
 }
 
+QString FileExplorer::currentPath() const
+{
+    return ui->pathEdit->text();
+}
+
 void FileExplorer::onCurrentDirChanged(QModelIndex current, QModelIndex previous)
 {
     emit sigPath( dir_model_->filePath(dir_proxy_model_->mapToSource( current)) );
