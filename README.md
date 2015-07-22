@@ -1,19 +1,20 @@
 MangaLib
 ========
-是用来记录漫画打包档 md5 ，以及自己评分的工具。
-这样看过又删掉的漫画文件，下次再遇到就知道已经遇到过了。（大概）
+is a soft to record comic archieve file md5 and your rating automatically.
+so that you know you have read it the next time you meet the same file.
 
-1. 第一次使用时需要选一个地方存放数据库，只是文件名和 hash 值之类，应该不会太大。
-2. 移动到某个文件夹之后，其中所有的 zip, rar, cbz, cbr 文件都会被自动计算 md5 并存入数据库。
-（如果文件多，会一直读硬盘导致很卡……，仅一次）
-3. 你可以给直接在界面上给每个文件打分，程序会记住 (依据是 md5) 。
+1. first time running, you need to specify a path for database, it only contains manga file name and hash value, it will not grow too big, I guess.
+2. browse to a folder, all the *.zip, *.rar, *.cbz, *.cbr files' md5 will be calculated and recorded.
+( too many or too large file will cause hanging reading disk... but this is needed to be done only once. )
+3. you can rate directly for each file, your rating score will be recorded.
 
-快捷键 
-------
-1. Explorer 里面，Ctrl+L 可以聚焦到地址栏。（和大多数浏览器一样）
-2. 关闭文件名标签记录：点一下文件名以外任意一栏。
+Shortcut
+--------
+1. Inside Explorer, Ctrl+L will focus address bar. ( just like most browser )
+2. To hide tags panel: click at any column other than file name column.
 
-其他
-----
-数据库是简单的 sqlite3。
-源码在  https://github.com/theme/MangaLib
+Build
+=====
+Either of the following ways will build the program: 
+* (Dynamic linking) use Qt from http://www.qt.io/download-open-source/
+* (Static linking) use Qt in msys2, follow guides at https://wiki.qt.io/MSYS2
