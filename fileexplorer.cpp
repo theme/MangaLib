@@ -10,7 +10,10 @@ FileExplorer::FileExplorer(QFileSystemModel *filesmodel, QWidget *parent) :
     // path Edit
     ui->pathEdit->setText( QDir::homePath() );
     QCompleter *completer = new QCompleter(this);
-    completer->setModel(new QDirModel(completer));
+    QStringList fli("*");
+    completer->setModel(new QDirModel(fli,
+                                      QDir::NoDotAndDotDot | QDir::AllDirs,
+                                      QDir::Name));
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     ui->pathEdit->setCompleter(completer);
 
