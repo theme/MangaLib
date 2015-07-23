@@ -75,7 +75,9 @@ void FileExplorer::setPath(QString path)
 {
     ui->pathEdit->setText(path);
 
-    QModelIndex din = dir_model_->index(path);
+    QModelIndex din = dir_proxy_model_->mapFromSource(dir_model_->index(path));
+    ui->dirView->scrollTo(din);
+    ui->dirView->collapse(din);
     ui->dirView->setCurrentIndex(din);
     ui->dirView->resizeColumnToContents(din.column());
 
