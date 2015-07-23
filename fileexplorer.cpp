@@ -85,6 +85,7 @@ void FileExplorer::setPath(QString path)
     ui->dirView->resizeColumnToContents(din.column());
 
     ui->filesView->setRootIndex(files_model_->setRootPath(path));
+    ui->filesView->resizeColumnsToContents();
 }
 
 void FileExplorer::on_pathEdit_editingFinished()
