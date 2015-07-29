@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QSystemTrayIcon>
 
 #include "sqlitedb.h"
 #include "fileexplorer.h"
@@ -72,6 +73,9 @@ private:
 
     // ui: DB tabs
     QHash<DBTableWidget*, int> db_table_widgets_hash_;
+
+    // ui: tray icon
+    QSystemTrayIcon tray_icon_;
 };
 
 #endif // MAINWINDOW_H

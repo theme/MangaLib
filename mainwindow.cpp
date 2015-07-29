@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     tp_ = new TagPool(db_,this);
     rp_ = new RankPool(db_, hp_,this);
 
+    // ui: tray icon
+    tray_icon_.setIcon(QIcon(":/icons/icon.svg"));
+    tray_icon_.show();
+
     // ui::menu
     createActions();
     createMenus();
