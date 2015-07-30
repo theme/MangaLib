@@ -18,18 +18,15 @@ MainWindow::MainWindow(QWidget *parent) :
     tp_ = new TagPool(db_,this);
     rp_ = new RankPool(db_, hp_,this);
 
-    // ui: tray icon
-    tray_icon_.setIcon(QIcon(":/icons/icon.svg"));
-    tray_icon_.show();
-
     // clip board
     clipboard_ = QApplication::clipboard();
     connect(clipboard_, SIGNAL(dataChanged()),
             this, SLOT(onClipboardChanged()));
 
-    // ui::menu
+    // menus
     createActions();
-    createMenus();
+    createMenus(); // ui::menu
+    createTrayIcon(); // ui: tray icon
 
     // ui: File explorer
     FSmixDBmodel *fmixd_;
@@ -192,9 +189,19 @@ void MainWindow::createMenus()
     DBMenu->addAction(tags2DBAct);
     DBMenu->addAction(quitAct);
 
+}
+
+void MainWindow::createTrayIcon()
+{
     tray_menu_ = new QMenu(this);
-    tray_icon_.setContextMenu(tray_menu_);
     tray_menu_->addAction(quitAct);
+
+    tray_icon_ = new QSystemTrayIcon(this);
+    tray_icon_->setIcon(QIcon(":/icons/icon.svg"));
+    tray_icon_->setContextMenu(tray_menu_);
+    tray_icon_->show();
+    connect(tray_icon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(onTrayIconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::on_topTabWidget_currentChanged(int index)
@@ -215,5 +222,17 @@ void MainWindow::onQuitAct()
 
 void MainWindow::onClipboardChanged()
 {
-    tray_icon_.showMessage("clipboard",clipboard_->text());
+    tray_icon_->showMessage("clipboard",clipboard_->text(),QSystemTrayIcon::Information,1000);
+}
+
+void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        tray_icon_->contextMenu()->show();
+//        tray_icon_->contextMenu()->popup(QCursor::pos());
+        break;
+    default:
+        break;
+    }
 }

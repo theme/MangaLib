@@ -42,6 +42,7 @@ private slots:
     void openDBManager();
     void onQuitAct();
     void onClipboardChanged();
+    void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
     void on_topTabWidget_currentChanged(int index);
 
@@ -50,6 +51,7 @@ private:
     // ui::Menu
     void createActions();
     void createMenus();
+    void createTrayIcon();
     QMenu *DBMenu;
     QAction *openAct;
     QAction *closeAct;  // close DB
@@ -77,7 +79,7 @@ private:
     QHash<DBTableWidget*, int> db_table_widgets_hash_;
 
     // ui: tray icon
-    QSystemTrayIcon tray_icon_;
+    QSystemTrayIcon *tray_icon_;
     QClipboard *clipboard_;
     QMenu *tray_menu_;
 };
