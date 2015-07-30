@@ -79,6 +79,7 @@ private:
     // ui: tray icon
     QSystemTrayIcon tray_icon_;
     QClipboard *clipboard_;
+    QMenu *tray_menu_;
 };
 
 #endif // MAINWINDOW_H

@@ -167,7 +167,7 @@ void MainWindow::createActions()
     closeAct->setStatusTip(tr("Close current DB connection"));
     connect(closeAct, SIGNAL(triggered()), this, SLOT(closeDBconnection()));
 
-    quitAct = new QAction(tr("&Quit"), this);
+    quitAct = new QAction(QIcon(":/icons/quit.svg"),tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit application"));
     connect(quitAct, SIGNAL(triggered()), this, SLOT(onQuitAct()));
@@ -191,6 +191,10 @@ void MainWindow::createMenus()
     DBMenu->addSeparator();
     DBMenu->addAction(tags2DBAct);
     DBMenu->addAction(quitAct);
+
+    tray_menu_ = new QMenu(this);
+    tray_icon_.setContextMenu(tray_menu_);
+    tray_menu_->addAction(quitAct);
 }
 
 void MainWindow::on_topTabWidget_currentChanged(int index)
