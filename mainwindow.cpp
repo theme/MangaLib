@@ -22,6 +22,11 @@ MainWindow::MainWindow(QWidget *parent) :
     tray_icon_.setIcon(QIcon(":/icons/icon.svg"));
     tray_icon_.show();
 
+    // clip board
+    clipboard_ = QApplication::clipboard();
+    connect(clipboard_, SIGNAL(dataChanged()),
+            this, SLOT(onClipboardChanged()));
+
     // ui::menu
     createActions();
     createMenus();
@@ -202,4 +207,9 @@ void MainWindow::onQuitAct()
     sett.setValue("file_exp/lastPath", file_exp_widget_->currentPath());
     sett.sync();
     close();
+}
+
+void MainWindow::onClipboardChanged()
+{
+    tray_icon_.showMessage("clipboard",clipboard_->text());
 }

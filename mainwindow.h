@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QSystemTrayIcon>
+#include <QClipboard>
 
 #include "sqlitedb.h"
 #include "fileexplorer.h"
@@ -40,6 +41,7 @@ private slots:
     void removeDBTabs();
     void openDBManager();
     void onQuitAct();
+    void onClipboardChanged();
 
     void on_topTabWidget_currentChanged(int index);
 
@@ -76,6 +78,7 @@ private:
 
     // ui: tray icon
     QSystemTrayIcon tray_icon_;
+    QClipboard *clipboard_;
 };
 
 #endif // MAINWINDOW_H
