@@ -15,10 +15,16 @@ Shortcut
 
 Build
 =====
-Either of the following ways will build the program: 
-* (Dynamic linking) use Qt from http://www.qt.io/download-open-source/
-* (Static linking) use Qt in msys2, follow guides at https://wiki.qt.io/MSYS2
+Static linking - use msys2
+--------------------------
+follow guides at https://wiki.qt.io/MSYS2
+Needed packages :
+* mingw-w64-x86_64-qt5-static
+* mingw-w64-x86_64-binutils
+* mingw-w64-x86_64-gcc
+* mingw-w64-x86_64-libwebp
+* mingw-w64-x86_64-jasper
 
-(ubuntu 14.04) build error "cannot find -lGL"
-refer to http://wiki.qt.io/Building_Qt_5_from_Git#Linux.2FX11
-sudo apt-get install "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev
+Dynamic linking - use Qt from qt.io
+-----------------------------------
+from http://www.qt.io/download-open-source/
